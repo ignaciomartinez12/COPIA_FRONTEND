@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TIComo - Registro</title>
+        <link rel="icon" href="../imgs/icon2.png">
+        <link rel="stylesheet" href="registro_estilos.css">
+    </head>
+    <body class="contenedor_login_padre">
+        
+        <div class="contenedor_login_hijo">
+            <div class="contenedor_header contenedor_horizontal">
+                <img class="img_logo" src="../imgs/logo3.png" alt="">
+                <a href="../inicio/inicio.html">
+                    <img class="img_logout" src="../imgs/home_icon.svg"/>
+                </a>
+            </div>
+            
+            <!-- Paso 1 -->
+            <div id="campos_paso1" class="contenedor_campos">
+                <h1 class="texto_gris">Registro</h1>
+
+                <div class="contenedor_pasos">
+                    <ul class="lista_horizontal">
+                        <li>
+                            <a id="paso1" href="#">•</a>
+                        </li>
+                        <li>
+                            <a id="paso2" class="texto_gris" href="#">•</a>
+                        </li>
+                        <li>
+                            <a id="paso3" class="texto_gris" href="#">•</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="nombre">Nombre</label>
+                    <label class="aviso oculto" for="nombre">Introduce un nombre</label>
+                </div>
+                <input class="campo_entrada" type="text" id="nombre" required>
+                
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="apellidos">Apellidos</label>
+                    <label class="aviso oculto" for="apellidos">Introduce los apellidos</label>
+                </div>
+                <input class="campo_entrada" type="text" id="apellidos" required>
+
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="nif">NIF</label>
+                    <label class="aviso oculto" for="nif">Introduce el NIF</label>
+                </div>
+                <input class="campo_entrada" type="text" id="nif" required>
+                
+                <div class="contenedor_acceder">
+                    <input id="siguiente1" class="btn_paso" type="submit" value="Siguiente 🢂" />
+                </div>
+                <div class="contenedor_horizontal registro">
+                    <p class="o_sep">o</p>
+                    <a href="../login/login.html" class="registro">Iniciar Sesión</a>
+                </div>
+            </div>
+
+            <!-- Paso 2 -->
+            <div id="campos_paso2" class="contenedor_campos oculto">
+                <h1 class="texto_gris">Registro</h1>
+
+                <div class="contenedor_pasos">
+                    <ul class="lista_horizontal">
+                        <li>
+                            <a id="paso4" class="texto_gris" href="#">•</a>
+                        </li>
+                        <li>
+                            <a id="paso5" href="#">•</a>
+                        </li>
+                        <li>
+                            <a id="paso6" class="texto_gris" href="#">•</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="telefono">Teléfono</label>
+                    <label class="aviso oculto" for="telefono">Introduce un número de teléfono válido</label>
+                </div>
+                <input class="campo_entrada" type="tel" id="telefono" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="direccion">Dirección</label>
+                    <label class="aviso oculto" for="direccion">Introduce la dirección completa</label>
+                </div>
+                <input class="campo_entrada" type="text" id="direccion" required>
+
+                <div class="contenedor_label contenedor_horizontal transparente">
+                    <label class="texto_gris" for="nif">label</label>
+                </div>
+                <input class="campo_entrada transparente" type="" disabled>
+                
+                <div class="contenedor_acceder contenedor_horizontal">
+                    <input id="anterior2" class="btn_paso ancho_partido" type="submit" value="🢀 Anterior" />
+                    <input id="siguiente2" class="btn_paso ancho_partido" type="submit" value="Siguiente 🢂" />
+                </div>
+                <div class="contenedor_horizontal registro">
+                    <p class="o_sep">o</p>
+                    <a href="../login/login.html" class="registro">Iniciar Sesión</a>
+                </div>
+            </div>
+
+            <!-- Paso 3 -->
+            <div id="campos_paso3" class="contenedor_campos oculto">
+                <h1 class="texto_gris">Registro</h1>
+
+                <div class="contenedor_pasos">
+                    <ul class="lista_horizontal">
+                        <li>
+                            <a id="paso7" class="texto_gris" href="#">•</a>
+                        </li>
+                        <li>
+                            <a id="paso8" class="texto_gris" href="#">•</a>
+                        </li>
+                        <li>
+                            <a id="paso9" href="#">•</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="email">Usuario</label>
+                    <label class="aviso oculto" for="email">El usuario especificado ya está registrado</label>
+                </div>
+                <input class="campo_entrada" type="email" id="email" pattern=".+@globex\.com" size="30" required>
+                
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="password">Contraseña</label>
+                    <label class="aviso oculto" for="password">Introduce la contraseña</label>
+                </div>
+                <input class="campo_entrada" type="password" id="password" pattern=".{6,}" required>
+
+                <div class="contenedor_label contenedor_horizontal">
+                    <label class="texto_gris" for="password2">Confirma la Contraseña</label>
+                    <label class="aviso oculto" for="password2">Introduce la contraseña</label>
+                </div>
+                <input class="campo_entrada" type="password" id="password2" pattern=".{6,}" required>
+                
+                <div class="contenedor_acceder contenedor_horizontal">
+                    <input id="anterior3" class="btn_paso ancho_partido" type="submit" value="🢀 Anterior" />
+                    <input id="acceder" class="btn_acceder ancho_partido" type="submit" value="Registrar Usuario" />
+                </div>
+                <div class="contenedor_horizontal registro">
+                    <p class="o_sep">o</p>
+                    <a href="../login/login.html" class="registro">Iniciar Sesión</a>
+                </div>
+            </div>
+        </div>
+
+        <script src="scripts.js"></script>
+    </body>
+</html>
