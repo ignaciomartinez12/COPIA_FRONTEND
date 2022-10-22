@@ -100,7 +100,7 @@ body{
 
 .portada{
     padding-top: 90px;
-    background: url(./app/imgs/food3_bg2.jpg);
+    background: url(../imgs/food3_bg2.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     height: 95vh;
