@@ -1,20 +1,7 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    list-style: none;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body{
-    min-height: 100vh;
-    background: url(../imgs/food_bg2.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
 .contenedor_login_padre{
+    background: url(../../../assets/bg_images/food_bg2.jpg);
+
+    min-height: 100vh;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -27,7 +14,7 @@ body{
     margin: 50px auto;
 }
 
-.contenedor_header {
+.contenedor_header2 {
     height: 90px;
     padding: 16px;
     background: #424242;
@@ -67,20 +54,12 @@ body{
     margin-bottom: 16px;
 }
 
-.texto_gris {
-    color: #424242;
-}
-
 label{
     font-weight: bold;
 }
 
 .aviso {
     color: #fc8a15;
-}
-
-.oculto{
-    display: none;
 }
 
 .campo_entrada{
