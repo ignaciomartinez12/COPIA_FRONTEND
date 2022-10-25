@@ -1,0 +1,107 @@
+<div class="contenedor_login_padre">
+        
+    <div class="contenedor_login_hijo">
+        <div class="contenedor_header2 contenedor_horizontal">
+            <a routerLink="/inicio">
+                <img class="img_logo" src="../../assets/ui_images/logo3.png" alt=""/>
+            </a>
+            <a routerLink="/inicio">
+                <img id="logout" class="img_logout" src="../../../assets/ui_images/home_icon.svg"/>
+            </a>
+        </div>
+        
+        <!-- Paso 1 -->
+        <div id="campos_paso1" class="contenedor_campos">
+            <h1 class="texto_gris">Registro</h1>
+
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="nombre">Nombre</label>
+                <label class="aviso oculto" for="nombre">Introduce un nombre</label>
+            </div>
+            <input class="campo_entrada" type="text" id="nombre" required>
+            
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="apellidos">Apellidos</label>
+                <label class="aviso oculto" for="apellidos">Introduce los apellidos</label>
+            </div>
+            <input class="campo_entrada" type="text" id="apellidos" required>
+
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="nif">NIF</label>
+                <label class="aviso oculto" for="nif">Introduce el NIF</label>
+            </div>
+            <input class="campo_entrada" type="text" id="nif" required>
+            
+            <div class="contenedor_acceder">
+                <button (click)="mostrar_paso2()" id="siguiente1" class="btn_paso">Siguiente 🢂</button>
+            </div>
+            <div class="contenedor_horizontal registro">
+                <p class="o_sep">o</p>
+                <a routerLink="/login" class="registro">Iniciar Sesión</a>
+            </div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div id="campos_paso2" class="contenedor_campos oculto">
+            <h1 class="texto_gris">Registro</h1>
+
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="telefono">Teléfono</label>
+                <label class="aviso oculto" for="telefono">Introduce un número de teléfono válido</label>
+            </div>
+            <input class="campo_entrada" type="tel" id="telefono" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+            
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="direccion">Dirección</label>
+                <label class="aviso oculto" for="direccion">Introduce la dirección completa</label>
+            </div>
+            <input class="campo_entrada" type="text" id="direccion" required>
+
+            <div class="contenedor_label contenedor_horizontal transparente">
+                <label class="texto_gris" for="nif">label</label>
+            </div>
+            <input class="campo_entrada transparente" type="" disabled>
+            
+            <div class="contenedor_acceder contenedor_horizontal">
+                <button (click)="mostrar_paso1()" id="anterior2" class="btn_paso ancho_partido">🢀 Anterior</button>
+                <button (click)="mostrar_paso3()" id="siguiente2" class="btn_paso ancho_partido">Siguiente 🢂</button>
+            </div>
+            <div class="contenedor_horizontal registro">
+                <p class="o_sep">o</p>
+                <a routerLink="/login" class="registro">Iniciar Sesión</a>
+            </div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div id="campos_paso3" class="contenedor_campos oculto">
+            <h1 class="texto_gris">Registro</h1>
+
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="email">Usuario</label>
+                <label class="aviso oculto" for="email">El usuario especificado ya está registrado</label>
+            </div>
+            <input class="campo_entrada" type="email" id="email" pattern=".+@globex\.com" size="30" required>
+            
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="password">Contraseña</label>
+                <label class="aviso oculto" for="password">Introduce la contraseña</label>
+            </div>
+            <input class="campo_entrada" type="password" id="password" pattern=".{6,}" required>
+
+            <div class="contenedor_label contenedor_horizontal">
+                <label class="texto_gris" for="password2">Confirma la Contraseña</label>
+                <label class="aviso oculto" for="password2">Introduce la contraseña</label>
+            </div>
+            <input class="campo_entrada" type="password" id="password2" pattern=".{6,}" required>
+            
+            <div class="contenedor_acceder contenedor_horizontal">
+                <button (click)="mostrar_paso2()" id="anterior3" class="btn_paso ancho_partido">🢀 Anterior</button>
+                <button (click)="registrar()" id="registrar" class="btn_acceder ancho_partido">Registrar Usuario</button>
+            </div>
+            <div class="contenedor_horizontal registro">
+                <p class="o_sep">o</p>
+                <a routerLink="/login" class="registro">Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
