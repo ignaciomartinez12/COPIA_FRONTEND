@@ -12,8 +12,8 @@
         <div class="contenedor_login_hijo">
             <div class="contenedor_header contenedor_horizontal">
                 <img class="img_logo" src="../imgs/logo3.png" alt="">
-                <a href="../inicio/inicio.html">
-                    <img class="img_logout" src="../imgs/home_icon.svg"/>
+                <a href="">
+                    <img id="logout" class="img_logout" src="../imgs/home_icon.svg"/>
                 </a>
             </div>
             <div class="contenedor_campos">
@@ -29,7 +29,7 @@
                 </div>
                 <input class="campo_entrada" type="password" id="password" pattern=".{6,}" required>
                 <div class="contenedor_acceder">
-                    <input class="btn_acceder" type="submit" value="Acceder" />
+                    <input id="btn_acceder" class="btn_acceder" type="submit" value="Acceder" />
                 </div>
                 <div class="contenedor_horizontal registro">
                     <p class="o_sep">o</p>
@@ -37,5 +37,6 @@
                 </div>
             </div>
         </div>
+        <script src="scripts.js"></script>
     </body>
 </html>
