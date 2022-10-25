@@ -1,39 +1,12 @@
 .contenedor_login_padre{
     background: url(../../../assets/bg_images/food_bg2.jpg);
-
+    background-repeat: no-repeat;
+    background-size: cover;
     min-height: 100vh;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.contenedor_login_hijo{
-    background: white;
-    width: 500px;
-    margin: 50px auto;
-}
-
-.contenedor_header2 {
-    height: 90px;
-    padding: 16px;
-    background: #424242;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.contenedor_horizontal {
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.img_logo{
-    height: 65px;
-}
-
-.img_logout{
-    height: 40px;
 }
 
 .contenedor_campos{

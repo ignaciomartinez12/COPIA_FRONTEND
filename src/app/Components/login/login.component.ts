@@ -50,6 +50,22 @@ export class LoginComponent implements OnInit {
 
     //this.router.navigate(['/gestion']);
     this.peticionHttp(correoCampo?.value, pwdCampo?.value);
+    //this.peticionGetHttp();
+  }
+
+  peticionGetHttp(): void {
+    let options: Object = {
+      "observe": 'body',
+      "responseType": 'text'
+    }    
+
+    const url = 'http://localhost:8082/user/getRiders';
+    this.http.get(url, options).subscribe((res: any) => {
+      var listaRiders = res.split(";");
+      //this.avisoEmail = res;
+      console.log(listaRiders.length);
+      this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
+    });
   }
 
   peticionHttp(correo:string, pwd: string): void {
@@ -59,8 +75,11 @@ export class LoginComponent implements OnInit {
       "pwd":pwd
     };
 
-    const url = 'http://localhost:8087/user/login';
+    const url = 'http://localhost:8082/user/login';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
+        if(data === "Inicio de sesion correcto como rider") {
+          this.router.navigate(['/gestion']);
+        }
         this.avisoEmail = data;
     });
   }

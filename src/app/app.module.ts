@@ -9,6 +9,7 @@ import { LoginComponent } from './Components/login/login.component';
 import { RouterModule } from '@angular/router';
 import { Page404Component } from './Components/page404/page404.component';
 import { RegistroComponent } from './Components/registro/registro.component';
+import { GestionComponent } from './Components/gestion/gestion.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { RegistroComponent } from './Components/registro/registro.component';
     InicioComponent,
     LoginComponent,
     Page404Component,
-    RegistroComponent
+    RegistroComponent,
+    GestionComponent
   ],
   imports: [
     BrowserModule,

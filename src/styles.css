@@ -48,12 +48,24 @@ body{
     z-index: 999;
 }
 
+.contenedor_header2 {
+    height: 90px;
+    padding: 16px;
+    background: #424242;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .img_logo{
     height: 65px;
 }
 
 .img_logo_mid{
     max-width: 60%;
+}
+
+.img_logout{
+    height: 40px;
 }
 
 .opcion_menu{
@@ -131,4 +143,10 @@ body{
     .contenedor_opc_menu2 {
         display: flex;
     }
+}
+
+.contenedor_login_hijo{
+    background: white;
+    width: 500px;
+    margin: 50px auto;
 }
