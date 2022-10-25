@@ -91,18 +91,18 @@ export class LoginComponent implements OnInit {
   accederRol(rol:string){
     if(rol === "rider") {
       this.router.navigate(
-        ['/gestion'],
-        { queryParams: { rol: 'rider' } }
+        ['/gestion_riders']
+       
       );
     }else if (rol === "admin"){
       this.router.navigate(
-        ['/gestion'],
-        { queryParams: { rol: 'admin' } }
+        ['/gestion_admins']
+        
       );
     }else if(rol === "cliente"){
       this.router.navigate(
-        ['/gestion'],
-        { queryParams: { rol: 'cliente' } }
+        ['/gestion_clientes']
+        
       );
     }else{
       this.avisoEmail = "No se ha podido obtener el rol "
