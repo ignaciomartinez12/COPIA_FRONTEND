@@ -13,13 +13,11 @@ export class LoginComponent implements OnInit {
   avisoEmail: string = "";
   avisoPwd: string = "";
   tipoUser: string = "";
-  loginUsuario: LoginUsuario;
 
   constructor(private router: Router, private http: HttpClient) {
     this.avisoEmail = "";
     this.avisoPwd = "";
     this.tipoUser = "";
-    this.loginUsuario = new LoginUsuario("","");
   }
 
   ngOnInit(): void {
