@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
 
     const url = 'http://localhost:8082/user/login';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
-        if(data === "Inicio de sesion correcto como rider") {
+        if(data === "rider") {
           this.router.navigate(['/gestion']);
         }
         this.avisoEmail = data;
@@ -119,7 +119,4 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  encriptarPwd(pswr:string) {
-    return SHA256(pswr).toString(enc.Hex);
-  }
 }
