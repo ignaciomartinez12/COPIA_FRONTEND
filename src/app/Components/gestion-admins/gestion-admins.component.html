@@ -1,0 +1,77 @@
+<div class="contenedor_padre">
+
+    <div class="contenedor_login_hijo">
+        <div class="contenedor_header3 contenedor_horizontal">
+            <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
+            <div class="botones contenedor_horizontal">
+                <img id="add" class="img_icon" src="../../../assets/ui_images/add_icon.svg" />
+                <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg" />
+                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg" />
+                <h2 class="sep">|</h2>
+                <a href="../inicio/inicio.html">
+                    <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg" />
+                </a>
+            </div>
+        </div>
+        <div class="contenedor_campos">
+            <div class="labels contenedor_horizontal">
+                <div class="label_lista">
+                    <h2 class="label_cuadro">Administradores</h2>
+                </div>
+                <div class="label_datos">
+                    <h2 class="label_cuadro">Datos del Administrador</h2>
+                </div>
+            </div>
+            <div class="contenido contenedor_horizontal">
+                <div class="contenedor_lista">
+                    <ul class="listaElementos">
+                        <li class="elementoBase">Elemento 1</li>
+                        <li class="elementoBase">Elemento 2</li>
+                        <li class="elementoBase">Elemento 3</li>
+                    </ul>
+                </div>
+                <div class="contenedor_datos">
+                    <div id="datos" class="contenedor_datos_rest">
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="nombre">Nombre</label>
+                                <input class="campo_entrada" type="text" id="nombre" required>
+                                <label class="aviso oculto" for="nombre">Introduce un nombre válido</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="apellidos">Apellidos</label>
+                                <input class="campo_entrada" type="text" id="apellidos" required>
+                                <label class="aviso oculto" for="apellidos">Introduce los apellidos</label>
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="zona">Zona</label>
+                                <input class="campo_entrada" type="text" id="zona" required>
+                                <label class="aviso oculto" for="zona">Introduce la zona</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="nif">NIF</label>
+                                <input class="campo_entrada" type="text" id="nif">
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="email">Correo</label>
+                                <input class="campo_entrada" type="email" id="email" pattern=".+@globex\.com" size="30"
+                                    required>
+                                <label class="aviso oculto" for="email">Introduce el correo</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="password">Contraseña</label>
+                                <input class="campo_entrada" type="password" id="password"
+                                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
+                                <label class="aviso oculto" for="password">Introduce la contraseña</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
