@@ -16,19 +16,19 @@
 
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="nombre">Nombre</label>
-                <label class="aviso oculto" for="nombre">Introduce un nombre</label>
+                <label class="aviso" for="email">{{ avisoNombre }}</label>
             </div>
             <input class="campo_entrada" type="text" id="nombre" required>
             
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="apellidos">Apellidos</label>
-                <label class="aviso oculto" for="apellidos">Introduce los apellidos</label>
+                <label class="aviso" for="email">{{ avisoApellidos }}</label>
             </div>
             <input class="campo_entrada" type="text" id="apellidos" required>
 
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="nif">NIF</label>
-                <label class="aviso oculto" for="nif">Introduce el NIF</label>
+                <label class="aviso" for="email">{{ avisoNif }}</label>
             </div>
             <input class="campo_entrada" type="text" id="nif" required>
             
@@ -47,13 +47,13 @@
 
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="telefono">Teléfono</label>
-                <label class="aviso oculto" for="telefono">Introduce un número de teléfono válido</label>
+                <label class="aviso" for="email">{{ avisoTlf }}</label>
             </div>
             <input class="campo_entrada" type="tel" id="telefono" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
             
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="direccion">Dirección</label>
-                <label class="aviso oculto" for="direccion">Introduce la dirección completa</label>
+                <label class="aviso" for="email">{{ avisoDireccion }}</label>
             </div>
             <input class="campo_entrada" type="text" id="direccion" required>
 
@@ -78,19 +78,19 @@
 
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="email">Usuario</label>
-                <label class="aviso oculto" for="email">El usuario especificado ya está registrado</label>
+                <label class="aviso" for="email">{{ avisoEmail }}</label>
             </div>
             <input class="campo_entrada" type="email" id="email" pattern=".+@globex\.com" size="30" required>
             
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="password">Contraseña</label>
-                <label class="aviso oculto" for="password">Introduce la contraseña</label>
+                <label class="aviso" for="email">{{ avisoPwd }}</label>
             </div>
             <input class="campo_entrada" type="password" id="password" pattern=".{6,}" required>
 
             <div class="contenedor_label contenedor_horizontal">
                 <label class="texto_gris" for="password2">Confirma la Contraseña</label>
-                <label class="aviso oculto" for="password2">Introduce la contraseña</label>
+                <label class="aviso" for="email">{{ avisoPwdDos }}</label>
             </div>
             <input class="campo_entrada" type="password" id="password2" pattern=".{6,}" required>
             
