@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginUsuario } from 'src/app/Entities/loginUsuario';
+import {enc, SHA256} from "crypto-js";
 
 @Component({
   selector: 'app-login',
@@ -36,7 +37,11 @@ export class LoginComponent implements OnInit {
     } else {
       this.avisoEmail= "";
     }
+    if(!this.validarEmail(correoCampo?.value)){
+      return;
+    }
 
+    
     //correo pwd?
     if (pwdCampo?.value === "") 
     {
