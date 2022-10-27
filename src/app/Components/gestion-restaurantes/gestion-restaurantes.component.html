@@ -1,0 +1,172 @@
+<div class="contenedor_login_padre">
+    <div class="contenedor_login_hijo">
+        <div class="contenedor_header3 contenedor_horizontal">
+            <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
+            <div class="botones contenedor_horizontal">
+                <img id="add" class="img_icon" src="../../../assets/ui_images/add_icon.svg"/>
+                <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/>
+                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/>
+                <h2 class="sep">|</h2>
+                <a href="../inicio/inicio.html">
+                    <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg"/>
+                </a>
+            </div>
+        </div>
+        <div class="contenedor_campos">
+            <div class="labels contenedor_horizontal">
+                <div class="label_lista">
+                    <h2 class="label_cuadro">Restaurantes</h2>
+                </div>
+                <div class="label_datos">
+                    <h2 class="label_cuadro">Datos del Restaurante</h2>
+                </div>
+            </div>
+            <div class="contenido contenedor_horizontal">
+                <div class="contenedor_lista">
+                    <ul class="listaElementos">
+                        <li class="elementoBase">Elemento 1</li>
+                        <li class="elementoBase">Elemento 2</li>
+                        <li class="elementoBase">Elemento 3</li>
+                    </ul>
+                </div>
+                <div class="contenedor_datos">
+                    <div class="contenedor_botones_rest">
+                        <ul>
+                            <li>
+                                <button (click)="mostrar_datos()" class="btn">Datos</button>
+                            </li>
+                            <li>
+                                <button (click)="mostrar_carta()" class="btn">Carta</button>
+                            </li>
+                            <li>
+                                <button (click)="mostrar_facturas()" class="btn">Facturas</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="datos" class="contenedor_datos_rest">
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="nombre">Nombre</label>
+                                <input class="campo_entrada" type="text" id="nombre" required>
+                                <label class="aviso" for="nombre">{{ avisoNombre }}</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="categoria">Categoría</label>
+                                <input class="campo_entrada" type="text" id="categoria" required>
+                                <label class="aviso" for="categoria">{{ avisoCategoria }}</label>
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="razon">Razón Social</label>
+                                <input class="campo_entrada" type="text" id="razon" required>
+                                <label class="aviso" for="razon">{{ avisoRazon }}</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="valoracion">Valoración</label>
+                                <input class="campo_entrada" type="number" id="valoracion">
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato3">
+                                <label class="texto_gris" for="direccion">Dirección</label>
+                                <input class="campo_entrada" type="text" id="direccion" required>
+                                <label class="aviso" for="direccion">{{ avisoDireccion }}</label>
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="email">Correo</label>
+                                <input class="campo_entrada" type="email" id="email" pattern=".+@globex\.com" size="30" required>
+                                <label class="aviso" for="email">{{ avisoEmail }}</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="tel">Teléfono</label>
+                                <input class="campo_entrada" type="tel" id="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
+                                <label class="aviso" for="tel">{{ avisoTelefono }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="carta" class="oculto contenedor_datos_rest">
+                        <div class="labels contenedor_horizontal">
+                            <div class="label_lista2">
+                                <h2 class="label_cuadro2">Platos</h2>
+                            </div>
+                            <div class="label_datos2">
+                                <h2 class="label_cuadro2">Datos del Plato</h2>
+                            </div>
+                        </div>
+                        <div class="contenido contenedor_horizontal">
+                            <div class="contenedor_lista_botones">
+                                <div class="contenedor_lista_platos">
+                                    <ul class="listaElementos">
+                                        <li class="elementoBase">
+                                            <div class="contenedor_horizontal">
+                                                <div class="cont_foto_plato">
+                                                    <img src="../../../assets/plt_images/food.png" alt="">
+                                                </div>
+                                                <div class="cont_titulo_plato">
+                                                    <p>Elemento 1</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="contenedor_botones_plato">
+                                    <div class="botones2 contenedor_horizontal">
+                                        <a href="#">
+                                            <img id="add_plato" class="img_icon2" src="../../../assets/ui_images/add_icon.svg"/>
+                                        </a>
+                                        <a href="#">
+                                            <img id="update_plato" class="img_icon2" src="../../../assets/ui_images/update2_icon.svg"/>
+                                        </a>
+                                        <a href="#">
+                                            <img id="delete_plato" class="img_icon2" src="../../../assets/ui_images/delete_icon.svg"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="contenedor_datos_platos">
+                                <div id="datos_platos">
+                                    <div class="linea_campo contenedor_horizontal">
+                                        <div class="campo_dato3">
+                                            <label class="texto_gris" for="nombreP">Nombre</label>
+                                            <input class="campo_entrada" type="text" id="nombreP" required>
+                                            <label class="aviso oculto" for="nombreP">Introduce un nombre válido</label>
+                                        </div>
+                                    </div>
+                                    <div class="linea_campo contenedor_horizontal">
+                                        <div class="campo_dato1">
+                                            <label class="texto_gris" for="precio">Precio</label>
+                                            <input class="campo_entrada" type="number" id="precio" required>
+                                            <label class="aviso oculto" for="precio">Introduce el precio</label>
+                                        </div>
+                                        <div class="campo_dato2">
+                                            <label class="texto_gris" for="vegano">Plato Vegano</label>
+                                            <input class="campo_entrada_check" type="checkbox" id="vegano">
+                                        </div>
+                                    </div>
+                                    <div id="linea_abajo" class="linea_campo contenedor_horizontal2">
+                                        <div class="campo_dato4">
+                                            <label id="lbl_desc" class="texto_gris" for="desc">Descripción</label>
+                                            <textarea class="campo_entrada_img" id="desc" required></textarea>
+                                            <label class="aviso oculto" for="desc">Introduce la descripción</label>
+                                        </div>
+                                        <div class="campo_dato5">
+                                            <label class="texto_gris" for="foto">Foto</label>
+                                            <input class="campo_entrada_img" type="image" id="foto" required src="../../../assets/plt_images/food.png">
+                                            <label class="aviso oculto" for="foto">Introduce la foto</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="facturas" class="oculto">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

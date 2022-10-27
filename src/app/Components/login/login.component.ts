@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginUsuario } from 'src/app/Entities/loginUsuario';
+import {enc, SHA256} from "crypto-js";
 
 @Component({
   selector: 'app-login',
@@ -38,7 +39,11 @@ export class LoginComponent implements OnInit {
     } else {
       this.avisoEmail= "";
     }
+    if(!this.validarEmail(correoCampo?.value)){
+      return;
+    }
 
+    
     //correo pwd?
     if (pwdCampo?.value === "") 
     {
@@ -49,7 +54,7 @@ export class LoginComponent implements OnInit {
     }
 
     //this.router.navigate(['/gestion']);
-    this.peticionHttp(correoCampo?.value, pwdCampo?.value);
+    this.peticionHttp(correoCampo?.value, this.encriptarPwd(pwdCampo?.value));
     //this.peticionGetHttp();
   }
 
@@ -62,9 +67,11 @@ export class LoginComponent implements OnInit {
     const url = 'http://localhost:8082/user/getRiders';
     this.http.get(url, options).subscribe((res: any) => {
       var listaRiders = res.split(";");
-      //this.avisoEmail = res;
-      console.log(listaRiders.length);
-      this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
+      //***********this.avisoEmail = res;
+      //console.log(listaRiders.length);
+      //this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
+      this.router.navigate(['/gestion'],
+      { queryParams: { rol: res } });
     });
   }
 
@@ -83,11 +90,37 @@ export class LoginComponent implements OnInit {
         this.avisoEmail = data;
     });
   }
-
   accederRol(rol:string){
     if(rol === "rider") {
-      this.router.navigate(['/gestion']);
+      this.router.navigate(
+        ['/gestion_riders']
+       
+      );
+    }else if (rol === "admin"){
+      this.router.navigate(
+        ['/gestion_admins']
+        
+      );
+    }else if(rol === "cliente"){
+      this.router.navigate(
+        ['/gestion_clientes']
+        
+      );
+    }else{
+      this.avisoEmail = "No se ha podido obtener el rol "
     }
   }
 
+  validarEmail(valor: string): boolean {
+    if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)){
+     this.avisoEmail = "";
+     return true;
+    } else {
+     this.avisoEmail = "Formato de email incorrecto";
+     return false;
+    }
+  }
+  encriptarPwd(pswr:string) {
+    return SHA256(pswr).toString(enc.Hex);
+  }
 }

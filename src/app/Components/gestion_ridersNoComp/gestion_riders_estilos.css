@@ -7,12 +7,32 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 body{
     min-height: 100vh;
+    background: url(../imgs/food_bg2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.contenedor_login_padre{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenedor_login_hijo{
+    background: white;
+    width: 100%;
+    margin: 20px;
+}
+
+.contenedor_header {
+    height: 60px;
+    padding: 16px;
+    background: #424242;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .contenedor_horizontal {
@@ -27,137 +47,42 @@ body{
     width: 100%;
 }
 
-.texto_gris {
-    color: #424242;
-}
-
-.oculto{
-    display: none;
-}
-
-.contenedor_header {
-    position: fixed;
-    width: 100%;
-    height: 90px;
-    padding: 16px;
-    background: #424242;
-    justify-content: space-between;
-    z-index: 999;
-}
-
-.contenedor_header2 {
-    height: 90px;
-    padding: 16px;
-    background: #424242;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.contenedor_header3 {
-    height: 60px;
-    padding: 16px;
-    background: #424242;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .img_logo{
-    height: 65px;
-}
-
-.img_logo2{
     height: 45px;
 }
 
-.img_logo_mid{
-    max-width: 60%;
+.img_icon{
+    height: 40px;
+    margin: 0 8px;
 }
 
-.img_logout{
-    height: 40px;
+.img_icon2{
+    height: 30px;
+    margin: 0 8px;
 }
 
-.opcion_menu{
-    width: 150px;
-    height: 40px;
-    margin: 16px;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 1rem;
-    color: #fc8a15;
-    line-height: 35px;
-    margin-bottom: 16px;
-    border: 3px solid #fc8a15;
-    border-radius: 5px;
+.contenedor_campos{
+    /*background: red;*/
     background: white;
+    padding: 16px;
+    border: 5px solid #424242;
+    height: 550px;
 }
 
-.opcion_menu2{
-    width: 150px;
-    height: 40px;
-    margin: 16px;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 1rem;
-    color: white;
-    line-height: 35px;
-    margin-bottom: 16px;
-    border: 3px solid #fc8a15;
-    background: #fc8a15;
-    border-radius: 5px;
-}
-
-.contenedor_tex_portada{
-    background: rgba( 66, 66, 66, 0.4 );
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 6px );
-    -webkit-backdrop-filter: blur( 6px );
-    border-radius: 10px;
-
-    width: 60%;
-    margin: 50px 0;
-    padding: 30px;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /*border-radius: 25px;*/
-}
-
-.contenedor_tex_portada h1 {
-    color: white;
+.contenedor_campos h1{
     text-align: center;
     font-size: 2rem;
-    margin: 15px 0;
+    margin-top: 16px;
+    margin-bottom: 32px;
 }
 
-.contenedor_opc_menu {
-    display: flex;
-    justify-content: right;
+.contenedor_label{
+    justify-content: space-between;
+    margin-bottom: 16px;
 }
 
-.contenedor_opc_menu2 {
-    display: none;
-    justify-content: center;
-}
-
-@media screen and (max-width: 700px){
-    #menu_header {
-        display: none;
-    }
-
-    .contenedor_opc_menu2 {
-        display: flex;
-    }
-}
-
-.contenedor_login_hijo{
-    background: white;
-    width: 500px;
-    margin: 50px auto;
+.texto_gris {
+    color: #424242;
 }
 
 label{
@@ -166,6 +91,10 @@ label{
 
 .aviso {
     color: #fc8a15;
+}
+
+.oculto{
+    display: none;
 }
 
 .campo_entrada{
@@ -177,7 +106,22 @@ label{
     font-size: 1rem;
 }
 
+.campo_entrada_img{
+    height: 150px;
+    width: 100%;
+    border: 3px solid #757575;
+    font-size: 1rem;
+    background: white;
+    overflow: hidden;
+}
+
+
 .campo_entrada:focus{
+    border: 3px solid #424242;
+    outline: none;
+}
+
+.campo_entrada_img:focus{
     border: 3px solid #424242;
     outline: none;
 }
@@ -203,9 +147,14 @@ label{
     background: #fc8a15;
 }
 
+a {
+    color: #fc8a15;
+    font-weight: bold;
+}
+
 .contenedor_lista{
     width: 20%;
-    height: 450px;
+    height: 500px;
     border: 3px solid #757575;
     padding: 24px 8px 8px 8px;
 }
@@ -224,10 +173,31 @@ label{
     background: #e5e5e5;
 }
 
+.contenedor_lista_platos{
+    width: 100%;
+    height: 342px;
+    border: 3px solid #757575;
+    padding: 24px 8px 8px 8px;
+}
+
+
+.contenedor_lista_platos ul li{
+    background: white;
+    border-radius: 5px;
+    height: 40px;
+    margin-bottom: 4px;
+    padding: 6px;
+    font-size: 1rem;
+}
+
+.contenedor_lista_platos ul li:hover{
+    background: #e5e5e5;
+}
+
 .contenedor_datos{
     /*background: orange;*/
     width: 80%;
-    height: 450px;
+    height: 500px;
     margin-left: 8px;
     border: 3px solid #757575;
     padding: 24px 8px 8px 8px;
@@ -279,6 +249,44 @@ label{
     justify-content: space-between;
 }
 
+/*botones restaurante*/
+.contenedor_botones_rest{
+    height: 40px;
+    /*background: green;*/
+    display: flex;
+}
+
+.contenedor_botones_rest ul{
+    /*background: red;*/
+    width: fit-content;
+    margin-left: auto;
+}
+
+.contenedor_botones_rest ul li{
+    list-style: none;
+    display: inline-block;
+    height: 30px;
+    width: 80px;
+    margin-left: 8px;
+    background: #424242;
+    padding: 6px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.contenedor_botones_rest ul li a{
+    color: white;
+}
+
+.contenedor_datos_rest{
+    background: #f5f5f5;
+    padding: 4px;
+    border-radius: 5px;
+    height: 90%;
+    width: 100%;
+
+}
+
 .campo_dato1{
     width: 70%;
     padding-right: 4px;
@@ -320,6 +328,30 @@ label{
     height: 4px;
 }
 
+#carta{
+    background: #f5f5f5;
+}
+
+#facturas{
+    background: red;
+}
+
+.contenedor_datos_rest{
+    width: 100%;
+    height: 500px;
+    border: 3px solid #757575;
+    padding: 24px 8px 8px 8px;
+}
+
+.contenedor_datos_platos{
+    margin-left: 8px;
+    width: 70%;
+    height: 380px;
+    border: 3px solid #757575;
+    padding: 24px 8px 8px 8px;
+}
+
+
 /*** checkbox ***/
 input[type="checkbox"] {
     appearance: none;
@@ -360,22 +392,40 @@ input[type="checkbox"]:disabled {
     cursor: not-allowed;
 }
 
-.img_icon{
+.cont_foto_plato img{
+    max-width: 50px;
+    max-height: 50px;
+    margin-right: 4px;
+}
+
+.cont_titulo_plato{
+    font-size: 1rem;
+}
+
+.contenedor_lista_botones{
+    /*background: green;*/
+    width: 30%;
+}
+
+.contenedor_botones_plato{
+    background: #757575;
+    padding: 4px;
+    height: 38px;
+}
+
+#desc{
+    padding: 4px;
+    resize: none;
+}
+
+.campo_radio{
+    padding-top: 8px;
     height: 40px;
-    margin: 0 8px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.contenedor_campos{
-    /*background: red;*/
-    background: white;
-    padding: 16px;
-    border: 5px solid #424242;
-    height: 500px;
-}
-
-.contenedor_campos h1{
-    text-align: center;
-    font-size: 2rem;
-    margin-top: 16px;
-    margin-bottom: 32px;
+.campo_radio label{
+    font-weight: initial;
+    margin-right: 8px;
 }
