@@ -3,7 +3,8 @@
         <div class="contenedor_header3 contenedor_horizontal">
             <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
             <div class="botones contenedor_horizontal">
-                <img id="add" class="img_icon" src="../../../assets/ui_images/add_icon.svg"/>
+                <button  (click)="crearRestaurante()"> 
+                    <img id="add"  class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
                 <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/>
                 <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/>
                 <h2 class="sep">|</h2>
@@ -58,16 +59,20 @@
                                 <label class="aviso oculto" for="razonRes">Introduce la razón social</label>
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="categoriaRes">Categoría</label>
-                                <input class="campo_entrada" type="text" id="categoriaRes" required>
-                                <label class="aviso oculto" for="categoriaRes">Introduce la categoría</label>
+
+                                <label class="texto_gris" for="categoria">Categoría</label>
+                                <input class="campo_entrada" type="text" id="categoria" required disabled>
+                                <label class="aviso" for="categoria">{{ avisoCategoria }}</label>
+
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="cifR">CIF</label>
-                                <input class="campo_entrada" type="text" id="cifR" required>
-                                <label class="aviso oculto" for="cifR">Introduce el CIF</label>
+
+                                <label class="texto_gris" for="razon">Razón Social</label>
+                                <input class="campo_entrada" type="text" id="razon" required disabled>
+                                <label class="aviso" for="razon">{{ avisoRazon }}</label>
+
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="valoracionRes">Valoración</label>
