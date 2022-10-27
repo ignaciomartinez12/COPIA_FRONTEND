@@ -120,5 +120,7 @@ export class LoginComponent implements OnInit {
      return false;
     }
   }
-
+  encriptarPwd(pswr:string) {
+    return SHA256(pswr).toString(enc.Hex);
+  }
 }

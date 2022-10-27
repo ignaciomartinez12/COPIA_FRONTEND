@@ -48,19 +48,19 @@
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="nombre">Nombre</label>
                                 <input class="campo_entrada" type="text" id="nombre" required>
-                                <label class="aviso oculto" for="nombre">Introduce un nombre válido</label>
+                                <label class="aviso" for="nombre">{{ avisoNombre }}</label>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="categoria">Categoría</label>
                                 <input class="campo_entrada" type="text" id="categoria" required>
-                                <label class="aviso oculto" for="categoria">Introduce la categoría</label>
+                                <label class="aviso" for="categoria">{{ avisoCategoria }}</label>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="razon">Razón Social</label>
                                 <input class="campo_entrada" type="text" id="razon" required>
-                                <label class="aviso oculto" for="razon">Introduce la razón social</label>
+                                <label class="aviso" for="razon">{{ avisoRazon }}</label>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="valoracion">Valoración</label>
@@ -71,19 +71,19 @@
                             <div class="campo_dato3">
                                 <label class="texto_gris" for="direccion">Dirección</label>
                                 <input class="campo_entrada" type="text" id="direccion" required>
-                                <label class="aviso oculto" for="direccion">Introduce la dirección completa</label>
+                                <label class="aviso" for="direccion">{{ avisoDireccion }}</label>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="email">Correo</label>
                                 <input class="campo_entrada" type="email" id="email" pattern=".+@globex\.com" size="30" required>
-                                <label class="aviso oculto" for="email">Introduce el correo</label>
+                                <label class="aviso" for="email">{{ avisoEmail }}</label>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="tel">Teléfono</label>
                                 <input class="campo_entrada" type="tel" id="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
-                                <label class="aviso oculto" for="tel">Introduce el telefono</label>
+                                <label class="aviso" for="tel">{{ avisoTelefono }}</label>
                             </div>
                         </div>
                     </div>
