@@ -48,7 +48,7 @@ export class GestionRestaurantesComponent implements OnInit {
     }
   }
 
-  crear(){
+  crearRestaurante(){
     var correoCampo = document.getElementById("email") as HTMLInputElement;
     var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccion") as HTMLInputElement;
@@ -62,7 +62,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (correoCampo?.value === "") 
     {
       this.avisoEmail = "Campo vacio";
-      return;
+      
     } else {
       this.avisoEmail = "";
     }
@@ -70,7 +70,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (telefonoCampo?.value === "") 
     {
       this.avisoTelefono = "Campo vacio";
-      return;
+      
     } else {
       this.avisoTelefono = "";
     }
@@ -78,7 +78,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (nombreCampo?.value === "") 
     {
       this.avisoNombre = "Campo vacio";
-      return;
+      
     } else {
       this.avisoNombre = "";
     }
@@ -86,7 +86,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (direccionCampo?.value === "") 
     {
       this.avisoDireccion = "Campo vacio";
-      return;
+      
     } else {
       this.avisoDireccion = "";
     }
@@ -94,7 +94,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (razon_socialCampo?.value === "") 
     {
       this.avisoRazon = "Campo vacio";
-      return;
+      
     } else {
       this.avisoRazon = "";
     }
@@ -102,7 +102,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (CIFCampo?.value === "") 
     {
       this.avisoCIF = "Campo vacio";
-      return;
+      
     } else {
       this.avisoCIF = "";
     }
@@ -110,7 +110,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (categoriaCampo?.value === "") 
     {
       this.avisoCategoria = "Campo vacio";
-      return;
+      
     } else {
       this.avisoCategoria = "";
     }
