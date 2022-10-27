@@ -18,12 +18,12 @@
 
 .contenedor_gestion{
     background: white;
-    height: 550px;
+    height: 560px;
 }
 
 .contenedor_modulos{
     /*background: orange;*/
-    height: 70px;
+    height: 50px;
     justify-content: space-around;
 }
 

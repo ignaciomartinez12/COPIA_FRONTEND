@@ -33,9 +33,9 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    var cont_datos = document.getElementById("datos");
-    var cont_carta = document.getElementById("carta");
-    var cont_factura= document.getElementById("facturas");
+    var cont_datos = document.getElementById("datos_v");
+    var cont_carta = document.getElementById("carta_v");
+    var cont_factura= document.getElementById("facturas_v");
 
     if (cont_datos != null){
       this.contenedor_datos = cont_datos;
@@ -171,20 +171,23 @@ export class GestionRestaurantesComponent implements OnInit {
     }
 
   mostrar_datos(){
+    this.ocultarTodo()
     this.contenedor_datos.classList.remove('oculto');
-    this.contenedor_carta.classList.add('oculto');
-    this.contenedor_factura.classList.add('oculto');
   }
 
   mostrar_carta(){
-    this.contenedor_datos.classList.add('oculto');
+    this.ocultarTodo()
     this.contenedor_carta.classList.remove('oculto');
-    this.contenedor_factura.classList.add('oculto');
   }
 
   mostrar_facturas(){
+    this.ocultarTodo()
+    this.contenedor_factura.classList.remove('oculto');
+  }
+
+  ocultarTodo(){
     this.contenedor_datos.classList.add('oculto');
     this.contenedor_carta.classList.add('oculto');
-    this.contenedor_factura.classList.remove('oculto');
+    this.contenedor_factura.classList.add('oculto');
   }
 }
