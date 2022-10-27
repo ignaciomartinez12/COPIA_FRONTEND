@@ -10,6 +10,12 @@ import { RouterModule } from '@angular/router';
 import { Page404Component } from './Components/page404/page404.component';
 import { RegistroComponent } from './Components/registro/registro.component';
 import { GestionComponent } from './Components/gestion/gestion.component';
+import { GestionRestaurantesComponent } from './Components/gestion-restaurantes/gestion-restaurantes.component';
+import { GestionClientesComponent } from './Components/gestion-clientes/gestion-clientes.component';
+import { GestionRidersComponent } from './Components/gestion-riders/gestion-riders.component';
+import { GestionAdminsComponent } from './Components/gestion-admins/gestion-admins.component';
+import { GestionPedidosComponent } from './Components/gestion-pedidos/gestion-pedidos.component';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +24,12 @@ import { GestionComponent } from './Components/gestion/gestion.component';
     LoginComponent,
     Page404Component,
     RegistroComponent,
-    GestionComponent
+    GestionComponent,
+    GestionRestaurantesComponent,
+    GestionClientesComponent,
+    GestionRidersComponent,
+    GestionAdminsComponent,
+    GestionPedidosComponent
   ],
   imports: [
     BrowserModule,

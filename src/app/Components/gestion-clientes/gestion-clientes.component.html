@@ -1,0 +1,80 @@
+<div class="contenedor_login_padre">
+    <div class="contenedor_login_hijo">
+        <div class="contenedor_header3 contenedor_horizontal">
+            <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
+            <div class="botones contenedor_horizontal">
+                <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/>
+                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/>
+                <h2 class="sep">|</h2>
+                <a href="../inicio/inicio.html">
+                    <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg"/>
+                </a>
+            </div>
+        </div>
+        <div class="contenedor_campos">
+            <div class="labels contenedor_horizontal">
+                <div class="label_lista">
+                    <h2 class="label_cuadro">Clientes</h2>
+                </div>
+                <div class="label_datos">
+                    <h2 class="label_cuadro">Datos del Cliente</h2>
+                </div>
+            </div>
+            <div class="contenido contenedor_horizontal">
+                <div class="contenedor_lista">
+                    <ul class="listaElementos">
+                        <li class="elementoBase">Elemento 1</li>
+                        <li class="elementoBase">Elemento 2</li>
+                        <li class="elementoBase">Elemento 3</li>
+                    </ul>
+                </div>
+                <div class="contenedor_datos">
+                    <div id="datos" class="contenedor_datos_rest">
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="nombreC">Nombre</label>
+                                <input class="campo_entrada" type="text" id="nombreC" required>
+                                <label class="aviso oculto" for="nombreC">Introduce un nombre válido</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="apellidosC">Apellidos</label>
+                                <input class="campo_entrada" type="text" id="apellidosC" required>
+                                <label class="aviso oculto" for="apellidosC">Introduce los apellidos</label>
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="nifC">NIF</label>
+                                <input class="campo_entrada" type="text" id="nifC">
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="telC">Teléfono</label>
+                                <input class="campo_entrada" type="tel" id="telC" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
+                                <label class="aviso oculto" for="telC">Introduce el telefono</label>
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato4">
+                                <label class="texto_gris" for="emailC">Correo</label>
+                                <input class="campo_entrada" type="email" id="emailC" pattern=".+@globex\.com" size="30" required>
+                                <label class="aviso oculto" for="emailC">Introduce el correo</label>
+                            </div>
+                            <div class="campo_dato5">
+                                <label class="texto_gris" for="passwordC">Contraseña</label>
+                                <input class="campo_entrada" type="password" id="passwordC" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
+                                <label class="aviso oculto" for="passwordC">Introduce la contraseña</label>
+                            </div>
+                        </div>
+                        <div class="linea_campo contenedor_horizontal">
+                            <div class="campo_dato3">
+                                <label class="texto_gris" for="direccionC">Dirección</label>
+                                <input class="campo_entrada" type="text" id="direccionC" required>
+                                <label class="aviso oculto" for="direccionC">Introduce una dirección</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

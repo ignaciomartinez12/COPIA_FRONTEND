@@ -13,13 +13,11 @@ export class LoginComponent implements OnInit {
   avisoEmail: string = "";
   avisoPwd: string = "";
   tipoUser: string = "";
-  loginUsuario: LoginUsuario;
 
   constructor(private router: Router, private http: HttpClient) {
     this.avisoEmail = "";
     this.avisoPwd = "";
     this.tipoUser = "";
-    this.loginUsuario = new LoginUsuario("","");
   }
 
   ngOnInit(): void {
@@ -62,9 +60,11 @@ export class LoginComponent implements OnInit {
     const url = 'http://localhost:8082/user/getRiders';
     this.http.get(url, options).subscribe((res: any) => {
       var listaRiders = res.split(";");
-      //this.avisoEmail = res;
-      console.log(listaRiders.length);
-      this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
+      //***********this.avisoEmail = res;
+      //console.log(listaRiders.length);
+      //this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
+      this.router.navigate(['/gestion'],
+      { queryParams: { rol: res } });
     });
   }
 
