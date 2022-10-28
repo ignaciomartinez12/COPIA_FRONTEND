@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { LoginUsuario } from 'src/app/Entities/loginUsuario';
 import {enc, SHA256} from "crypto-js";
 
 @Component({
@@ -55,7 +53,9 @@ export class LoginComponent implements OnInit {
   }
 
   peticionHttp(correo:string, pwd: string): void {
-    const headers = { 'Content-Type': 'application/json'};
+    const headers = { 
+      'Content-Type': 'application/json'
+    };
     const body = {
       "correo": correo,
       "pwd":pwd
@@ -68,6 +68,8 @@ export class LoginComponent implements OnInit {
         window.sessionStorage.setItem('rol', data);
         window.sessionStorage.removeItem('correo');
         window.sessionStorage.setItem('correo', correo);
+        window.sessionStorage.removeItem('password');
+        window.sessionStorage.setItem('password', pwd);
         this.router.navigate(['/gestion']);
         //this.avisoEmail = data;
       },
@@ -80,5 +82,15 @@ export class LoginComponent implements OnInit {
         }
       }
     });
+  }
+
+  validarEmail(valor: string): boolean {
+    if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)){
+     this.avisoEmail = "";
+      return true;
+    } else {
+      this.avisoEmail = "Formato de email incorrecto";
+      return false;
+    }
   }
 }
