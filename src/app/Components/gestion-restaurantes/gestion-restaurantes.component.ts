@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Restaurante } from 'src/app/Entities/restaurante';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-gestion-restaurantes',
@@ -9,8 +14,26 @@ export class GestionRestaurantesComponent implements OnInit {
   private contenedor_datos!: HTMLElement;
   private contenedor_carta!: HTMLElement;
   private contenedor_factura!: HTMLElement;
+  avisoEmail: string = "";
+  avisoTelefono: string = "";
+  avisoCIF: string = "";
+  avisoDireccion: string = "";
+  avisoCategoria: string = "";
+  avisoNombre: string = "";
+  avisoRazon: string = "";
+  listaRestaurantes: Restaurante[] = [];
+  
 
-  constructor() { }
+  constructor(private router: Router, private http: HttpClient) {
+    this.avisoEmail = "";
+    this.avisoNombre = "";
+    this.avisoCategoria = "";
+    this.avisoCIF = "";
+    this.avisoRazon = "";
+    this.avisoTelefono = "";
+    this.avisoDireccion = "";
+    
+  }
 
   ngOnInit(): void {
     var cont_datos = document.getElementById("datos_v");
@@ -25,6 +48,292 @@ export class GestionRestaurantesComponent implements OnInit {
     }
     if (cont_factura != null){
       this.contenedor_factura = cont_factura;
+    }
+
+    this.peticionGetHttp();
+  }
+
+  acptarCambiosCrear(){
+    var correoCampo = document.getElementById("email") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccion") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombre") as HTMLInputElement;
+    var valoracionCampo = document.getElementById("valoracion") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIF") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razon") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("tel") as HTMLInputElement;
+
+    //correo vacio?
+    if (correoCampo?.value === "") 
+    {
+      this.avisoEmail = "Campo vacio";
+      
+    } else {
+      this.avisoEmail = "";
+    }
+
+    if (telefonoCampo?.value === "") 
+    {
+      this.avisoTelefono = "Campo vacio";
+      
+    } else {
+      this.avisoTelefono = "";
+    }
+
+    if (nombreCampo?.value === "") 
+    {
+      this.avisoNombre = "Campo vacio";
+      
+    } else {
+      this.avisoNombre = "";
+    }
+
+    if (direccionCampo?.value === "") 
+    {
+      this.avisoDireccion = "Campo vacio";
+      
+    } else {
+      this.avisoDireccion = "";
+    }
+
+    if (razon_socialCampo?.value === "") 
+    {
+      this.avisoRazon = "Campo vacio";
+      
+    } else {
+      this.avisoRazon = "";
+    }
+
+    if (CIFCampo?.value === "") 
+    {
+      this.avisoCIF = "Campo vacio";
+      
+    } else {
+      this.avisoCIF = "";
+    }
+
+    if (categoriaCampo?.value === "") 
+    {
+      this.avisoCategoria = "Campo vacio";
+      
+    } else {
+      this.avisoCategoria = "";
+    }
+
+    if(!this.esNumero(telefonoCampo?.value)){
+      this.avisoTelefono = "No corresponde con un numero de tlf";
+    }
+
+    //this.router.navigate(['/gestion']);
+    this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+    //this.peticionGetHttp();
+  }
+
+  acptarCambiosActualizar(){
+    var correoCampo = document.getElementById("email") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccion") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombre") as HTMLInputElement;
+   
+    var CIFCampo = document.getElementById("CIF") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razon") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("tel") as HTMLInputElement;
+
+    //correo vacio?
+    if (correoCampo?.value === "") 
+    {
+      this.avisoEmail = "Campo vacio";
+      
+    } else {
+      this.avisoEmail = "";
+    }
+
+    if (telefonoCampo?.value === "") 
+    {
+      this.avisoTelefono = "Campo vacio";
+      
+    } else {
+      this.avisoTelefono = "";
+    }
+
+    if (nombreCampo?.value === "") 
+    {
+      this.avisoNombre = "Campo vacio";
+      
+    } else {
+      this.avisoNombre = "";
+    }
+
+    if (direccionCampo?.value === "") 
+    {
+      this.avisoDireccion = "Campo vacio";
+      
+    } else {
+      this.avisoDireccion = "";
+    }
+
+    if (razon_socialCampo?.value === "") 
+    {
+      this.avisoRazon = "Campo vacio";
+      
+    } else {
+      this.avisoRazon = "";
+    }
+
+    if (CIFCampo?.value === "") 
+    {
+      this.avisoCIF = "Campo vacio";
+      
+    } else {
+      this.avisoCIF = "";
+    }
+
+    if (categoriaCampo?.value === "") 
+    {
+      this.avisoCategoria = "Campo vacio";
+      
+    } else {
+      this.avisoCategoria = "";
+    }
+
+    if(!this.esNumero(telefonoCampo?.value)){
+      this.avisoTelefono = "No corresponde con un numero de tlf";
+    }
+
+   
+
+    //this.router.navigate(['/gestion']);
+    //this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+    //this.peticionGetHttp();
+  }
+
+  peticionHttpCrear(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat, direccion : string, correo : string, telefono : number, CIF : string): void {
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "correo": correo,
+      "categoria": categoria,
+      "razon": razon_social,
+      "valoracion": valoracion,
+      "direccion": direccion,
+      "nombre": nombre,
+      "telefono": telefono,
+      "CIF": CIF
+    };
+
+    const url = 'http://localhost:8082/food/gestionRestaurantes';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
+        alert(data);
+    });
+  }
+
+  peticionGetHttp(): void {
+    const headers = { 
+      'Content-Type': 'application/json'}; 
+
+    const url = 'http://localhost:8082/food/consultarRestaurantes';
+    this.http.get(url, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        var listaResJSON = data.split(";");
+        for (let i = 0; i < listaResJSON.length; i++) {
+          this.listaRestaurantes.push(new Restaurante(listaResJSON[i]))
+        }
+      }, error: error => {
+        
+        this.router.navigate(['/login']);
+        //alert("Ha ocurrido un error al realizar la operación");
+      }
+    });
+  } 
+
+  cancelarCambios(){
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoriaRes") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+
+    correoCampo.disabled = true;
+    direccionCampo.disabled = true;
+    categoriaCampo.disabled = true;
+    nombreCampo.disabled = true;
+    CIFCampo.disabled = true;
+    razon_socialCampo.disabled = true;
+    telefonoCampo.disabled = true;
+
+    correoCampo.value = "";
+    direccionCampo.value = "";
+    categoriaCampo.value = "";
+    nombreCampo.value = "";
+    CIFCampo.value = "";
+    razon_socialCampo.value = "";
+    telefonoCampo.value = "";
+
+
+  }
+
+  activarCamposCrear(){
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+
+    correoCampo.disabled = false;
+    direccionCampo.disabled = false;
+    categoriaCampo.disabled = false;
+    nombreCampo.disabled = false;
+    //CIFCampo.disabled = false;
+    razon_socialCampo.disabled = false;
+    telefonoCampo.disabled = false;
+
+    correoCampo.value = "";
+    direccionCampo.value = "";
+    categoriaCampo.value = "";
+    nombreCampo.value = "";
+    CIFCampo.value = "";
+    razon_socialCampo.value = "";
+    telefonoCampo.value = "";
+
+  }
+
+  activarCamposActualizar(){
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+
+    correoCampo.disabled = false;
+    direccionCampo.disabled = false;
+    categoriaCampo.disabled = false;
+    nombreCampo.disabled = false;
+    //CIFCampo.disabled = false;
+    razon_socialCampo.disabled = false;
+    telefonoCampo.disabled = false;
+
+  }
+
+  eliminar(){
+    alert("¿Seguro que quiere eliminar el restaurante?");
+  }
+
+  esNumero(evt:string): boolean{
+			
+    // code is the decimal ASCII representation of the pressed key.
+    var code = Number(evt);
+    
+    if(code==8) { // backspace.
+      return true;
+    } else if(code>=48 && code<=57) { // is a number.
+      return true;
+    } else{ // other keys.
+      return false;
     }
   }
 
@@ -47,5 +356,10 @@ export class GestionRestaurantesComponent implements OnInit {
     this.contenedor_datos.classList.add('oculto');
     this.contenedor_carta.classList.add('oculto');
     this.contenedor_factura.classList.add('oculto');
+  }
+
+  onSelect(element: Restaurante){
+    //selecciona un elemento de la lista
+    alert("Ticomo la polla");
   }
 }

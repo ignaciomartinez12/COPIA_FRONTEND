@@ -3,9 +3,12 @@
         <div class="contenedor_header3 contenedor_horizontal">
             <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
             <div class="botones contenedor_horizontal">
-                <img id="add" class="img_icon" src="../../../assets/ui_images/add_icon.svg"/>
-                <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/>
-                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/>
+                <button  (click)="activarCamposCrear()"> 
+                    <img id="add"  class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
+                <button  (click)="activarCamposActualizar()"> 
+                    <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
+                <button  (click)="eliminar()">
+                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
                 <h2 class="sep">|</h2>
                 <a href="../inicio/inicio.html">
                     <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg"/>
@@ -24,9 +27,8 @@
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
                     <ul class="listaElementos">
-                        <li class="elementoBase">Elemento 1</li>
-                        <li class="elementoBase">Elemento 2</li>
-                        <li class="elementoBase">Elemento 3</li>
+                        <li class="elementoBase" *ngFor="let element of listaRestaurantes" 
+                        (click)="onSelect(element)">{{ element.nombre }}</li>
                     </ul>
                 </div>
                 <div class="contenedor_datos">
@@ -46,28 +48,34 @@
                     <div id="datos_v" class="contenedor_datos_rest2">
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato3">
-                                <label class="texto_gris" for="nombreRes">Nombre</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="nombreRes">Nombre</label>
+                                    <label class="aviso" for="nombreRes">Introduce un nombre válido</label>
+                                </div>
                                 <input class="campo_entrada" type="text" id="nombreRes" required>
-                                <label class="aviso oculto" for="nombreRes">Introduce un nombre válido</label>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="razonRes">Razón Social</label>
-                                <input class="campo_entrada" type="text" id="razonRes" required>
+                                <input class="campo_entrada" type="text" id="razonRes" required disabled>
                                 <label class="aviso oculto" for="razonRes">Introduce la razón social</label>
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="categoriaRes">Categoría</label>
-                                <input class="campo_entrada" type="text" id="categoriaRes" required>
-                                <label class="aviso oculto" for="categoriaRes">Introduce la categoría</label>
+
+                                <label class="texto_gris" for="categoria">Categoría</label>
+                                <input class="campo_entrada" type="text" id="categoria" required disabled>
+                                <label class="aviso" for="categoria">{{ avisoCategoria }}</label>
+
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="cifR">CIF</label>
-                                <input class="campo_entrada" type="text" id="cifR" required>
-                                <label class="aviso oculto" for="cifR">Introduce el CIF</label>
+
+                                <label class="texto_gris" for="razon">Razón Social</label>
+                                <input class="campo_entrada" type="text" id="razon" required disabled>
+                                <label class="aviso" for="razon">{{ avisoRazon }}</label>
+
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="valoracionRes">Valoración</label>
@@ -77,19 +85,19 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato3">
                                 <label class="texto_gris" for="direccionRes">Dirección</label>
-                                <input class="campo_entrada" type="text" id="direccionRes" required>
+                                <input class="campo_entrada" type="text" id="direccionRes" required disabled>
                                 <label class="aviso oculto" for="direccionRes">Introduce la dirección completa</label>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="emailRes">Correo</label>
-                                <input class="campo_entrada" type="email" id="emailRes" pattern=".+@globex\.com" size="30" required>
+                                <input class="campo_entrada" type="email" id="emailRes" pattern=".+@globex\.com" size="30" required disabled>
                                 <label class="aviso oculto" for="emailRes">Introduce el correo</label>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="telRes">Teléfono</label>
-                                <input class="campo_entrada" type="tel" id="telRes" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
+                                <input class="campo_entrada" type="tel" pattern="[0-9]+" id="telRes" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required disabled>
                                 <label class="aviso oculto" for="telRes">Introduce el telefono</label>
                             </div>
                         </div>

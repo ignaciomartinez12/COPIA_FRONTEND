@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { LoginUsuario } from 'src/app/Entities/loginUsuario';
+import {enc, SHA256} from "crypto-js";
 
 @Component({
   selector: 'app-login',
@@ -18,6 +17,7 @@ export class LoginComponent implements OnInit {
     this.avisoEmail = "";
     this.avisoPwd = "";
     this.tipoUser = "";
+    this.loginUsuario = new LoginUsuario("","");
   }
 
   ngOnInit(): void {
@@ -36,7 +36,11 @@ export class LoginComponent implements OnInit {
     } else {
       this.avisoEmail= "";
     }
+    if(!this.validarEmail(correoCampo?.value)){
+      return;
+    }
 
+    
     //correo pwd?
     if (pwdCampo?.value === "") 
     {
@@ -46,7 +50,6 @@ export class LoginComponent implements OnInit {
       this.avisoPwd= "";
     }
 
-    //this.router.navigate(['/gestion']);
     this.peticionHttp(correoCampo?.value, pwdCampo?.value);
     //this.peticionGetHttp();
   }
@@ -60,34 +63,51 @@ export class LoginComponent implements OnInit {
     const url = 'http://localhost:8082/user/getRiders';
     this.http.get(url, options).subscribe((res: any) => {
       var listaRiders = res.split(";");
-      //***********this.avisoEmail = res;
-      //console.log(listaRiders.length);
-      //this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
-      this.router.navigate(['/gestion'],
-      { queryParams: { rol: res } });
+      //this.avisoEmail = res;
+      console.log(listaRiders.length);
+      this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
     });
   }
 
   peticionHttp(correo:string, pwd: string): void {
-    const headers = { 'Content-Type': 'application/json'};
+    const headers = { 
+      'Content-Type': 'application/json'
+    };
     const body = {
       "correo": correo,
       "pwd":pwd
     };
 
     const url = 'http://localhost:8082/user/login';
-    this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
-        if(data === "rider") {
-          this.router.navigate(['/gestion']);
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        window.sessionStorage.removeItem('rol');
+        window.sessionStorage.setItem('rol', data);
+        window.sessionStorage.removeItem('correo');
+        window.sessionStorage.setItem('correo', correo);
+        window.sessionStorage.removeItem('password');
+        window.sessionStorage.setItem('password', pwd);
+        this.router.navigate(['/gestion']);
+        //this.avisoEmail = data;
+      },
+      error: error => {
+        console.log(error);
+        if(error.error.includes("Usuario o password desconocidas")){
+          this.avisoEmail = "Usuario o contraseña desconocidas";
+        }else{
+          this.avisoEmail = "Ha ocurrido algún error al iniciar";
         }
-        this.avisoEmail = data;
+      }
     });
   }
 
-  accederRol(rol:string){
-    if(rol === "rider") {
-      this.router.navigate(['/gestion']);
+  validarEmail(valor: string): boolean {
+    if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)){
+     this.avisoEmail = "";
+      return true;
+    } else {
+      this.avisoEmail = "Formato de email incorrecto";
+      return false;
     }
   }
-
 }
