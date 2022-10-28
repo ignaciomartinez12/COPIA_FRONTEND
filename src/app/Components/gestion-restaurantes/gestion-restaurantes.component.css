@@ -178,3 +178,10 @@ a {
 #datos{
     padding: 8px;
 }
+
+button{
+    appearance: none;
+    border-color: transparent;
+    background: transparent;
+    cursor: pointer;
+}

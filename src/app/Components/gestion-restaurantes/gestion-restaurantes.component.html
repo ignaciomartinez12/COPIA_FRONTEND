@@ -3,12 +3,28 @@
         <div class="contenedor_header3 contenedor_horizontal">
             <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
             <div class="botones contenedor_horizontal">
-                <button  (click)="activarCamposCrear()"> 
-                    <img id="add"  class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
-                <button  (click)="activarCamposActualizar()"> 
-                    <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
-                <button  (click)="eliminar()">
-                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
+                <div id="cont_confirm_add" class="contenedor_horizontal oculto">
+                    <button  > 
+                        <img id="acept_add"  class="img_icon" src="../../../assets/ui_images/acept.png"/></button>
+                    <button  > 
+                        <img id="cancel_add" class="img_icon" src="../../../assets/ui_images/cancel.svg"/></button>
+                </div>
+                <div id="cont_confirm_udt" class="contenedor_horizontal oculto">
+                    <button  > 
+                        <img id="acept_udt"  class="img_icon" src="../../../assets/ui_images/acept.png"/></button>
+                    <button  > 
+                        <img id="cancel_udt" class="img_icon" src="../../../assets/ui_images/cancel.svg"/></button>
+                </div>
+
+                <div id="cont_btn_opc" class="contenedor_horizontal">
+                    <button  (click)="activarCamposCrear()"> 
+                        <img id="add"  class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
+                    <button  (click)="activarCamposActualizar()"> 
+                        <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
+                    <button  (click)="eliminar()">
+                        <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
+                </div>
+                
                 <h2 class="sep">|</h2>
                 <a href="../inicio/inicio.html">
                     <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg"/>

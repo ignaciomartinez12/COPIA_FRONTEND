@@ -153,7 +153,11 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   eliminar(){
-    alert("¿Seguro que quiere eliminar el restaurante?");
+    if(confirm("¿Seguro que quiere eliminar el restaurante?")){
+      //eliminar
+    }else{
+      //cancelar
+    }
   }
 
   esNumero(evt:string): boolean{
