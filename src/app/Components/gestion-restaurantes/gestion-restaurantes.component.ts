@@ -53,7 +53,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.peticionGetHttp();
   }
 
-  crearRestaurante(){
+  acptarCambiosCrear(){
     var correoCampo = document.getElementById("email") as HTMLInputElement;
     var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccion") as HTMLInputElement;
@@ -125,11 +125,89 @@ export class GestionRestaurantesComponent implements OnInit {
     }
 
     //this.router.navigate(['/gestion']);
-    this.peticionHttp(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+    this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
     //this.peticionGetHttp();
   }
 
-  peticionHttp(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat, direccion : string, correo : string, telefono : number, CIF : string): void {
+  acptarCambiosActualizar(){
+    var correoCampo = document.getElementById("email") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccion") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombre") as HTMLInputElement;
+   
+    var CIFCampo = document.getElementById("CIF") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razon") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("tel") as HTMLInputElement;
+
+    //correo vacio?
+    if (correoCampo?.value === "") 
+    {
+      this.avisoEmail = "Campo vacio";
+      
+    } else {
+      this.avisoEmail = "";
+    }
+
+    if (telefonoCampo?.value === "") 
+    {
+      this.avisoTelefono = "Campo vacio";
+      
+    } else {
+      this.avisoTelefono = "";
+    }
+
+    if (nombreCampo?.value === "") 
+    {
+      this.avisoNombre = "Campo vacio";
+      
+    } else {
+      this.avisoNombre = "";
+    }
+
+    if (direccionCampo?.value === "") 
+    {
+      this.avisoDireccion = "Campo vacio";
+      
+    } else {
+      this.avisoDireccion = "";
+    }
+
+    if (razon_socialCampo?.value === "") 
+    {
+      this.avisoRazon = "Campo vacio";
+      
+    } else {
+      this.avisoRazon = "";
+    }
+
+    if (CIFCampo?.value === "") 
+    {
+      this.avisoCIF = "Campo vacio";
+      
+    } else {
+      this.avisoCIF = "";
+    }
+
+    if (categoriaCampo?.value === "") 
+    {
+      this.avisoCategoria = "Campo vacio";
+      
+    } else {
+      this.avisoCategoria = "";
+    }
+
+    if(!this.esNumero(telefonoCampo?.value)){
+      this.avisoTelefono = "No corresponde con un numero de tlf";
+    }
+
+   
+
+    //this.router.navigate(['/gestion']);
+    //this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+    //this.peticionGetHttp();
+  }
+
+  peticionHttpCrear(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat, direccion : string, correo : string, telefono : number, CIF : string): void {
     const headers = { 'Content-Type': 'application/json'};
     const body = {
       "correo": correo,
@@ -167,15 +245,97 @@ export class GestionRestaurantesComponent implements OnInit {
     });
   } 
 
-   esNumero (dato: string): boolean {
-    /*Definición de los valores aceptados*/
-    var valoresAceptados = /^[0-9]+$/;
-      if (dato.match(valoresAceptados)){
-        return true;
-      }else{
-        return false;
-      }
+  cancelarCambios(){
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoriaRes") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+
+    correoCampo.disabled = true;
+    direccionCampo.disabled = true;
+    categoriaCampo.disabled = true;
+    nombreCampo.disabled = true;
+    CIFCampo.disabled = true;
+    razon_socialCampo.disabled = true;
+    telefonoCampo.disabled = true;
+
+    correoCampo.value = "";
+    direccionCampo.value = "";
+    categoriaCampo.value = "";
+    nombreCampo.value = "";
+    CIFCampo.value = "";
+    razon_socialCampo.value = "";
+    telefonoCampo.value = "";
+
+
+  }
+
+  activarCamposCrear(){
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+
+    correoCampo.disabled = false;
+    direccionCampo.disabled = false;
+    categoriaCampo.disabled = false;
+    nombreCampo.disabled = false;
+    //CIFCampo.disabled = false;
+    razon_socialCampo.disabled = false;
+    telefonoCampo.disabled = false;
+
+    correoCampo.value = "";
+    direccionCampo.value = "";
+    categoriaCampo.value = "";
+    nombreCampo.value = "";
+    CIFCampo.value = "";
+    razon_socialCampo.value = "";
+    telefonoCampo.value = "";
+
+  }
+
+  activarCamposActualizar(){
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+
+    correoCampo.disabled = false;
+    direccionCampo.disabled = false;
+    categoriaCampo.disabled = false;
+    nombreCampo.disabled = false;
+    //CIFCampo.disabled = false;
+    razon_socialCampo.disabled = false;
+    telefonoCampo.disabled = false;
+
+  }
+
+  eliminar(){
+    alert("¿Seguro que quiere eliminar el restaurante?");
+  }
+
+  esNumero(evt:string): boolean{
+			
+    // code is the decimal ASCII representation of the pressed key.
+    var code = Number(evt);
+    
+    if(code==8) { // backspace.
+      return true;
+    } else if(code>=48 && code<=57) { // is a number.
+      return true;
+    } else{ // other keys.
+      return false;
     }
+  }
 
   mostrar_datos(){
     this.ocultarTodo()
