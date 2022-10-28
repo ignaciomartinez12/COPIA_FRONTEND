@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Restaurante } from 'src/app/Entities/restaurante';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,9 +21,10 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoCategoria: string = "";
   avisoNombre: string = "";
   avisoRazon: string = "";
+  listaRestaurantes: Restaurante[] = [];
   
 
-  constructor( private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient) {
     this.avisoEmail = "";
     this.avisoNombre = "";
     this.avisoCategoria = "";
@@ -46,6 +49,8 @@ export class GestionRestaurantesComponent implements OnInit {
     if (cont_factura != null){
       this.contenedor_factura = cont_factura;
     }
+
+    this.peticionGetHttp();
   }
 
   acptarCambiosCrear(){
@@ -118,8 +123,6 @@ export class GestionRestaurantesComponent implements OnInit {
     if(!this.esNumero(telefonoCampo?.value)){
       this.avisoTelefono = "No corresponde con un numero de tlf";
     }
-
-   
 
     //this.router.navigate(['/gestion']);
     this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
@@ -224,17 +227,21 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   peticionGetHttp(): void {
-    let options: Object = {
-      "observe": 'body',
-      "responseType": 'text'
-    }    
+    const headers = { 
+      'Content-Type': 'application/json'}; 
 
-    const url = 'http://localhost:8082/food/gestionRestaurante';
-    this.http.get(url, options).subscribe((res: any) => {
-      var listaRiders = res.split(";");
-      //***********this.avisoEmail = res;
-      //console.log(listaRiders.length);
-      //this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
+    const url = 'http://localhost:8082/food/consultarRestaurantes';
+    this.http.get(url, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        var listaResJSON = data.split(";");
+        for (let i = 0; i < listaResJSON.length; i++) {
+          this.listaRestaurantes.push(new Restaurante(listaResJSON[i]))
+        }
+      }, error: error => {
+        
+        this.router.navigate(['/login']);
+        //alert("Ha ocurrido un error al realizar la operación");
+      }
     });
   } 
 
@@ -349,5 +356,10 @@ export class GestionRestaurantesComponent implements OnInit {
     this.contenedor_datos.classList.add('oculto');
     this.contenedor_carta.classList.add('oculto');
     this.contenedor_factura.classList.add('oculto');
+  }
+
+  onSelect(element: Restaurante){
+    //selecciona un elemento de la lista
+    alert("Ticomo la polla");
   }
 }

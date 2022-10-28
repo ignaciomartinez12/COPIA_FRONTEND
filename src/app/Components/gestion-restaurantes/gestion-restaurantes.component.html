@@ -27,9 +27,8 @@
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
                     <ul class="listaElementos">
-                        <li class="elementoBase">Elemento 1</li>
-                        <li class="elementoBase">Elemento 2</li>
-                        <li class="elementoBase">Elemento 3</li>
+                        <li class="elementoBase" *ngFor="let element of listaRestaurantes" 
+                        (click)="onSelect(element)">{{ element.nombre }}</li>
                     </ul>
                 </div>
                 <div class="contenedor_datos">
@@ -49,9 +48,11 @@
                     <div id="datos_v" class="contenedor_datos_rest2">
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato3">
-                                <label class="texto_gris" for="nombreRes">Nombre</label>
-                                <input class="campo_entrada" type="text" id="nombreRes" required disabled>
-                                <label class="aviso oculto" for="nombreRes">Introduce un nombre válido</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="nombreRes">Nombre</label>
+                                    <label class="aviso" for="nombreRes">Introduce un nombre válido</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="nombreRes" required>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
