@@ -14,26 +14,19 @@ export class GestionRestaurantesComponent implements OnInit {
   private contenedor_datos!: HTMLElement;
   private contenedor_carta!: HTMLElement;
   private contenedor_factura!: HTMLElement;
-  avisoEmail: string = "";
-  avisoTelefono: string = "";
-  avisoCIF: string = "";
-  avisoDireccion: string = "";
-  avisoCategoria: string = "";
+  
   avisoNombre: string = "";
   avisoRazon: string = "";
+  avisoCategoria: string = "";
+  avisoCIF: string = "";
+  avisoDireccion: string = "";
+  avisoEmail: string = "";
+  avisoTelefono: string = "";
+    
   listaRestaurantes: Restaurante[] = [];
   
 
-  constructor(private router: Router, private http: HttpClient) {
-    this.avisoEmail = "";
-    this.avisoNombre = "";
-    this.avisoCategoria = "";
-    this.avisoCIF = "";
-    this.avisoRazon = "";
-    this.avisoTelefono = "";
-    this.avisoDireccion = "";
-    
-  }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     var cont_datos = document.getElementById("datos_v");
@@ -54,157 +47,51 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   acptarCambiosCrear(){
-    var correoCampo = document.getElementById("email") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
-    var direccionCampo = document.getElementById("direccion") as HTMLInputElement;
-    var nombreCampo = document.getElementById("nombre") as HTMLInputElement;
-    var valoracionCampo = document.getElementById("valoracion") as HTMLInputElement;
-    var CIFCampo = document.getElementById("CIF") as HTMLInputElement;
-    var razon_socialCampo = document.getElementById("razon") as HTMLInputElement;
-    var telefonoCampo = document.getElementById("tel") as HTMLInputElement;
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoriaRes") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    //correo vacio?
-    if (correoCampo?.value === "") 
-    {
-      this.avisoEmail = "Campo vacio";
-      
-    } else {
-      this.avisoEmail = "";
-    }
-
-    if (telefonoCampo?.value === "") 
-    {
-      this.avisoTelefono = "Campo vacio";
-      
-    } else {
-      this.avisoTelefono = "";
-    }
-
-    if (nombreCampo?.value === "") 
-    {
-      this.avisoNombre = "Campo vacio";
-      
-    } else {
-      this.avisoNombre = "";
-    }
-
-    if (direccionCampo?.value === "") 
-    {
-      this.avisoDireccion = "Campo vacio";
-      
-    } else {
-      this.avisoDireccion = "";
-    }
-
-    if (razon_socialCampo?.value === "") 
-    {
-      this.avisoRazon = "Campo vacio";
-      
-    } else {
-      this.avisoRazon = "";
-    }
-
-    if (CIFCampo?.value === "") 
-    {
-      this.avisoCIF = "Campo vacio";
-      
-    } else {
-      this.avisoCIF = "";
-    }
-
-    if (categoriaCampo?.value === "") 
-    {
-      this.avisoCategoria = "Campo vacio";
-      
-    } else {
-      this.avisoCategoria = "";
-    }
+    this.comprobarVacio(correoCampo?.value, this.avisoEmail);
+    this.comprobarVacio(telefonoCampo?.value, this.avisoTelefono);
+    this.comprobarVacio(nombreCampo?.value, this.avisoNombre);
+    this.comprobarVacio(direccionCampo?.value, this.avisoDireccion);
+    this.comprobarVacio(razon_socialCampo?.value, this.avisoRazon);
+    this.comprobarVacio(CIFCampo?.value, this.avisoCIF);
+    this.comprobarVacio(categoriaCampo?.value, this.avisoCategoria);
 
     if(!this.esNumero(telefonoCampo?.value)){
       this.avisoTelefono = "No corresponde con un numero de tlf";
     }
 
     //this.router.navigate(['/gestion']);
-    this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+    this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  0, direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
     //this.peticionGetHttp();
   }
 
   acptarCambiosActualizar(){
-    var correoCampo = document.getElementById("email") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
-    var direccionCampo = document.getElementById("direccion") as HTMLInputElement;
-    var nombreCampo = document.getElementById("nombre") as HTMLInputElement;
-   
-    var CIFCampo = document.getElementById("CIF") as HTMLInputElement;
-    var razon_socialCampo = document.getElementById("razon") as HTMLInputElement;
-    var telefonoCampo = document.getElementById("tel") as HTMLInputElement;
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoriaRes") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    //correo vacio?
-    if (correoCampo?.value === "") 
-    {
-      this.avisoEmail = "Campo vacio";
-      
-    } else {
-      this.avisoEmail = "";
-    }
-
-    if (telefonoCampo?.value === "") 
-    {
-      this.avisoTelefono = "Campo vacio";
-      
-    } else {
-      this.avisoTelefono = "";
-    }
-
-    if (nombreCampo?.value === "") 
-    {
-      this.avisoNombre = "Campo vacio";
-      
-    } else {
-      this.avisoNombre = "";
-    }
-
-    if (direccionCampo?.value === "") 
-    {
-      this.avisoDireccion = "Campo vacio";
-      
-    } else {
-      this.avisoDireccion = "";
-    }
-
-    if (razon_socialCampo?.value === "") 
-    {
-      this.avisoRazon = "Campo vacio";
-      
-    } else {
-      this.avisoRazon = "";
-    }
-
-    if (CIFCampo?.value === "") 
-    {
-      this.avisoCIF = "Campo vacio";
-      
-    } else {
-      this.avisoCIF = "";
-    }
-
-    if (categoriaCampo?.value === "") 
-    {
-      this.avisoCategoria = "Campo vacio";
-      
-    } else {
-      this.avisoCategoria = "";
-    }
+    this.comprobarVacio(correoCampo?.value, this.avisoEmail);
+    this.comprobarVacio(telefonoCampo?.value, this.avisoTelefono);
+    this.comprobarVacio(nombreCampo?.value, this.avisoNombre);
+    this.comprobarVacio(direccionCampo?.value, this.avisoDireccion);
+    this.comprobarVacio(razon_socialCampo?.value, this.avisoRazon);
+    this.comprobarVacio(CIFCampo?.value, this.avisoCIF);
+    this.comprobarVacio(categoriaCampo?.value, this.avisoCategoria);
 
     if(!this.esNumero(telefonoCampo?.value)){
       this.avisoTelefono = "No corresponde con un numero de tlf";
     }
-
-   
-
-    //this.router.navigate(['/gestion']);
-    //this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  Number(valoracionCampo?.value), direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
-    //this.peticionGetHttp();
   }
 
   peticionHttpCrear(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat, direccion : string, correo : string, telefono : number, CIF : string): void {
@@ -233,9 +120,15 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = 'http://localhost:8082/food/consultarRestaurantes';
     this.http.get(url, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        var listaResJSON = data.split(";");
-        for (let i = 0; i < listaResJSON.length; i++) {
-          this.listaRestaurantes.push(new Restaurante(listaResJSON[i]))
+        if(data.length == 0){
+          alert("No hay restaurantes");
+        }else{
+          var listaResJSON = data.split(";");
+          for (let i = 0; i < listaResJSON.length; i++) {
+            //console.log(listaResJSON[i]);
+            this.listaRestaurantes.push(new Restaurante(listaResJSON[i]))
+            console.log(this.listaRestaurantes[i]);
+          }
         }
       }, error: error => {
         
@@ -246,77 +139,17 @@ export class GestionRestaurantesComponent implements OnInit {
   } 
 
   cancelarCambios(){
-    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoriaRes") as HTMLInputElement;
-    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
-    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
-    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
-    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
-    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
-
-    correoCampo.disabled = true;
-    direccionCampo.disabled = true;
-    categoriaCampo.disabled = true;
-    nombreCampo.disabled = true;
-    CIFCampo.disabled = true;
-    razon_socialCampo.disabled = true;
-    telefonoCampo.disabled = true;
-
-    correoCampo.value = "";
-    direccionCampo.value = "";
-    categoriaCampo.value = "";
-    nombreCampo.value = "";
-    CIFCampo.value = "";
-    razon_socialCampo.value = "";
-    telefonoCampo.value = "";
-
-
+    this.disabledTodos(true);
+    this.vaciarCampos();
   }
 
   activarCamposCrear(){
-    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
-    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
-    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
-    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
-    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
-    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
-
-    correoCampo.disabled = false;
-    direccionCampo.disabled = false;
-    categoriaCampo.disabled = false;
-    nombreCampo.disabled = false;
-    //CIFCampo.disabled = false;
-    razon_socialCampo.disabled = false;
-    telefonoCampo.disabled = false;
-
-    correoCampo.value = "";
-    direccionCampo.value = "";
-    categoriaCampo.value = "";
-    nombreCampo.value = "";
-    CIFCampo.value = "";
-    razon_socialCampo.value = "";
-    telefonoCampo.value = "";
-
+    this.disabledTodos(false);
+    this.vaciarCampos();
   }
 
   activarCamposActualizar(){
-    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
-    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
-    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
-    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
-    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
-    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
-
-    correoCampo.disabled = false;
-    direccionCampo.disabled = false;
-    categoriaCampo.disabled = false;
-    nombreCampo.disabled = false;
-    //CIFCampo.disabled = false;
-    razon_socialCampo.disabled = false;
-    telefonoCampo.disabled = false;
-
+    this.disabledTodos(false);
   }
 
   eliminar(){
@@ -359,7 +192,55 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   onSelect(element: Restaurante){
-    //selecciona un elemento de la lista
-    alert("Ticomo la polla");
+    this.disabledTodos(true);
+    console.log(element);
+    
+    this.asignarValorID('emailRes', element.correo);
+    this.asignarValorID('categoria', element.categoria);
+    this.asignarValorID('direccionRes', element.direccion);
+    this.asignarValorID('nombreRes', element.nombre);
+    this.asignarValorID('CIFRes', element.CIF);
+    this.asignarValorID('razonRes', element.razon_social);
+    this.asignarValorID('telRes', String(element.telefono));
+    this.asignarValorID('valoracionRes', String(element.valoracion));
+  }
+
+  disabledTodos(valor: boolean){
+    this.disabledID('emailRes', valor);
+    this.disabledID('categoria', valor);
+    this.disabledID('direccionRes', valor);
+    this.disabledID('nombreRes', valor);
+    this.disabledID('CIFRes', valor);
+    this.disabledID('razonRes', valor);
+    this.disabledID('telRes', valor);
+  }
+
+  disabledID(id:string, valor:boolean){
+    var campo = document.getElementById(id) as HTMLInputElement;
+    campo.disabled = valor;
+  }
+
+  asignarValorID(id:string, valor:string){
+    var campo = document.getElementById(id) as HTMLInputElement;
+    campo.value = valor;
+  }
+
+  comprobarVacio(cadena:string, aviso:string){
+    if(cadena === ""){
+      aviso = "Campo vacío";
+    }else{
+      aviso = "";
+    }
+  }
+
+  vaciarCampos(){
+    this.asignarValorID("emailRes","");
+    this.asignarValorID("categoria","");
+    this.asignarValorID("direccionRes","");
+    this.asignarValorID("nombreRes","");
+    this.asignarValorID("CIFRes","");
+    this.asignarValorID("razonRes","");
+    this.asignarValorID("telRes","");
+    this.asignarValorID("valoracionRes","0");
   }
 }
