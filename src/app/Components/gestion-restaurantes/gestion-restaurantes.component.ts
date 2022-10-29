@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Restaurante } from 'src/app/Entities/restaurante';
 import { Router } from '@angular/router';
+import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 
 
 @Component({
@@ -46,52 +47,62 @@ export class GestionRestaurantesComponent implements OnInit {
     this.peticionGetHttp();
   }
 
-  acptarCambiosCrear(){
+  aceptarCambiosCrear(){
     var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoriaRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
     var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
     var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
     var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    this.comprobarVacio(correoCampo?.value, this.avisoEmail);
-    this.comprobarVacio(telefonoCampo?.value, this.avisoTelefono);
-    this.comprobarVacio(nombreCampo?.value, this.avisoNombre);
-    this.comprobarVacio(direccionCampo?.value, this.avisoDireccion);
-    this.comprobarVacio(razon_socialCampo?.value, this.avisoRazon);
-    this.comprobarVacio(CIFCampo?.value, this.avisoCIF);
-    this.comprobarVacio(categoriaCampo?.value, this.avisoCategoria);
+    
 
-    if(!this.esNumero(telefonoCampo?.value)){
-      this.avisoTelefono = "No corresponde con un numero de tlf";
+    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
+    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
+    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
+    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
+    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
+    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
+    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
+
+    if(telefonoCampo?.value != ""){
+      if(!this.esNumero(telefonoCampo?.value)){
+        this.avisoTelefono = "No corresponde con un numero de tlf";
+      }
+    }else{
+      return;
     }
+    
 
     //this.router.navigate(['/gestion']);
     this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  0, direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
     //this.peticionGetHttp();
   }
 
-  acptarCambiosActualizar(){
+  aceptarCambiosActualizar(){
     var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoriaRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
     var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
     var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
     var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    this.comprobarVacio(correoCampo?.value, this.avisoEmail);
-    this.comprobarVacio(telefonoCampo?.value, this.avisoTelefono);
-    this.comprobarVacio(nombreCampo?.value, this.avisoNombre);
-    this.comprobarVacio(direccionCampo?.value, this.avisoDireccion);
-    this.comprobarVacio(razon_socialCampo?.value, this.avisoRazon);
-    this.comprobarVacio(CIFCampo?.value, this.avisoCIF);
-    this.comprobarVacio(categoriaCampo?.value, this.avisoCategoria);
+    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
+    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
+    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
+    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
+    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
+    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
+    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
 
     if(!this.esNumero(telefonoCampo?.value)){
       this.avisoTelefono = "No corresponde con un numero de tlf";
     }
+
+    this.peticionHttpActualizar(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value, direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+
   }
 
   peticionHttpCrear(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat, direccion : string, correo : string, telefono : number, CIF : string): void {
@@ -107,7 +118,26 @@ export class GestionRestaurantesComponent implements OnInit {
       "CIF": CIF
     };
 
-    const url = 'http://localhost:8082/food/gestionRestaurantes';
+    const url = 'http://localhost:8082/food/crearRestaurante';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
+        alert(data);
+    });
+  }
+
+  peticionHttpActualizar(nombre : string, categoria : string, razon_social : string, direccion : string, correo : string, telefono : number, CIF : string): void {
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "correo": correo,
+      "categoria": categoria,
+      "razon": razon_social,
+      
+      "direccion": direccion,
+      "nombre": nombre,
+      "telefono": telefono,
+      "CIF": CIF
+    };
+
+    const url = 'http://localhost:8082/food/actualizarRestaurante';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
         alert(data);
     });
@@ -138,14 +168,28 @@ export class GestionRestaurantesComponent implements OnInit {
     });
   } 
 
-  cancelarCambios(){
+  
+
+  cancelarCambiosCrear(){
     this.disabledTodos(true);
     this.vaciarCampos();
+    var botonAceptar = document.getElementById("cont_confirm_add") as HTMLInputElement;
+    botonAceptar.classList.add('oculto')
+  }
+
+  cancelarCambiosActualizar(){
+    this.disabledTodos(true);
+    this.vaciarCampos();
+    var botonAceptar = document.getElementById("cont_confirm_add") as HTMLInputElement;
+    botonAceptar.classList.add('oculto')
   }
 
   activarCamposCrear(){
     this.disabledTodos(false);
     this.vaciarCampos();
+    var botonAceptar = document.getElementById("cont_confirm_add") as HTMLInputElement;
+    botonAceptar.classList.remove('oculto')
+    
   }
 
   activarCamposActualizar(){
@@ -153,25 +197,63 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   eliminar(){
+
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+
     if(confirm("¿Seguro que quiere eliminar el restaurante?")){
-      //eliminar
+      this.peticionHttpEliminar(nombreCampo?.value);
     }else{
       //cancelar
     }
   }
 
+  peticionHttpEliminar(nombre : string){
+    
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      
+      "nombre": nombre
+      
+    };
+
+    const url = 'http://localhost:8082/food/eliminarRestaurante';
+      this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
+          alert(data);
+      });
+  }
+
   esNumero(evt:string): boolean{
 			
     // code is the decimal ASCII representation of the pressed key.
-    var code = Number(evt);
     
-    if(code==8) { // backspace.
-      return true;
-    } else if(code>=48 && code<=57) { // is a number.
-      return true;
-    } else{ // other keys.
+
+    if(evt.length != 9){
+      
       return false;
     }
+    for(let i = 0; i<9; i++){
+      if(!this.esInt(evt.charAt(i))){
+        return false;
+      }
+    }
+
+
+   return true;
+
+  }
+
+  esInt(charac:string):boolean{
+
+    if(parseInt(charac)==NaN){
+  
+      return false;
+  
+    }else{
+  
+      return true;
+  
+    }
+  
   }
 
   mostrar_datos(){
@@ -229,11 +311,11 @@ export class GestionRestaurantesComponent implements OnInit {
     campo.value = valor;
   }
 
-  comprobarVacio(cadena:string, aviso:string){
+  comprobarVacio(cadena:string):string{
     if(cadena === ""){
-      aviso = "Campo vacío";
+      return "Campo vacío";
     }else{
-      aviso = "";
+      return "";
     }
   }
 
