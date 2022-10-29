@@ -55,13 +55,13 @@ export class GestionRestaurantesComponent implements OnInit {
     var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    this.comprobarVacio(correoCampo?.value, this.avisoEmail);
-    this.comprobarVacio(telefonoCampo?.value, this.avisoTelefono);
-    this.comprobarVacio(nombreCampo?.value, this.avisoNombre);
-    this.comprobarVacio(direccionCampo?.value, this.avisoDireccion);
-    this.comprobarVacio(razon_socialCampo?.value, this.avisoRazon);
-    this.comprobarVacio(CIFCampo?.value, this.avisoCIF);
-    this.comprobarVacio(categoriaCampo?.value, this.avisoCategoria);
+    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
+    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
+    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
+    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
+    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
+    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
+    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
 
     if(!this.esNumero(telefonoCampo?.value)){
       this.avisoTelefono = "No corresponde con un numero de tlf";
@@ -81,13 +81,13 @@ export class GestionRestaurantesComponent implements OnInit {
     var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    this.comprobarVacio(correoCampo?.value, this.avisoEmail);
-    this.comprobarVacio(telefonoCampo?.value, this.avisoTelefono);
-    this.comprobarVacio(nombreCampo?.value, this.avisoNombre);
-    this.comprobarVacio(direccionCampo?.value, this.avisoDireccion);
-    this.comprobarVacio(razon_socialCampo?.value, this.avisoRazon);
-    this.comprobarVacio(CIFCampo?.value, this.avisoCIF);
-    this.comprobarVacio(categoriaCampo?.value, this.avisoCategoria);
+    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
+    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
+    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
+    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
+    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
+    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
+    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
 
     if(!this.esNumero(telefonoCampo?.value)){
       this.avisoTelefono = "No corresponde con un numero de tlf";
@@ -229,11 +229,11 @@ export class GestionRestaurantesComponent implements OnInit {
     campo.value = valor;
   }
 
-  comprobarVacio(cadena:string, aviso:string){
+  comprobarVacio(cadena:string):string{
     if(cadena === ""){
-      aviso = "Campo vacío";
+      return "Campo vacío";
     }else{
-      aviso = "";
+      return "";
     }
   }
 
