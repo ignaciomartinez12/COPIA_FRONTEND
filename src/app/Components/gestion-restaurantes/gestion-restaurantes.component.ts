@@ -56,8 +56,6 @@ export class GestionRestaurantesComponent implements OnInit {
     var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    
-
     this.avisoEmail = this.comprobarVacio(correoCampo?.value);
     this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
     this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
