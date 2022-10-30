@@ -94,10 +94,4 @@ export class GestionComponent implements OnInit {
     this.contenedor_restaurantes.classList.add('oculto');
     this.contenedor_pedidos.classList.add('oculto');
   }
-
-  crearRyders(){
-    var nombreRyder = document.getElementById("g_admins");
-        
-  }
 }
-

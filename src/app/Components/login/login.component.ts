@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit {
     this.avisoEmail = "";
     this.avisoPwd = "";
     this.tipoUser = "";
-    //this.loginUsuario = new LoginUsuario("","");
   }
 
   ngOnInit(): void {
@@ -51,22 +50,6 @@ export class LoginComponent implements OnInit {
     }
 
     this.peticionHttp(correoCampo?.value, pwdCampo?.value);
-    //this.peticionGetHttp();
-  }
-
-  peticionGetHttp(): void {
-    let options: Object = {
-      "observe": 'body',
-      "responseType": 'text'
-    }    
-
-    const url = 'http://localhost:8082/user/getRiders';
-    this.http.get(url, options).subscribe((res: any) => {
-      var listaRiders = res.split(";");
-      //this.avisoEmail = res;
-      console.log(listaRiders.length);
-      this.avisoEmail = JSON.parse(listaRiders[0]).apellidos;
-    });
   }
 
   peticionHttp(correo:string, pwd: string): void {
