@@ -72,10 +72,9 @@ export class GestionRestaurantesComponent implements OnInit {
       return;
     }
     
-
-    //this.router.navigate(['/gestion']);
-    this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value,  0, direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
-    //this.peticionGetHttp();
+    this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  
+      razon_socialCampo?.value,  0, direccionCampo?.value, correoCampo?.value, 
+      Number(telefonoCampo?.value), CIFCampo?.value );
   }
 
   aceptarCambiosActualizar(){
@@ -86,6 +85,7 @@ export class GestionRestaurantesComponent implements OnInit {
     var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
     var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+    var valoracionCampo = document.getElementById("valoracionRes") as HTMLInputElement;
 
     this.avisoEmail = this.comprobarVacio(correoCampo?.value);
     this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
@@ -99,46 +99,83 @@ export class GestionRestaurantesComponent implements OnInit {
       this.avisoTelefono = "No corresponde con un numero de tlf";
     }
 
-    this.peticionHttpActualizar(nombreCampo?.value, categoriaCampo?.value,  razon_socialCampo?.value, direccionCampo?.value, correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+    this.peticionHttpActualizar(nombreCampo?.value, categoriaCampo?.value,  
+      razon_socialCampo?.value, valoracionCampo?.value, direccionCampo?.value, 
+      correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
 
   }
 
-  peticionHttpCrear(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat, direccion : string, correo : string, telefono : number, CIF : string): void {
+  peticionHttpCrear(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat,
+     direccion : string, correo : string, telefono : number, CIF : string): void {
     const headers = { 'Content-Type': 'application/json'};
     const body = {
-      "correo": correo,
+      "email": correo,
       "categoria": categoria,
-      "razon": razon_social,
-      "valoracion": valoracion,
+      "razonSocial": razon_social,
+      "valoracion": String(valoracion),
       "direccion": direccion,
       "nombre": nombre,
-      "telefono": telefono,
-      "CIF": CIF
+      "telefono": String(telefono),
+      "cif": CIF,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
     const url = 'http://localhost:8082/food/crearRestaurante';
-    this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
-        alert(data);
-    });
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Restaurante creado exitosamente");
+        this.dejarVacio();
+        this.ocultarBtn("add_res",false);
+        this.ocultarBtn("cont_confirm_add",true);
+        this.peticionGetHttp();
+      }, error: error =>{
+        if(error.error.includes("Ya existe un restaurante con ese nombre")){
+          alert("Ya existe un restaurante con ese nombre");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al introducir el restaurante");
+        }
+      }});
   }
 
-  peticionHttpActualizar(nombre : string, categoria : string, razon_social : string, direccion : string, correo : string, telefono : number, CIF : string): void {
+  peticionHttpActualizar(nombre : string, categoria : string, razon_social : string, 
+    valoracion : string, direccion : string, correo : string, telefono : number, 
+    CIF : string): void {
     const headers = { 'Content-Type': 'application/json'};
     const body = {
-      "correo": correo,
+      "email": correo,
       "categoria": categoria,
-      "razon": razon_social,
-      
+      "razonSocial": razon_social,
+      "valoracion": valoracion,
       "direccion": direccion,
       "nombre": nombre,
-      "telefono": telefono,
-      "CIF": CIF
+      "telefono": String(telefono),
+      "cif": CIF,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
     const url = 'http://localhost:8082/food/actualizarRestaurante';
-    this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
-        alert(data);
-    });
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Restaurante actualizado exitosamente");
+        this.dejarVacio();
+        this.ocultarBtn("update_res",false);
+        this.ocultarBtn("cont_confirm_udt",true);
+        this.peticionGetHttp();
+      }, error: error =>{
+        if(error.error.includes("No existe un restaurante con ese nombre")){
+          alert("No existe un restaurante con ese nombre");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al actualizar el restaurante");
+        }
+      }});
   }
 
   peticionGetHttp(): void {
@@ -148,8 +185,10 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = 'http://localhost:8082/food/consultarRestaurantes';
     this.http.get(url, { headers, responseType: 'text' }).subscribe({
       next: data => {
+        this.listaRestaurantes = [];
         if(data.length == 0){
-          alert("No hay restaurantes");
+          //alert(window.sessionStorage.getItem('rol'));
+          //alert("No hay restaurantes");
         }else{
           var listaResJSON = data.split(";");
           for (let i = 0; i < listaResJSON.length; i++) {
@@ -160,98 +199,109 @@ export class GestionRestaurantesComponent implements OnInit {
         }
       }, error: error => {
         
-        this.router.navigate(['/login']);
-        //alert("Ha ocurrido un error al realizar la operación");
+        //this.router.navigate(['/login']);
+        alert("Ha ocurrido un error al cargar los restaurantes");
       }
     });
   } 
 
-  
-
   cancelarCambiosCrear(){
-    this.disabledTodos(true);
-    this.vaciarCampos();
-    var botonAceptar = document.getElementById("cont_confirm_add") as HTMLInputElement;
-    botonAceptar.classList.add('oculto')
+    this.disabledTodos(true); //bloquear campos
+    this.dejarVacio();
+    this.ocultarBtn('add_res', false); //mostrar btn_add
+    this.ocultarBtn('cont_confirm_add', true); //ocultar btns_aceptar_cancelar
   }
 
   cancelarCambiosActualizar(){
-    this.disabledTodos(true);
-    this.vaciarCampos();
-    var botonAceptar = document.getElementById("cont_confirm_add") as HTMLInputElement;
-    botonAceptar.classList.add('oculto')
+    this.disabledTodos(true); //bloquear campos
+    this.dejarVacio();
+    this.ocultarBtn('add_res', false); //mostrar btn_add
+    this.ocultarBtn('cont_confirm_udt', true); //ocultar btns_aceptar_cancelar
   }
 
   activarCamposCrear(){
-    this.disabledTodos(false);
-    this.vaciarCampos();
-    var botonAceptar = document.getElementById("cont_confirm_add") as HTMLInputElement;
-    botonAceptar.classList.remove('oculto')
-    
+    this.disabledTodos(false); //habilitar campos
+    this.vaciarCampos(); //vaciar campos
+    this.ocultarBtn('add_res', true); //ocultar btn_add
+    this.ocultarBtn('update_res', true); //ocultar btn_add
+    this.ocultarBtn('delete_res', true); //ocultar btn_add
+    this.ocultarBtn('cont_confirm_add', false); //mostrar btns_aceptar_cancelar    
   }
 
   activarCamposActualizar(){
-    this.disabledTodos(false);
+    this.disabledTodos(false); //habilitar campos
+    this.disabledID('nombreRes',true);
+    this.vaciarAvisos(); //vaciar campos
+    this.ocultarBtn('add_res', true); //ocultar btn_add
+    this.ocultarBtn('update_res', true); //ocultar btn_add
+    this.ocultarBtn('delete_res', true); //ocultar btn_add
+    this.ocultarBtn('cont_confirm_udt', false); //mostrar btns_aceptar_cancelar
   }
 
   eliminar(){
-
     var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
 
     if(confirm("¿Seguro que quiere eliminar el restaurante?")){
       this.peticionHttpEliminar(nombreCampo?.value);
+      this.dejarVacio();
+      this.peticionGetHttp();
     }else{
       //cancelar
     }
   }
 
   peticionHttpEliminar(nombre : string){
-    
     const headers = { 'Content-Type': 'application/json'};
     const body = {
-      
-      "nombre": nombre
-      
+      "nombre": nombre,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
     const url = 'http://localhost:8082/food/eliminarRestaurante';
-      this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
-          alert(data);
-      });
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
+      alert(data);
+    });
   }
 
-  esNumero(evt:string): boolean{
-			
-    // code is the decimal ASCII representation of the pressed key.
-    
-
-    if(evt.length != 9){
-      
+  esNumero(cadena:string): boolean{
+		if(cadena.length != 9){
       return false;
     }
+    
     for(let i = 0; i<9; i++){
-      if(!this.esInt(evt.charAt(i))){
+      if(!this.esInt(cadena.charAt(i))){
         return false;
       }
     }
 
-
    return true;
-
   }
 
   esInt(charac:string):boolean{
-
-    if(parseInt(charac)==NaN){
-  
-      return false;
-  
-    }else{
-  
+    if(charac=='0'){
       return true;
-  
+    }else if(charac=='1'){
+      return true;
+    }else if(charac=='2'){
+      return true;
+    }else if(charac=='3'){
+      return true;
+    }else if(charac=='4'){
+      return true;
+    }else if(charac=='5'){
+      return true;
+    }else if(charac=='6'){
+      return true;
+    }else if(charac=='7'){
+      return true;
+    }else if(charac=='8'){
+      return true;
+    }else if(charac=='9'){
+      return true;
+    }else{
+      return false;
     }
-  
   }
 
   mostrar_datos(){
@@ -287,6 +337,12 @@ export class GestionRestaurantesComponent implements OnInit {
     this.asignarValorID('razonRes', element.razon_social);
     this.asignarValorID('telRes', String(element.telefono));
     this.asignarValorID('valoracionRes', String(element.valoracion));
+
+    this.ocultarBtn("cont_confirm_add",true);
+    this.ocultarBtn("cont_confirm_udt",true);
+    this.ocultarBtn("add_res",false);
+    this.ocultarBtn("update_res",false);
+    this.ocultarBtn("delete_res",false);
   }
 
   disabledTodos(valor: boolean){
@@ -326,5 +382,36 @@ export class GestionRestaurantesComponent implements OnInit {
     this.asignarValorID("razonRes","");
     this.asignarValorID("telRes","");
     this.asignarValorID("valoracionRes","0");
+  }
+
+  ocultarBtn(id:string, valor:boolean){
+    var campo = document.getElementById(id) as HTMLInputElement;
+    if(valor){
+      campo.classList.add('oculto');
+    }else{
+      campo.classList.remove('oculto');
+    }
+  }
+
+  vaciarAvisos(){
+    this.avisoNombre = "";
+    this.avisoRazon = "";
+    this.avisoCategoria = "";
+    this.avisoCIF = "";
+    this.avisoDireccion = "";
+    this.avisoEmail = "";
+    this.avisoTelefono = "";
+  }
+
+  dejarVacio(){
+    this.vaciarAvisos();
+    this.vaciarCampos();
+  }
+
+  logout(){
+    window.sessionStorage.removeItem('rol');
+    window.sessionStorage.removeItem('correo');
+    window.sessionStorage.removeItem('password');
+    this.router.navigate(['/inicio']);
   }
 }
