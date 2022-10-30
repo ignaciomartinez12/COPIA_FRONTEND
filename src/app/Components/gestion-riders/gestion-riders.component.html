@@ -34,57 +34,55 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="nombre">Nombre</label>
-                                <input class="campo_entrada" type="text" id="nombre" required>
-                                <label class="aviso oculto" for="nombre">Introduce un nombre válido</label>
+                                <input class="campo_entrada" type="text" id="nombreRy" required>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="apellidos">Apellidos</label>
-                                <input class="campo_entrada" type="text" id="apellidos" required>
-                                <label class="aviso oculto" for="apellidos">Introduce los apellidos</label>
+                                <input class="campo_entrada" type="text" id="apellidosRy" required>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="nif">NIF</label>
-                                <input class="campo_entrada" type="text" id="nif">
+                                <input class="campo_entrada" type="text" id="nifRy">
                             </div>
+                            <!-- FALLA 53-56 -->
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="valoracion">Valoración</label>
-                                <input class="campo_entrada" type="number" id="valoracion">
+                                <input class="campo_entrada" type="number" id="valoracionRy" >
                             </div>
                         </div>
+                        
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="email">Correo</label>
-                                <input class="campo_entrada" type="email" id="email" pattern=".+@globex\.com" size="30" required>
-                                <label class="aviso oculto" for="email">Introduce el correo</label>
+                                <input class="campo_entrada" type="email" id="emailRy" pattern=".+@globex\.com" size="30" required>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="password">Contraseña</label>
-                                <input class="campo_entrada" type="password" id="password" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
-                                <label class="aviso oculto" for="password">Introduce la contraseña</label>
+                                <input class="campo_entrada" type="password" id="passwordRy" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
                             </div>
                         </div>
                         <div class="linea_campo campo_dato3">
                             <label class="texto_gris" for="matricula">Tipo de Vehículo</label>
                                 
                             <div class="campo_radio campo_entrada">
-                                <label><input type="radio" name="tipoVehiculo" value="coche"> Coche</label>
-                                <label><input type="radio" name="tipoVehiculo" value="moto"> Moto</label>
-                                <label><input type="radio" name="tipoVehiculo" value="bici"> Bicicleta</label>
-                                <label><input type="radio" name="tipoVehiculo" value="patinete"> Patinete</label>
+                                <label><input type="radio" name="tipoVehiculo" id="cocheRy" value="coche"> Coche</label>
+                                <label><input type="radio" name="tipoVehiculo" id="motoRy" value="moto"> Moto</label>
+                                <label><input type="radio" name="tipoVehiculo" id="biciRy" value="bici"> Bicicleta</label>
+                                <label><input type="radio" name="tipoVehiculo" id="patineteRy" value="patinete"> Patinete</label>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <label class="texto_gris" for="matricula">Matrícula</label>
-                                <input class="campo_entrada" type="text" id="matricula" required>
-                                <label class="aviso oculto" for="matricula">Introduce una matrícula</label>
+                                <input class="campo_entrada" type="text" id="matriculaRy" required>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="carnet">Carnet</label>
-                                <input class="campo_entrada" type="text" id="carnet" required>
-                                <label class="aviso oculto" for="carnet">Introduce el carnet</label>
+                                <input class="campo_entrada" type="text" id="carnetRy" required>
+                                <label class="aviso" >{{ avisoRegistroRyders }}</label>
+                                <button (click)="crearRyder()" id="crearRyder" class="btn_acceder ancho_partido">Registrar Ryder</button>
                             </div>
                         </div>
                     </div>

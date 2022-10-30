@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import {enc, SHA256} from "crypto-js";
+//import {enc, SHA256} from "crypto-js";
 
 @Component({
   selector: 'app-login',

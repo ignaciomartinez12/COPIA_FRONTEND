@@ -71,7 +71,7 @@ export class GestionRestaurantesComponent implements OnInit {
     }else{
       return;
     }
-    
+
     this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  
       razon_socialCampo?.value,  0, direccionCampo?.value, correoCampo?.value, 
       Number(telefonoCampo?.value), CIFCampo?.value );
@@ -139,6 +139,7 @@ export class GestionRestaurantesComponent implements OnInit {
           alert("Ha ocurrido un error al introducir el restaurante");
         }
       }});
+
   }
 
   peticionHttpActualizar(nombre : string, categoria : string, razon_social : string, 
@@ -176,6 +177,7 @@ export class GestionRestaurantesComponent implements OnInit {
           alert("Ha ocurrido un error al actualizar el restaurante");
         }
       }});
+
   }
 
   peticionGetHttp(): void {
@@ -301,7 +303,13 @@ export class GestionRestaurantesComponent implements OnInit {
       return true;
     }else{
       return false;
+  
+    }else{
+  
+      return true;
+  
     }
+  
   }
 
   mostrar_datos(){
@@ -337,7 +345,6 @@ export class GestionRestaurantesComponent implements OnInit {
     this.asignarValorID('razonRes', element.razon_social);
     this.asignarValorID('telRes', String(element.telefono));
     this.asignarValorID('valoracionRes', String(element.valoracion));
-
     this.ocultarBtn("cont_confirm_add",true);
     this.ocultarBtn("cont_confirm_udt",true);
     this.ocultarBtn("add_res",false);
