@@ -252,6 +252,8 @@ export class GestionRestaurantesComponent implements OnInit {
     }
   }
 
+
+  //duda
   peticionHttpEliminar(nombre : string){
     const headers = { 'Content-Type': 'application/json'};
     const body = {
@@ -303,10 +305,6 @@ export class GestionRestaurantesComponent implements OnInit {
       return true;
     }else{
       return false;
-  
-    }else{
-  
-      return true;
   
     }
   
