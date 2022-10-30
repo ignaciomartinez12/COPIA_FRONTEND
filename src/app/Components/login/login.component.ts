@@ -70,6 +70,8 @@ export class LoginComponent implements OnInit {
         window.sessionStorage.setItem('correo', correo);
         window.sessionStorage.removeItem('password');
         window.sessionStorage.setItem('password', pwd);
+
+
         this.router.navigate(['/gestion']);
         //this.avisoEmail = data;
       },
