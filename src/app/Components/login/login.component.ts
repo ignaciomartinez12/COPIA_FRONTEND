@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
     this.avisoEmail = "";
     this.avisoPwd = "";
     this.tipoUser = "";
-    this.loginUsuario = new LoginUsuario("","");
+    //this.loginUsuario = new LoginUsuario("","");
   }
 
   ngOnInit(): void {
