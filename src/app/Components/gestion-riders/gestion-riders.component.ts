@@ -25,7 +25,7 @@ export class GestionRidersComponent implements OnInit {
   }
 }
 
-registrar(){
+crearRyder(){
   var nombreRyCampo = document.getElementById("nombreRy") as HTMLInputElement;
   var apellidosRyCampo = document.getElementById("apellidosRy") as HTMLInputElement;
   var nifRyCampo = document.getElementById("nifRy") as HTMLInputElement;
@@ -129,10 +129,14 @@ peticionHttp(nombreRy: string, apellidosRy: string, nifRy: string, valoracionRy:
     "nif": nifRy, 
     "valoracion": valoracionRy,
     "correo": emailRy,
-    "pwd": pwdRy, 
+    "pwd1": pwdRy, 
+    "pwd2": pwdRy,
     "tipovehiculo": seleccionVRy,
     "matricula": matriculaRy, 
-    "carnet": carnetRy
+    "carnet": carnetRy,
+    "rol": "rider",
+    "correoAcceso": window.sessionStorage.getItem('correo'),
+    "passwordAcceso": window.sessionStorage.getItem('password')
   };
 
   const url = 'http://localhost:8082/user/crearUsuario';
