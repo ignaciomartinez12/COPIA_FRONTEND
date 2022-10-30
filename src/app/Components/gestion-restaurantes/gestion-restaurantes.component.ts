@@ -303,11 +303,6 @@ export class GestionRestaurantesComponent implements OnInit {
       return true;
     }else{
       return false;
-  
-    }else{
-  
-      return true;
-  
     }
   
   }
