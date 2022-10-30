@@ -17,18 +17,17 @@
                 </div>
 
                 <div id="cont_btn_opc" class="contenedor_horizontal">
-                    <button  (click)="activarCamposCrear()"> 
-                        <img id="add"  class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
-                    <button  (click)="activarCamposActualizar()"> 
-                        <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
-                    <button  (click)="eliminar()">
-                        <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
+                    <button id="add_res" (click)="activarCamposCrear()"> 
+                        <img class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
+                    <button id="update_res" class="oculto"  (click)="activarCamposActualizar()"> 
+                        <img class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
+                    <button id="delete_res" class="oculto" (click)="eliminar()">
+                        <img class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
                 </div>
                 
                 <h2 class="sep">|</h2>
-                <a href="../inicio/inicio.html">
-                    <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg"/>
-                </a>
+                <button id="logout_res" (click)="logout()">
+                    <img class="img_icon" src="../../../assets/ui_images/home_icon.svg"/></button>
             </div>
         </div>
         <div class="contenedor_campos">
