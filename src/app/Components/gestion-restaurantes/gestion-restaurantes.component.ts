@@ -25,7 +25,13 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoEmail: string = "";
   avisoTelefono: string = "";
   URL : string = new Url().url;
-    
+
+  avisoNombreP: string = "";
+  avisoPrecioP: string = "";
+  avisoVeganoP: string = "";
+  avisoDescP: string = "";
+  avisoFotoP: string = "";
+  
   listaRestaurantes: Restaurante[] = [];
   
 
@@ -430,4 +436,155 @@ export class GestionRestaurantesComponent implements OnInit {
     window.sessionStorage.removeItem('password');
     this.router.navigate(['/inicio']);
   }
+  
+  //---------------------------------------------------------------------------------------------
+  //------------------------------CARTAS DESDE AQUI----------------------------------------------
+  //---------------------------------------------------------------------------------------------
+
+  aceptarCambiosCrearCarta(){
+    var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
+    var precioPCampo = document.getElementById("prerequiredcio") as HTMLInputElement;
+    var descripcionPCampo = document.getElementById("desc") as HTMLInputElement;
+    var veganoPCampo = document.getElementById("vegano") as HTMLInputElement;
+    var fotoPCampo = document.getElementById("foto") as HTMLInputElement;
+ 
+    this.avisoNombreP = this.comprobarVacio(nombrePCampo?.value);
+    this.avisoPrecioP = this.comprobarVacio(precioPCampo?.value);
+    this.avisoDescP = this.comprobarVacio(descripcionPCampo?.value);
+    this.avisoVeganoP = this.comprobarVacio(veganoPCampo?.value);
+    this.avisoFotoP = this.comprobarVacio(fotoPCampo?.value);
+    
+    //COMPROBAR LA IMAGEN SUPONGO SI NO NADA
+
+    this.peticionHttpCrearCarta(nombrePCampo?.value, Number(precioPCampo?.value),  
+      descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value);
+  }
+
+  aceptarCambiosActualizarCarta(){
+    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
+    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
+    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
+    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
+    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
+    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
+    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
+    var valoracionCampo = document.getElementById("valoracionRes") as HTMLInputElement;
+
+    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
+    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
+    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
+    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
+    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
+    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
+    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
+
+    if(!this.esNumero(telefonoCampo?.value)){
+      this.avisoTelefono = "No corresponde con un numero de tlf";
+    }
+
+    this.peticionHttpActualizar(nombreCampo?.value, categoriaCampo?.value,  
+      razon_socialCampo?.value, valoracionCampo?.value, direccionCampo?.value, 
+      correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+
+  }
+
+  peticionHttpCrearCarta(nombreP : string, precioP : number,  
+    descripcionP : string, veganoP : string, fotoP : string, nombreRes : string): void { //la foto como se pasa?
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "nombre": nombreP,
+      "aptoVegano": veganoP,
+      "descripcion" : descripcionP,
+      "precio" : precioP,
+      "foto" : fotoP,
+      "nombreRestaurante" : nombreRes,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'food/crearRestaurante';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Restaurante creado exitosamente");
+        this.dejarVacio();
+        this.ocultarBtn("add_res",false);
+        this.ocultarBtn("cont_confirm_add",true);
+        this.peticionGetHttp();
+      }, error: error =>{
+        if(error.error.includes("Ya existe un restaurante con ese nombre")){
+          alert("Ya existe un restaurante con ese nombre");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al introducir el restaurante");
+        }
+      }});
+
+  }
+
+  peticionHttpActualizarCarta(nombre : string, categoria : string, razon_social : string, 
+    valoracion : string, direccion : string, correo : string, telefono : number, 
+    CIF : string): void {
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "email": correo,
+      "categoria": categoria,
+      "razonSocial": razon_social,
+      "valoracion": valoracion,
+      "direccion": direccion,
+      "nombre": nombre,
+      "telefono": String(telefono),
+      "cif": CIF,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'food/actualizarRestaurante';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Restaurante actualizado exitosamente");
+        this.dejarVacio();
+        this.ocultarBtn("update_res",false);
+        this.ocultarBtn("cont_confirm_udt",true);
+        this.peticionGetHttp();
+      }, error: error =>{
+        if(error.error.includes("No existe un restaurante con ese nombre")){
+          alert("No existe un restaurante con ese nombre");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al actualizar el restaurante");
+        }
+      }});
+
+  }
+
+  peticionGetCartaHttp(): void {
+    const headers = { 
+      'Content-Type': 'application/json'}; 
+
+      const url = this.URL + 'food/consultarRestaurantes';
+    this.http.get(url, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaRestaurantes = [];
+        if(data.length == 0){
+          //alert(window.sessionStorage.getItem('rol'));
+          //alert("No hay restaurantes");
+        }else{
+          var listaResJSON = data.split(";");
+          for (let i = 0; i < listaResJSON.length; i++) {
+            //console.log(listaResJSON[i]);
+            this.listaRestaurantes.push(new Restaurante(listaResJSON[i]))
+            console.log(this.listaRestaurantes[i]);
+          }
+        }
+      }, error: error => {
+        //this.router.navigate(['/login']);
+        //alert("Ha ocurrido un error al cargar los restaurantes");
+      }
+    });
+  } 
+
 }

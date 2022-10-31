@@ -169,40 +169,47 @@
                                 <div id="datos_platos">
                                     <div class="linea_campo contenedor_horizontal">
                                         <div class="campo_dato3">
-                                            <label class="texto_gris" for="nombreP">Nombre</label>
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label class="texto_gris" for="nombreP">Nombre</label>
+                                                <label class="aviso" for="nombreP">{{ avisoNombreP }}</label>  
+                                            </div>
                                             <input class="campo_entrada" type="text" id="nombreP">
-                                            <label class="aviso oculto" for="nombreP">Introduce un nombre válido</label>
                                         </div>
-                                    </div>
                                     <div class="linea_campo contenedor_horizontal">
                                         <div class="campo_dato1">
-                                            <label class="texto_gris" for="precio">Precio</label>
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label class="texto_gris" for="precio">Precio</label>
+                                                <label class="aviso" for="precio">{{ avisoPrecioP }}</label>  
+                                            </div>
                                             <input class="campo_entrada" type="number" id="prerequiredcio">
-                                            <label class="aviso oculto" for="precio">Introduce el precio</label>
-                                        </div>
                                         <div class="campo_dato2">
-                                            <label class="texto_gris" for="vegano">Plato Vegano</label>
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label class="texto_gris" for="vegano">Plato Vegano</label>
+                                                <label class="aviso" for="vegano">{{ avisoVeganoP }}</label>                                    
+                                            </div>
                                             <input class="campo_entrada_check" type="checkbox" id="vegano">
                                         </div>
-                                    </div>
                                     <div id="linea_abajo" class="linea_campo contenedor_horizontal2">
                                         <div class="campo_dato4">
-                                            <label id="lbl_desc" class="texto_gris" for="desc">Descripción</label>
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label id="lbl_desc" class="texto_gris" for="desc">Descripción</label>
+                                                <label class="aviso" for="desc">{{ avisoDescP }}</label>                                    
+                                            </div>
                                             <textarea class="campo_entrada_img" id="desc"></textarea>
-                                            <label class="aviso oculto" for="desc">Introduce la descripción</label>
-                                        </div>
                                         <div class="campo_dato5">
-                                            <label class="texto_gris" for="foto">Foto</label>
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label class="texto_gris" for="foto">Foto</label>
+                                                <label class="aviso" for="foto">{{ avisoFotoP }}</label>                                    
+                                            </div>
                                             <input class="campo_entrada_img" type="image" id="foto" src="../../../assets/plt_images/food.png">
-                                            <label class="aviso oculto" for="foto">Introduce la foto</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="facturas_v" class="oculto">
+                        <div id="facturas_v" class="oculto">
                         
+                        </div>
                     </div>
                 </div>
             </div>
