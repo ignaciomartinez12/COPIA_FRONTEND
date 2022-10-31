@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Admin } from 'src/app/Entities/admin';
+import { Url } from 'src/app/Entities/url';
 
 @Component({
   selector: 'app-gestion-admins',
@@ -15,6 +16,7 @@ export class GestionAdminsComponent implements OnInit {
   avisoNIF: string = "";
   avisoCorreo: string = "";
   avisoPwd: string = "";
+  URL : string = new Url().url;
     
   listaAdmins: Admin[] = [];
 
@@ -33,7 +35,7 @@ export class GestionAdminsComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/user/getAdmins';
+    const url = this.URL + 'user/getAdmins';
     this.http.post(url, body, { headers, responseType: 'text'}).subscribe({
       next: data => {
         this.listaAdmins = [];
@@ -159,7 +161,7 @@ export class GestionAdminsComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/user/eliminarUsuario';
+    const url = this.URL + 'user/eliminarUsuario';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         alert("Administrador eliminado exitosamente");
@@ -195,7 +197,7 @@ export class GestionAdminsComponent implements OnInit {
      "passwordAcceso": window.sessionStorage.getItem('password')
    };
 
-   const url = 'http://localhost:8082/user/crearUsuario';
+   const url = this.URL + 'user/crearUsuario';
    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
      next: data => {
        alert("Administrador creado exitosamente");
@@ -235,7 +237,7 @@ export class GestionAdminsComponent implements OnInit {
     "passwordAcceso": window.sessionStorage.getItem('password')
   };
 
-   let url = 'http://localhost:8082/user/actualizarUsuario/';
+   let url = this.URL + 'user/actualizarUsuario/';
    url += correo;
    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
      next: data => {
@@ -315,6 +317,7 @@ export class GestionAdminsComponent implements OnInit {
       campo.classList.remove('oculto');
     }
   }
+
   comprobarVacio(cadena:string):string{
     if(cadena === ""){
       return "Campo vacío";
