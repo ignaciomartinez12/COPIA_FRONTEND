@@ -24,11 +24,6 @@
     padding: 24px 8px 8px 8px;
 }
 
-.contenedor_label{
-    justify-content: space-between;
-    margin-bottom: 16px;
-}
-
 a {
     color: #fc8a15;
     font-weight: bold;
@@ -84,4 +79,15 @@ a {
 
 .labels{
     height: 4px;
+}
+
+button{
+    appearance: none;
+    border-color: transparent;
+    background: transparent;
+    cursor: pointer;
+}
+
+.contenedor_label{
+    justify-content: space-between;
 }

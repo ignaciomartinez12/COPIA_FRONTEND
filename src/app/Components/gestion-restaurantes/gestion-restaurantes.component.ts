@@ -74,7 +74,7 @@ export class GestionRestaurantesComponent implements OnInit {
 
     this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  
       razon_socialCampo?.value,  0, direccionCampo?.value, correoCampo?.value, 
-      Number(telefonoCampo?.value), CIFCampo?.value );
+      Number(telefonoCampo?.value), CIFCampo?.value);
   }
 
   aceptarCambiosActualizar(){
@@ -261,9 +261,23 @@ export class GestionRestaurantesComponent implements OnInit {
     };
 
     const url = 'http://localhost:8082/food/eliminarRestaurante';
-    this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {
-      alert(data);
-    });
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Restaurante eliminado exitosamente");
+        this.dejarVacio();
+        this.ocultarBtn("add_res",false);
+        this.ocultarBtn("cont_confirm_add",true);
+        this.peticionGetHttp();
+      }, error: error =>{
+        if(error.error.includes("No existe un restaurante llamado ")){
+          alert("No existe ese restaurante en la base de datos");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al eliminar el restaurante");
+        }
+      }});
   }
 
   esNumero(cadena:string): boolean{
@@ -303,13 +317,7 @@ export class GestionRestaurantesComponent implements OnInit {
       return true;
     }else{
       return false;
-  
-    }else{
-  
-      return true;
-  
     }
-  
   }
 
   mostrar_datos(){
