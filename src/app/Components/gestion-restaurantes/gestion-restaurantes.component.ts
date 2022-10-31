@@ -200,9 +200,8 @@ export class GestionRestaurantesComponent implements OnInit {
           }
         }
       }, error: error => {
-        
         //this.router.navigate(['/login']);
-        alert("Ha ocurrido un error al cargar los restaurantes");
+        //alert("Ha ocurrido un error al cargar los restaurantes");
       }
     });
   } 
