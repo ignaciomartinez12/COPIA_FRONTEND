@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Url } from 'src/app/Entities/url';
 //import {enc, SHA256} from "crypto-js";
 
 @Component({
@@ -12,11 +13,13 @@ export class LoginComponent implements OnInit {
   avisoEmail: string = "";
   avisoPwd: string = "";
   tipoUser: string = "";
+  URL : string = new Url().url;
 
   constructor(private router: Router, private http: HttpClient) {
     this.avisoEmail = "";
     this.avisoPwd = "";
     this.tipoUser = "";
+
   }
 
   ngOnInit(): void {
@@ -61,7 +64,7 @@ export class LoginComponent implements OnInit {
       "pwd":pwd
     };
 
-    const url = 'http://localhost:8082/user/login';
+    const url = this.URL + 'user/login';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         window.sessionStorage.removeItem('rol');
