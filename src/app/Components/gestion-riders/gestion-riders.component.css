@@ -27,7 +27,6 @@
 
 .contenedor_label{
     justify-content: space-between;
-    margin-bottom: 16px;
 }
 
 a {
@@ -97,4 +96,11 @@ a {
 .campo_radio label{
     font-weight: initial;
     margin-right: 8px;
+}
+
+button{
+    appearance: none;
+    border-color: transparent;
+    background: transparent;
+    cursor: pointer;
 }

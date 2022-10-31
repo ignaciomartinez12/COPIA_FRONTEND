@@ -52,8 +52,8 @@ export class GestionAdminsComponent implements OnInit {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
         }else{
-          //alert("Ha ocurrido un error al cargar los administradores");
-          alert(error.error);
+          alert("Ha ocurrido un error al cargar los administradores");
+          //alert(error.error);
         }
       }
     });
@@ -185,6 +185,7 @@ export class GestionAdminsComponent implements OnInit {
    const body = {
      "correo": correo,
      "pwd1": pwd,
+     "pwd2": pwd,
      "apellidos": apellidos,
      "nif": nif,
      "nombre": nombre,
@@ -208,8 +209,11 @@ export class GestionAdminsComponent implements OnInit {
        }else if(error.error.includes("No tienes acceso a este servicio")){
          alert("No tienes acceso a este servicio");
          this.router.navigate(['/login']);
+       }else if(error.error.includes("contraseña")){
+        alert(error.error);
        }else{
-         alert("Ha ocurrido un error al introducir el administrador");
+         //alert("Ha ocurrido un error al introducir el administrador");
+         alert(error.error);
        }
      }});
 
@@ -221,6 +225,7 @@ export class GestionAdminsComponent implements OnInit {
    const body = {
     "correo": correo,
     "pwd1": pwd,
+    "pwd2": pwd,
     "apellidos": apellidos,
     "nif": nif,
     "nombre": nombre,
@@ -246,7 +251,8 @@ export class GestionAdminsComponent implements OnInit {
          alert("No tienes acceso a este servicio");
          this.router.navigate(['/login']);
        }else{
-         alert("Ha ocurrido un error al actualizar el administrador");
+         //alert("Ha ocurrido un error al actualizar el administrador");
+         alert(error.error);
        }
      }});
 
