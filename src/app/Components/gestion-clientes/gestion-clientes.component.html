@@ -3,12 +3,24 @@
         <div class="contenedor_header3 contenedor_horizontal">
             <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
             <div class="botones contenedor_horizontal">
-                <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/>
-                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/>
+                <div id="cont_confirm_udt_c" class="contenedor_horizontal oculto">
+                    <button  (click)="aceptarCambiosActualizar()">
+                        <img id="acept_udt_c"  class="img_icon" src="../../../assets/ui_images/acept.png"/></button>
+                    <button  (click)="cancelarCambiosActualizar()"> 
+                        <img id="cancel_udt_c" class="img_icon" src="../../../assets/ui_images/cancel.svg"/></button>
+                </div>
+
+                <div id="cont_btn_opc" class="contenedor_horizontal">
+
+                    <button id="update_clientes" class="oculto"  (click)="activarCamposActualizar()"> 
+                        <img class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
+                    <button id="delete_clientes" class="oculto" (click)="eliminar()">
+                        <img class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
+                </div>
+                
                 <h2 class="sep">|</h2>
-                <a href="../inicio/inicio.html">
-                    <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg"/>
-                </a>
+                <button id="logout_clientes" (click)="logout()">
+                    <img class="img_icon" src="../../../assets/ui_images/home_icon.svg"/></button>
             </div>
         </div>
         <div class="contenedor_campos">
@@ -23,53 +35,67 @@
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
                     <ul class="listaElementos">
-                        <li class="elementoBase">Elemento 1</li>
-                        <li class="elementoBase">Elemento 2</li>
-                        <li class="elementoBase">Elemento 3</li>
+                        <li class="elementoBase" *ngFor="let element of listaClientes" 
+                        (click)="onSelect(element)">{{ element.nombre }}</li>
                     </ul>
                 </div>
                 <div class="contenedor_datos">
                     <div id="datos" class="contenedor_datos_rest">
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="nombreC">Nombre</label>
-                                <input class="campo_entrada" type="text" id="nombreC" required>
-                                <label class="aviso oculto" for="nombreC">Introduce un nombre válido</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="nombreC">Nombre</label>
+                                    <label class="aviso" for="nombreC">{{ avisoNombre }}</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="nombreC">
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="apellidosC">Apellidos</label>
-                                <input class="campo_entrada" type="text" id="apellidosC" required>
-                                <label class="aviso oculto" for="apellidosC">Introduce los apellidos</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="apellidosC">Apellidos</label>
+                                    <label class="aviso" for="apellidosC">{{ avisoApellidos }}</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="apellidosC">
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="nifC">NIF</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="nifC">NIF</label>
+                                    <label class="aviso" for="nifC">{{ avisoNIF }}</label>
+                                </div>
                                 <input class="campo_entrada" type="text" id="nifC">
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="telC">Teléfono</label>
-                                <input class="campo_entrada" type="tel" id="telC" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
-                                <label class="aviso oculto" for="telC">Introduce el telefono</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="telC">Teléfono</label>
+                                    <label class="aviso" for="telC">{{ avisoTel }}</label>
+                                </div>
+                                <input class="campo_entrada" type="tel" id="telC" size="9">
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="emailC">Correo</label>
-                                <input class="campo_entrada" type="email" id="emailC" pattern=".+@globex\.com" size="30" required>
-                                <label class="aviso oculto" for="emailC">Introduce el correo</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="emailC">Correo</label>
+                                    <label class="aviso" for="emailC">{{ avisoCorreo }}</label>
+                                </div>
+                                <input class="campo_entrada" type="email" id="emailC" pattern=".+@globex\.com" size="30">
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="passwordC">Contraseña</label>
-                                <input class="campo_entrada" type="password" id="passwordC" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
-                                <label class="aviso oculto" for="passwordC">Introduce la contraseña</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="passwordC">Contraseña</label>
+                                    <label class="aviso" for="passwordC">{{ avisoPwd }}</label>
+                                </div>
+                                <input class="campo_entrada" type="password" id="passwordC">
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato3">
-                                <label class="texto_gris" for="direccionC">Dirección</label>
-                                <input class="campo_entrada" type="text" id="direccionC" required>
-                                <label class="aviso oculto" for="direccionC">Introduce una dirección</label>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="direccionC">Dirección</label>
+                                    <label class="aviso" for="direccionC">{{ avisoDireccion }}</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="direccionC">
                             </div>
                         </div>
                     </div>

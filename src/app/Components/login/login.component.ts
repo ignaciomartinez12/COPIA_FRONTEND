@@ -71,9 +71,8 @@ export class LoginComponent implements OnInit {
         window.sessionStorage.removeItem('password');
         window.sessionStorage.setItem('password', pwd);
 
-
+        this.avisoEmail = "Iniciando sesión";
         this.router.navigate(['/gestion']);
-        //this.avisoEmail = data;
       },
       error: error => {
         console.log(error);
