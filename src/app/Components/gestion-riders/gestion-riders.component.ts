@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Rider } from 'src/app/Entities/rider';
+import { Url } from 'src/app/Entities/url';
 
 @Component({
   selector: 'app-gestion-riders',
@@ -18,6 +19,7 @@ export class GestionRidersComponent implements OnInit {
   avisoTipoVeh: string = "";
   avisoMatricula: string = "";
   avisoCarnet: string = "";
+  URL : string = new Url().url;
 
   listaRiders: Rider[] = [];
 
@@ -36,7 +38,7 @@ export class GestionRidersComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/user/getRiders';
+    const url = this.URL + 'user/getRiders';
     this.http.post(url, body, { headers, responseType: 'text'}).subscribe({
       next: data => {
         this.listaRiders = [];
@@ -131,7 +133,7 @@ export class GestionRidersComponent implements OnInit {
     "passwordAcceso": window.sessionStorage.getItem('password')
    };
 
-   const url = 'http://localhost:8082/user/crearUsuario';
+   const url = this.URL + 'user/crearUsuario';
    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
      next: data => {
        alert("Rider creado exitosamente");
@@ -254,7 +256,7 @@ export class GestionRidersComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
   
-     let url = 'http://localhost:8082/user/actualizarUsuario/';
+     let url = this.URL + 'user/actualizarUsuario/';
      url += correo;
      this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
        next: data => {
@@ -329,7 +331,7 @@ export class GestionRidersComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/user/eliminarUsuario';
+    const url = this.URL + 'user/eliminarUsuario';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         alert("Rider eliminado exitosamente");

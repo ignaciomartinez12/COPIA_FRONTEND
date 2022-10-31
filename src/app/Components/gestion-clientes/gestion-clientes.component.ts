@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cliente } from 'src/app/Entities/cliente';
+import { Url } from 'src/app/Entities/url';
 
 @Component({
   selector: 'app-gestion-clientes',
@@ -16,6 +17,7 @@ export class GestionClientesComponent implements OnInit {
   avisoCorreo: string = "";
   avisoPwd: string = "";
   avisoDireccion: string = "";
+  URL : string = new Url().url;
     
   listaClientes: Cliente[] = [];
   constructor(private router: Router, private http: HttpClient) { }
@@ -33,7 +35,7 @@ export class GestionClientesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/user/getClients';
+    const url = this.URL + 'user/getClients';
     this.http.post(url, body, { headers, responseType: 'text'}).subscribe({
       next: data => {
         this.listaClientes = [];
@@ -124,7 +126,7 @@ export class GestionClientesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/user/eliminarUsuario';
+    const url = this.URL + 'user/eliminarUsuario';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         alert("Cliente eliminado exitosamente");
@@ -174,7 +176,7 @@ export class GestionClientesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
   
-     let url = 'http://localhost:8082/user/actualizarCliente/';
+     let url = this.URL + 'user/actualizarCliente/';
      url += correo;
      this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
        next: data => {

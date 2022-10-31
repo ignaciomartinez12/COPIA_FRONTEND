@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Url } from 'src/app/Entities/url';
 
 @Component({
   selector: 'app-registro',
@@ -22,18 +23,9 @@ export class RegistroComponent implements OnInit {
   avisoEmail: string = "";
   avisoPwd: string = "";
   avisoPwdDos: string = "";
+  URL : string = new Url().url;
   
-  constructor(private router: Router, private http: HttpClient) {
-    this.avisoNombre = "";
-    this.avisoApellidos = "";
-    this.avisoNif = "";
-    this.avisoTlf = "" ;
-    this.avisoDireccion = "";
-    this.avisoEmail = "";
-    this.avisoPwd = "";
-    this.avisoPwdDos = "";
-
-   }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void { 
     var campo1 = document.getElementById("campos_paso1");
@@ -162,7 +154,7 @@ export class RegistroComponent implements OnInit {
       "pwd2": pwd2
     };
 
-    const url = 'http://localhost:8082/user/register';
+    const url = this.URL + 'user/register';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {  
     if(data === "Registro completado"){
       this.router.navigate(['/login']); 

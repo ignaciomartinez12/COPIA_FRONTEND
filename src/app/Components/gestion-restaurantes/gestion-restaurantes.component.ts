@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Restaurante } from 'src/app/Entities/restaurante';
 import { Router } from '@angular/router';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
+import { Url } from 'src/app/Entities/url';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoDireccion: string = "";
   avisoEmail: string = "";
   avisoTelefono: string = "";
+  URL : string = new Url().url;
     
   listaRestaurantes: Restaurante[] = [];
   
@@ -121,7 +123,7 @@ export class GestionRestaurantesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/food/crearRestaurante';
+    const url = this.URL + 'food/crearRestaurante';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         alert("Restaurante creado exitosamente");
@@ -159,7 +161,7 @@ export class GestionRestaurantesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/food/actualizarRestaurante';
+    const url = this.URL + 'food/actualizarRestaurante';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         alert("Restaurante actualizado exitosamente");
@@ -184,7 +186,7 @@ export class GestionRestaurantesComponent implements OnInit {
     const headers = { 
       'Content-Type': 'application/json'}; 
 
-    const url = 'http://localhost:8082/food/consultarRestaurantes';
+      const url = this.URL + 'food/consultarRestaurantes';
     this.http.get(url, { headers, responseType: 'text' }).subscribe({
       next: data => {
         this.listaRestaurantes = [];
@@ -259,7 +261,7 @@ export class GestionRestaurantesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = 'http://localhost:8082/food/eliminarRestaurante';
+    const url = this.URL + 'food/eliminarRestaurante';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         alert("Restaurante eliminado exitosamente");
