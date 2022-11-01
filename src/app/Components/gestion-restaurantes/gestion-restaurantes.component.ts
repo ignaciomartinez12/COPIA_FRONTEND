@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Restaurante } from 'src/app/Entities/restaurante';
+import { Plato } from 'src/app/Entities/plato';
 import { Router } from '@angular/router';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { Url } from 'src/app/Entities/url';
@@ -24,7 +25,7 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoDireccion: string = "";
   avisoEmail: string = "";
   avisoTelefono: string = "";
-  URL : string = new Url().url;
+  URL : string = new Url().urlHeroku;
 
   avisoNombreP: string = "";
   avisoPrecioP: string = "";
@@ -33,6 +34,7 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoFotoP: string = "";
   
   listaRestaurantes: Restaurante[] = [];
+  listaCarta:  Plato[] = [];
   
 
   constructor(private router: Router, private http: HttpClient) { }
@@ -416,13 +418,11 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   vaciarAvisos(){
-    this.avisoNombre = "";
-    this.avisoRazon = "";
-    this.avisoCategoria = "";
-    this.avisoCIF = "";
-    this.avisoDireccion = "";
-    this.avisoEmail = "";
-    this.avisoTelefono = "";
+    this.avisoNombreP = "";    
+    this.avisoPrecioP = "";
+    this.avisoDescP = "";
+    this.avisoVeganoP = "";
+    this.avisoFotoP = "";    
   }
 
   dejarVacio(){
@@ -438,8 +438,34 @@ export class GestionRestaurantesComponent implements OnInit {
   }
   
   //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
   //------------------------------CARTAS DESDE AQUI----------------------------------------------
   //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+
+  vaciarCamposCarta(){
+    this.asignarValorID("nombreP","");
+    this.asignarValorID("prerequiredcio","");
+    this.asignarValorID("desc","");
+    this.asignarValorID("vegano","");
+    this.asignarValorID("foto","");
+  }
+
+  vaciarAvisosCarta(){
+    this.avisoNombreP = "";    
+    this.avisoPrecioP = "";
+    this.avisoDescP = "";
+    this.avisoVeganoP = "";
+    this.avisoFotoP = "";    
+  }
+
+  dejarVacioCarta(){
+    this.vaciarAvisosCarta();
+    this.vaciarCamposCarta();
+  }
 
   aceptarCambiosCrearCarta(){
     var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
@@ -457,35 +483,38 @@ export class GestionRestaurantesComponent implements OnInit {
     //COMPROBAR LA IMAGEN SUPONGO SI NO NADA
 
     this.peticionHttpCrearCarta(nombrePCampo?.value, Number(precioPCampo?.value),  
-      descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value);
+      descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value, nombreRestaurante);
   }
 
   aceptarCambiosActualizarCarta(){
-    var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
-    var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
-    var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
-    var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
-    var CIFCampo = document.getElementById("CIFRes") as HTMLInputElement;
-    var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
-    var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
-    var valoracionCampo = document.getElementById("valoracionRes") as HTMLInputElement;
+    var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
+    var precioPCampo = document.getElementById("prerequiredcio") as HTMLInputElement;
+    var descripcionPCampo = document.getElementById("desc") as HTMLInputElement;
+    var veganoPCampo = document.getElementById("vegano") as HTMLInputElement;
+    var fotoPCampo = document.getElementById("foto") as HTMLInputElement;
+ 
 
-    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
-    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
-    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
-    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
-    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
-    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
-    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
+    this.avisoNombreP = this.comprobarVacio(nombrePCampo?.value);
+    this.avisoPrecioP = this.comprobarVacio(precioPCampo?.value);
+    this.avisoDescP = this.comprobarVacio(descripcionPCampo?.value);
+    this.avisoVeganoP = this.comprobarVacio(veganoPCampo?.value);
+    this.avisoFotoP = this.comprobarVacio(fotoPCampo?.value);
 
-    if(!this.esNumero(telefonoCampo?.value)){
-      this.avisoTelefono = "No corresponde con un numero de tlf";
+    this.peticionHttpActualizarCarta(nombrePCampo?.value, nombreViejo, Number(precioPCampo?.value),  
+    descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value, nombreRestaurante);
+
+  }
+
+  eliminarCarta(){
+    var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
+
+    if(confirm("¿Seguro que quiere eliminar el plato?")){
+      this.peticionHttpEliminar(nombrePCampo?.value, nombreRes);
+      this.dejarVacioCarta();
+      this.peticionGetHttpCarta(nombreRes);
+    }else{
+      //cancelar
     }
-
-    this.peticionHttpActualizar(nombreCampo?.value, categoriaCampo?.value,  
-      razon_socialCampo?.value, valoracionCampo?.value, direccionCampo?.value, 
-      correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
-
   }
 
   peticionHttpCrearCarta(nombreP : string, precioP : number,  
@@ -502,14 +531,14 @@ export class GestionRestaurantesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = this.URL + 'food/crearRestaurante';
+    const url = this.URL + 'food/crearPlato';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Restaurante creado exitosamente");
+        alert("Plato creado exitosamente");
         this.dejarVacio();
-        this.ocultarBtn("add_res",false);
-        this.ocultarBtn("cont_confirm_add",true);
-        this.peticionGetHttp();
+        this.ocultarBtn("add_plato",false);
+        this.ocultarBtn("cont_confirm_addP",true);
+        this.peticionGetHttpCarta(nombreRes);
       }, error: error =>{
         if(error.error.includes("Ya existe un restaurante con ese nombre")){
           alert("Ya existe un restaurante con ese nombre");
@@ -523,30 +552,27 @@ export class GestionRestaurantesComponent implements OnInit {
 
   }
 
-  peticionHttpActualizarCarta(nombre : string, categoria : string, razon_social : string, 
-    valoracion : string, direccion : string, correo : string, telefono : number, 
-    CIF : string): void {
+  peticionHttpActualizarCarta(nombreP : string, nombreViejo : string, precioP : number, descripcionP : string, veganoP : string, fotoP : string, nombreRes : string): void {
     const headers = { 'Content-Type': 'application/json'};
     const body = {
-      "email": correo,
-      "categoria": categoria,
-      "razonSocial": razon_social,
-      "valoracion": valoracion,
-      "direccion": direccion,
-      "nombre": nombre,
-      "telefono": String(telefono),
-      "cif": CIF,
+      "nombre": nombreP,
+      "nombreViejo" : nombreViejo,
+      "aptoVegano": veganoP,
+      "descripcion" : descripcionP,
+      "precio" : precioP,
+      "foto" : fotoP,
+      "nombreRestaurante" : nombreRes,
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = this.URL + 'food/actualizarRestaurante';
+    const url = this.URL + 'food/actualizarPlato';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Restaurante actualizado exitosamente");
-        this.dejarVacio();
-        this.ocultarBtn("update_res",false);
-        this.ocultarBtn("cont_confirm_udt",true);
+        alert("Plato actualizado exitosamente");
+        this.dejarVacioCarta();
+        this.ocultarBtn("update_plato",false);
+        this.ocultarBtn("cont_confirm_udtP",true);
         this.peticionGetHttp();
       }, error: error =>{
         if(error.error.includes("No existe un restaurante con ese nombre")){
@@ -561,23 +587,52 @@ export class GestionRestaurantesComponent implements OnInit {
 
   }
 
-  peticionGetCartaHttp(): void {
+  peticionHttpEliminarPlato(nombrePlato : string, nombreRes : string){
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "nombrePlato": nombrePlato,
+      "nombreRes": nombreRes,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'food/eliminarPlato';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Plato eliminado exitosamente");
+        this.dejarVacioCarta();
+        this.ocultarBtn("add_plato",false);
+        this.ocultarBtn("cont_confirm_addP",true);
+        this.peticionGetHttpCarta(nombreRes);
+      }, error: error =>{
+        if(error.error.includes("No existe un restaurante llamado ")){
+          alert("No existe ese restaurante en la base de datos");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al eliminar el restaurante");
+        }
+      }});
+  }
+
+  peticionGetHttpCarta(nombreRes : string): void {
     const headers = { 
       'Content-Type': 'application/json'}; 
 
-      const url = this.URL + 'food/consultarRestaurantes';
+      const url = this.URL + 'food/getCarta/' + nombreRes;
     this.http.get(url, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        this.listaRestaurantes = [];
+        this.listaCarta = [];
         if(data.length == 0){
           //alert(window.sessionStorage.getItem('rol'));
-          //alert("No hay restaurantes");
+          alert("No hay carta en ese restaurante");
         }else{
-          var listaResJSON = data.split(";");
-          for (let i = 0; i < listaResJSON.length; i++) {
+          var listaCartaJSON = data.split(";");
+          for (let i = 0; i < listaCartaJSON.length; i++) {
             //console.log(listaResJSON[i]);
-            this.listaRestaurantes.push(new Restaurante(listaResJSON[i]))
-            console.log(this.listaRestaurantes[i]);
+            this.listaCarta.push(new Plato(listaCartaJSON[i]))
+            console.log(this.listaCarta[i]);
           }
         }
       }, error: error => {
@@ -585,6 +640,6 @@ export class GestionRestaurantesComponent implements OnInit {
         //alert("Ha ocurrido un error al cargar los restaurantes");
       }
     });
-  } 
+  }
 
 }
