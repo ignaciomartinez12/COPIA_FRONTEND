@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Restaurante } from 'src/app/Entities/restaurante';
+import { Plato } from 'src/app/Entities/plato';
 import { Router } from '@angular/router';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { Url } from 'src/app/Entities/url';
@@ -24,9 +25,16 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoDireccion: string = "";
   avisoEmail: string = "";
   avisoTelefono: string = "";
-  URL : string = new Url().url;
-    
+  URL : string = new Url().urlHeroku;
+
+  avisoNombreP: string = "";
+  avisoPrecioP: string = "";
+  avisoVeganoP: string = "";
+  avisoDescP: string = "";
+  avisoFotoP: string = "";
+  
   listaRestaurantes: Restaurante[] = [];
+  listaCarta:  Plato[] = [];
   
 
   constructor(private router: Router, private http: HttpClient) { }
@@ -410,13 +418,11 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   vaciarAvisos(){
-    this.avisoNombre = "";
-    this.avisoRazon = "";
-    this.avisoCategoria = "";
-    this.avisoCIF = "";
-    this.avisoDireccion = "";
-    this.avisoEmail = "";
-    this.avisoTelefono = "";
+    this.avisoNombreP = "";    
+    this.avisoPrecioP = "";
+    this.avisoDescP = "";
+    this.avisoVeganoP = "";
+    this.avisoFotoP = "";    
   }
 
   dejarVacio(){
@@ -430,4 +436,210 @@ export class GestionRestaurantesComponent implements OnInit {
     window.sessionStorage.removeItem('password');
     this.router.navigate(['/inicio']);
   }
+  
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //------------------------------CARTAS DESDE AQUI----------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------
+
+  vaciarCamposCarta(){
+    this.asignarValorID("nombreP","");
+    this.asignarValorID("prerequiredcio","");
+    this.asignarValorID("desc","");
+    this.asignarValorID("vegano","");
+    this.asignarValorID("foto","");
+  }
+
+  vaciarAvisosCarta(){
+    this.avisoNombreP = "";    
+    this.avisoPrecioP = "";
+    this.avisoDescP = "";
+    this.avisoVeganoP = "";
+    this.avisoFotoP = "";    
+  }
+
+  dejarVacioCarta(){
+    this.vaciarAvisosCarta();
+    this.vaciarCamposCarta();
+  }
+
+  aceptarCambiosCrearCarta(){
+    var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
+    var precioPCampo = document.getElementById("prerequiredcio") as HTMLInputElement;
+    var descripcionPCampo = document.getElementById("desc") as HTMLInputElement;
+    var veganoPCampo = document.getElementById("vegano") as HTMLInputElement;
+    var fotoPCampo = document.getElementById("foto") as HTMLInputElement;
+ 
+    this.avisoNombreP = this.comprobarVacio(nombrePCampo?.value);
+    this.avisoPrecioP = this.comprobarVacio(precioPCampo?.value);
+    this.avisoDescP = this.comprobarVacio(descripcionPCampo?.value);
+    this.avisoVeganoP = this.comprobarVacio(veganoPCampo?.value);
+    this.avisoFotoP = this.comprobarVacio(fotoPCampo?.value);
+    
+    //COMPROBAR LA IMAGEN SUPONGO SI NO NADA
+
+    this.peticionHttpCrearCarta(nombrePCampo?.value, Number(precioPCampo?.value),  
+      descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value, nombreRestaurante);
+  }
+
+  aceptarCambiosActualizarCarta(){
+    var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
+    var precioPCampo = document.getElementById("prerequiredcio") as HTMLInputElement;
+    var descripcionPCampo = document.getElementById("desc") as HTMLInputElement;
+    var veganoPCampo = document.getElementById("vegano") as HTMLInputElement;
+    var fotoPCampo = document.getElementById("foto") as HTMLInputElement;
+ 
+
+    this.avisoNombreP = this.comprobarVacio(nombrePCampo?.value);
+    this.avisoPrecioP = this.comprobarVacio(precioPCampo?.value);
+    this.avisoDescP = this.comprobarVacio(descripcionPCampo?.value);
+    this.avisoVeganoP = this.comprobarVacio(veganoPCampo?.value);
+    this.avisoFotoP = this.comprobarVacio(fotoPCampo?.value);
+
+    this.peticionHttpActualizarCarta(nombrePCampo?.value, nombreViejo, Number(precioPCampo?.value),  
+    descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value, nombreRestaurante);
+
+  }
+
+  eliminarCarta(){
+    var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
+
+    if(confirm("¿Seguro que quiere eliminar el plato?")){
+      this.peticionHttpEliminar(nombrePCampo?.value, nombreRes);
+      this.dejarVacioCarta();
+      this.peticionGetHttpCarta(nombreRes);
+    }else{
+      //cancelar
+    }
+  }
+
+  peticionHttpCrearCarta(nombreP : string, precioP : number,  
+    descripcionP : string, veganoP : string, fotoP : string, nombreRes : string): void { //la foto como se pasa?
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "nombre": nombreP,
+      "aptoVegano": veganoP,
+      "descripcion" : descripcionP,
+      "precio" : precioP,
+      "foto" : fotoP,
+      "nombreRestaurante" : nombreRes,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'food/crearPlato';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Plato creado exitosamente");
+        this.dejarVacio();
+        this.ocultarBtn("add_plato",false);
+        this.ocultarBtn("cont_confirm_addP",true);
+        this.peticionGetHttpCarta(nombreRes);
+      }, error: error =>{
+        if(error.error.includes("Ya existe un restaurante con ese nombre")){
+          alert("Ya existe un restaurante con ese nombre");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al introducir el restaurante");
+        }
+      }});
+
+  }
+
+  peticionHttpActualizarCarta(nombreP : string, nombreViejo : string, precioP : number, descripcionP : string, veganoP : string, fotoP : string, nombreRes : string): void {
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "nombre": nombreP,
+      "nombreViejo" : nombreViejo,
+      "aptoVegano": veganoP,
+      "descripcion" : descripcionP,
+      "precio" : precioP,
+      "foto" : fotoP,
+      "nombreRestaurante" : nombreRes,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'food/actualizarPlato';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Plato actualizado exitosamente");
+        this.dejarVacioCarta();
+        this.ocultarBtn("update_plato",false);
+        this.ocultarBtn("cont_confirm_udtP",true);
+        this.peticionGetHttp();
+      }, error: error =>{
+        if(error.error.includes("No existe un restaurante con ese nombre")){
+          alert("No existe un restaurante con ese nombre");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al actualizar el restaurante");
+        }
+      }});
+
+  }
+
+  peticionHttpEliminarPlato(nombrePlato : string, nombreRes : string){
+    const headers = { 'Content-Type': 'application/json'};
+    const body = {
+      "nombrePlato": nombrePlato,
+      "nombreRes": nombreRes,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'food/eliminarPlato';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        alert("Plato eliminado exitosamente");
+        this.dejarVacioCarta();
+        this.ocultarBtn("add_plato",false);
+        this.ocultarBtn("cont_confirm_addP",true);
+        this.peticionGetHttpCarta(nombreRes);
+      }, error: error =>{
+        if(error.error.includes("No existe un restaurante llamado ")){
+          alert("No existe ese restaurante en la base de datos");
+        }else if(error.error.includes("No tienes acceso a este servicio")){
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        }else{
+          alert("Ha ocurrido un error al eliminar el restaurante");
+        }
+      }});
+  }
+
+  peticionGetHttpCarta(nombreRes : string): void {
+    const headers = { 
+      'Content-Type': 'application/json'}; 
+
+      const url = this.URL + 'food/getCarta/' + nombreRes;
+    this.http.get(url, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaCarta = [];
+        if(data.length == 0){
+          //alert(window.sessionStorage.getItem('rol'));
+          alert("No hay carta en ese restaurante");
+        }else{
+          var listaCartaJSON = data.split(";");
+          for (let i = 0; i < listaCartaJSON.length; i++) {
+            //console.log(listaResJSON[i]);
+            this.listaCarta.push(new Plato(listaCartaJSON[i]))
+            console.log(this.listaCarta[i]);
+          }
+        }
+      }, error: error => {
+        //this.router.navigate(['/login']);
+        //alert("Ha ocurrido un error al cargar los restaurantes");
+      }
+    });
+  }
+
 }
