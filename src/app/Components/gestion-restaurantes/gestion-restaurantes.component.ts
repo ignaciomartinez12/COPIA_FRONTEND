@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Restaurante } from 'src/app/Entities/restaurante';
-import { Plato } from 'src/app/Entities/plato';
 import { Router } from '@angular/router';
 import { DomSanitizer, EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { Url } from 'src/app/Entities/url';
@@ -18,12 +17,12 @@ import * as fs from 'fs';
 })
 export class GestionRestaurantesComponent implements OnInit {
   public previsualizacion!: string;
-  private pathImgSel: string = "";
   public loading!: boolean;
   public archivos: any = [];
 
   private restauranteSelect: string;
   private platoSelect: string;
+  public platoFoto: string;
 
   //restaurantes
   avisoNombre: string = "";
@@ -33,7 +32,6 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoDireccion: string = "";
   avisoEmail: string = "";
   avisoTelefono: string = "";
-
   URL: string = new Url().url;
   funciones: FuncionesService;
   listaRestaurantes: Restaurante[] = [];
@@ -48,6 +46,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones = new FuncionesService();
     this.restauranteSelect = '';
     this.platoSelect = '';
+    this.platoFoto = '';
   }
 
   ngOnInit(): void {
@@ -507,9 +506,16 @@ export class GestionRestaurantesComponent implements OnInit {
 
     //this.avisoFotoP = this.funciones.comprobarVacio(fotoPCampo?.value);
 
+    var imagen = '';
+    if (this.platoFoto === '') {
+      imagen = "../../../assets/plt_images/food.png";
+    } else {
+      imagen = this.platoFoto;
+    }
+
     if (!errorCampo) {
       this.peticionHttpCrearCarta(nombrePCampo?.value, Number(precioPCampo?.value),
-        descripcionPCampo?.value, veganoPCampo?.value, "../../../assets/plt_images/food.png", this.restauranteSelect);
+        descripcionPCampo?.value, veganoPCampo?.value, imagen, this.restauranteSelect);
     }
   }
 
@@ -553,9 +559,16 @@ export class GestionRestaurantesComponent implements OnInit {
 
     //this.avisoFotoP = this.funciones.comprobarVacio(fotoPCampo?.value);
 
+    var imagen = '';
+    if (this.platoFoto === '') {
+      imagen = "../../../assets/plt_images/food.png";
+    } else {
+      imagen = this.platoFoto;
+    }
+
     if (!errorCampo) {
       this.peticionHttpActualizarCarta(nombrePCampo?.value, this.platoSelect, Number(precioPCampo?.value),
-        descripcionPCampo?.value, veganoPCampo?.value, "../../../assets/plt_images/food.png", this.restauranteSelect);
+        descripcionPCampo?.value, veganoPCampo?.value, imagen, this.restauranteSelect);
     }
   }
 
@@ -699,12 +712,14 @@ export class GestionRestaurantesComponent implements OnInit {
       const url = this.URL + 'food/getCarta/' + this.restauranteSelect;
       this.http.get(url, { headers, responseType: 'text' }).subscribe({
         next: data => {
+          //console.log(data);
+
           this.listaPlatos = [];
           if (data.length == 0) {
             //alert(window.sessionStorage.getItem('rol'));
             alert("No hay carta en ese restaurante");
           } else {
-            var listaCartaJSON = data.split(";");
+            var listaCartaJSON = data.split(";;");
             for (let i = 0; i < listaCartaJSON.length; i++) {
               //console.log(listaResJSON[i]);
               this.listaPlatos.push(new Plato(listaCartaJSON[i]))
@@ -782,54 +797,19 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('cont_confirm_udtP', false); //mostrar btns_aceptar_cancelar
   }
 
-  capturarFile2(event: any): any {
-    const archivoCapturado = event.target.files[0];
-    var fReader = new FileReader();
-    fReader.readAsDataURL(archivoCapturado);
-    fReader.onloadend = function (event) {
-      var img = document.getElementById("fotoPlato") as HTMLImageElement;
-      if (event.target !== null) {
-        if (event.target.result !== null) {
-          img.src = String(event.target.result);
-        } else {
-          alert("Error al cargar la foto");
-        }
-      } else {
-        alert("Error al cargar la foto");
-      }
-    }
-    var img = document.getElementById("fotoPlato") as HTMLImageElement;
+  capturarFile(event: any) {
+    let file = event.target.files[0];
+    this.imageConverter(file);
   }
 
-  capturarFile(event: any): any {
-    const archivoCapturado = event.target.files[0];
-    var fReader = new FileReader();
-    fReader.readAsDataURL(archivoCapturado);
-    fReader.onloadend = function (event) {
-      var img = document.getElementById("fotoPlato") as HTMLImageElement;
-      if (event.target !== null) {
-        if (event.target.result !== null) {
-          img.src = String(event.target.result);
-        } else {
-          alert("Error al cargar la foto");
-        }
-      } else {
-        alert("Error al cargar la foto");
+  imageConverter(file: Blob) {
+    let self = this;
+    let reader = new FileReader();
+    reader.onload = function () {
+      if (typeof reader.result === "string") {
+        self.platoFoto = ("data:image/png;base64," + btoa(reader.result));
       }
     }
-    var img = document.getElementById("fotoPlato") as HTMLImageElement;
+    reader.readAsBinaryString(file);
   }
-
-  /*subirFoto() {
-    if (this.pathImgSel !== "") {
-      var ultposicion = this.pathImgSel.lastIndexOf("/");
-      var destino = "../../../assets/plt_images/" + this.pathImgSel.substring(ultposicion);
-      //console.log(destino);
-      fs.copyFile(this.pathImgSel, 'destination.txt', (err: any) => {
-        if (err)
-          throw err;
-        alert(destino);
-      });
-    }
-  }*/
 }

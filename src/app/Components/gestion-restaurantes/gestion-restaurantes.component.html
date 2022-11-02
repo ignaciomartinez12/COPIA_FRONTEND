@@ -190,6 +190,7 @@
                                             </div>
                                             <input class="campo_entrada" type="text" id="nombreP" disabled>
                                         </div>
+                                    </div>
                                     <div class="linea_campo contenedor_horizontal">
                                         <div class="campo_dato1">
                                             <div class="contenedor_label contenedor_horizontal">
@@ -202,13 +203,14 @@
                                             <label class="texto_gris" for="vegano">Plato Vegano</label>
                                             <input class="campo_entrada_check" type="checkbox" id="vegano" disabled>
                                         </div>
+                                    </div>
                                     <div id="linea_abajo" class="linea_campo contenedor_horizontal2">
                                         <div class="campo_dato4">
                                             <div class="contenedor_label contenedor_horizontal">
                                                 <label class="texto_gris" for="botonFoto">Foto</label>
                                                 <label class="aviso" for="botonFoto">{{ avisoFotoP }}</label>
                                             </div>
-                                            <img id="fotoPlato" class="campo_entrada_img" [src]="previsualizacion" alt="">
+                                            <img id="fotoPlato" class="campo_entrada_img" [src]="platoFoto" alt="">
                                             <input (change)="capturarFile($event)" accept=".png" type="file" id="botonFoto" disabled>
                                         </div>
                                         <div class="campo_dato5">
