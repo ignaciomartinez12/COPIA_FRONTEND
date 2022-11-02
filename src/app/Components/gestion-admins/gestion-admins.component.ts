@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Admin } from 'src/app/Entities/admin';
 import { Url } from 'src/app/Entities/url';
+import { FuncionesService } from 'src/app/services/funcionesServices';
 
 @Component({
   selector: 'app-gestion-admins',
@@ -16,19 +17,23 @@ export class GestionAdminsComponent implements OnInit {
   avisoNIF: string = "";
   avisoCorreo: string = "";
   avisoPwd: string = "";
-  URL : string = new Url().url;
-    
+  URL: string = new Url().url;
+  funciones: FuncionesService;
+
   listaAdmins: Admin[] = [];
 
-  constructor(private router: Router, private http: HttpClient) { }
-  
+  constructor(private router: Router, private http: HttpClient) {
+    this.funciones = new FuncionesService();
+  }
+
   ngOnInit(): void {
     this.peticionGetHttp();
   }
 
   peticionGetHttp(): void {
-    const headers = { 
-      'Content-Type': 'application/json'}; 
+    const headers = {
+      'Content-Type': 'application/json'
+    };
 
     const body = {
       "correoAcceso": window.sessionStorage.getItem('correo'),
@@ -36,32 +41,32 @@ export class GestionAdminsComponent implements OnInit {
     };
 
     const url = this.URL + 'user/getAdmins';
-    this.http.post(url, body, { headers, responseType: 'text'}).subscribe({
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        this.listaAdmins = [];
-        if(data.length == 0){
-          //alert("No hay admins");
-        }else{
-          var listaResJSON = data.split(";");
-          for (let i = 0; i < listaResJSON.length; i++) {
-            //console.log(listaResJSON[i]);
-            this.listaAdmins.push(new Admin(listaResJSON[i]))
-            console.log(this.listaAdmins[i]);
+        if (data == "No tienes acceso a este servicio") {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else {
+          this.listaAdmins = [];
+          if (data.length == 0) {
+            //alert("No hay admins");
+          } else {
+            var listaResJSON = data.split(";");
+            for (let i = 0; i < listaResJSON.length; i++) {
+              //console.log(listaResJSON[i]);
+              this.listaAdmins.push(new Admin(listaResJSON[i]))
+              console.log(this.listaAdmins[i]);
+            }
           }
         }
       }, error: error => {
-        if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
-          this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al cargar los administradores");
-          //alert(error.error);
-        }
+        alert("Ha ocurrido un error al cargar los administradores");
+        //alert(error.error);
       }
     });
   }
 
-  aceptarCambiosCrear(){
+  aceptarCambiosCrear() {
     var nombreCampo = document.getElementById("nombreA") as HTMLInputElement;
     var apellidosCampo = document.getElementById("apellidosA") as HTMLInputElement;
     var zonaCampo = document.getElementById("zonaA") as HTMLInputElement;
@@ -69,22 +74,32 @@ export class GestionAdminsComponent implements OnInit {
     var emailCampo = document.getElementById("emailA") as HTMLInputElement;
     var pwdCampo = document.getElementById("passwordA") as HTMLInputElement;
 
-    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
-    this.avisoApellidos = this.comprobarVacio(apellidosCampo?.value);
-    this.avisoZona = this.comprobarVacio(zonaCampo?.value);
-    this.avisoNIF = this.comprobarVacio(nifCampo?.value);
-    this.avisoCorreo = this.comprobarVacio(emailCampo?.value);
-    this.avisoPwd = this.comprobarVacio(pwdCampo?.value);
+    var errorCampo = false;
 
-    if(!this.validarEmail(emailCampo?.value)){
-      return;
+    this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
+    if (this.avisoNombre !== "") { errorCampo = true; }
+    this.avisoApellidos = this.funciones.comprobarVacio(apellidosCampo?.value);
+    if (this.avisoApellidos !== "") { errorCampo = true; }
+    this.avisoZona = this.funciones.comprobarVacio(zonaCampo?.value);
+    if (this.avisoZona !== "") { errorCampo = true; }
+    this.avisoNIF = this.funciones.comprobarVacio(nifCampo?.value);
+    if (this.avisoNIF !== "") { errorCampo = true; }
+    this.avisoCorreo = this.funciones.comprobarVacio(emailCampo?.value);
+    if (this.avisoCorreo !== "") { errorCampo = true; }
+    this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
+    if (this.avisoPwd !== "") { errorCampo = true; }
+
+    if (!this.funciones.validarEmail(emailCampo?.value)) {
+      errorCampo = true;
     }
 
-    this.peticionHttpCrear(nombreCampo?.value, apellidosCampo?.value,  
-      zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value);
+    if (!errorCampo) {
+      this.peticionHttpCrear(nombreCampo?.value, apellidosCampo?.value,
+        zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value);
+    }
   }
 
-  aceptarCambiosActualizar(){
+  aceptarCambiosActualizar() {
     var nombreCampo = document.getElementById("nombreA") as HTMLInputElement;
     var apellidosCampo = document.getElementById("apellidosA") as HTMLInputElement;
     var zonaCampo = document.getElementById("zonaA") as HTMLInputElement;
@@ -92,69 +107,78 @@ export class GestionAdminsComponent implements OnInit {
     var emailCampo = document.getElementById("emailA") as HTMLInputElement;
     var pwdCampo = document.getElementById("passwordA") as HTMLInputElement;
 
-    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
-    this.avisoApellidos = this.comprobarVacio(apellidosCampo?.value);
-    this.avisoZona = this.comprobarVacio(zonaCampo?.value);
-    this.avisoNIF = this.comprobarVacio(nifCampo?.value);
-    this.avisoCorreo = this.comprobarVacio(emailCampo?.value);
-    this.avisoPwd = this.comprobarVacio(pwdCampo?.value);
+    var errorCampo = false;
 
-    if(!this.validarEmail(emailCampo?.value)){
-      return;
+    this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
+    if (this.avisoNombre !== "") { errorCampo = true; }
+    this.avisoApellidos = this.funciones.comprobarVacio(apellidosCampo?.value);
+    if (this.avisoApellidos !== "") { errorCampo = true; }
+    this.avisoZona = this.funciones.comprobarVacio(zonaCampo?.value);
+    if (this.avisoZona !== "") { errorCampo = true; }
+    this.avisoNIF = this.funciones.comprobarVacio(nifCampo?.value);
+    if (this.avisoNIF !== "") { errorCampo = true; }
+    this.avisoCorreo = this.funciones.comprobarVacio(emailCampo?.value);
+    if (this.avisoCorreo !== "") { errorCampo = true; }
+    this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
+    if (this.avisoPwd !== "") { errorCampo = true; }
+
+    if (!this.funciones.validarEmail(emailCampo?.value)) {
+      errorCampo = true;
     }
 
-    this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value,  
-      zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value);
-
+    if (!errorCampo) {
+      this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value,
+        zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value);
+    }
   }
 
-  cancelarCambiosCrear(){
+  cancelarCambiosCrear() {
     this.disabledTodos(true); //bloquear campos
     this.dejarVacio();
-    this.ocultarBtn('add_admin', false); //mostrar btn_add
-    this.ocultarBtn('cont_confirm_add_a', true); //ocultar btns_aceptar_cancelar
+    this.funciones.ocultarBtn('add_admin', false); //mostrar btn_add
+    this.funciones.ocultarBtn('cont_confirm_add_a', true); //ocultar btns_aceptar_cancelar
   }
 
-  cancelarCambiosActualizar(){
+  cancelarCambiosActualizar() {
     this.disabledTodos(true); //bloquear campos
     this.dejarVacio();
-    this.ocultarBtn('add_admin', false); //mostrar btn_add
-    this.ocultarBtn('cont_confirm_udt_a', true); //ocultar btns_aceptar_cancelar
+    this.funciones.ocultarBtn('add_admin', false); //mostrar btn_add
+    this.funciones.ocultarBtn('cont_confirm_udt_a', true); //ocultar btns_aceptar_cancelar
   }
 
-  activarCamposCrear(){
+  activarCamposCrear() {
     this.disabledTodos(false); //habilitar campos
     this.vaciarCampos(); //vaciar campos
-    this.ocultarBtn('add_admin', true); //ocultar btn_add
-    this.ocultarBtn('update_admin', true); //ocultar btn_add
-    this.ocultarBtn('delete_admin', true); //ocultar btn_add
-    this.ocultarBtn('cont_confirm_add_a', false); //mostrar btns_aceptar_cancelar    
+    this.funciones.ocultarBtn('add_admin', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_admin', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_admin', true); //ocultar btn_add
+    this.funciones.ocultarBtn('cont_confirm_add_a', false); //mostrar btns_aceptar_cancelar    
   }
 
-  activarCamposActualizar(){
+  activarCamposActualizar() {
     this.disabledTodos(false); //habilitar campos
-    this.disabledID('emailA',true);
+    this.funciones.disabledID('emailA', true);
     this.vaciarAvisos(); //vaciar campos
-    this.ocultarBtn('add_admin', true); //ocultar btn_add
-    this.ocultarBtn('update_admin', true); //ocultar btn_add
-    this.ocultarBtn('delete_admin', true); //ocultar btn_add
-    this.ocultarBtn('cont_confirm_udt_a', false); //mostrar btns_aceptar_cancelar
+    this.funciones.ocultarBtn('add_admin', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_admin', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_admin', true); //ocultar btn_add
+    this.funciones.ocultarBtn('cont_confirm_udt_a', false); //mostrar btns_aceptar_cancelar
   }
 
-  eliminar(){
+  eliminar() {
     var correoCampo = document.getElementById("emailA") as HTMLInputElement;
 
-    if(confirm("¿Seguro que quiere eliminar el administrador?")){
+    if (confirm("¿Seguro que quiere eliminar el administrador?")) {
       this.peticionHttpEliminar(correoCampo?.value);
       this.dejarVacio();
       this.peticionGetHttp();
-    }else{
+    } else {
       //cancelar
     }
   }
 
-  peticionHttpEliminar(correo : string){
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpEliminar(correo: string) {
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "correo": correo,
       "correoAcceso": window.sessionStorage.getItem('correo'),
@@ -164,122 +188,120 @@ export class GestionAdminsComponent implements OnInit {
     const url = this.URL + 'user/eliminarUsuario';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Administrador eliminado exitosamente");
-        this.dejarVacio();
-        this.ocultarBtn("add_admin",false);
-        this.ocultarBtn("cont_confirm_add_a",true);
-        this.peticionGetHttp();
-      }, error: error =>{
-        if(error.error.includes("No existe ningun usuario en la base de datos")){
+        if (data.includes("No existe ningun usuario en la base de datos")) {
           alert("No existe ese usuario en la base de datos");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
+        } else if (data.includes("No tienes acceso a este servicio")) {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al eliminar el administrador");
+        } else {
+          alert("Administrador eliminado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_admin", false);
+          this.funciones.ocultarBtn("cont_confirm_add_a", true);
+          this.peticionGetHttp();
         }
-      }});
+      }, error: error => {
+        alert("Ha ocurrido un error al eliminar el administrador");
+      }
+    });
   }
 
-  peticionHttpCrear(nombre : string, apellidos : string, zona : string,
-    nif : string, correo : string, pwd : string): void {
-   const headers = { 'Content-Type': 'application/json'};
-   const body = {
-     "correo": correo,
-     "pwd1": pwd,
-     "pwd2": pwd,
-     "apellidos": apellidos,
-     "nif": nif,
-     "nombre": nombre,
-     "zona": zona,
-     "rol": "admin",
-     "correoAcceso": window.sessionStorage.getItem('correo'),
-     "passwordAcceso": window.sessionStorage.getItem('password')
-   };
+  peticionHttpCrear(nombre: string, apellidos: string, zona: string,
+    nif: string, correo: string, pwd: string): void {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "correo": correo,
+      "pwd1": pwd,
+      "pwd2": pwd,
+      "apellidos": apellidos,
+      "nif": nif,
+      "nombre": nombre,
+      "zona": zona,
+      "rol": "admin",
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
 
-   const url = this.URL + 'user/crearUsuario';
-   this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
-     next: data => {
-       alert("Administrador creado exitosamente");
-       this.dejarVacio();
-       this.ocultarBtn("add_admin",false);
-       this.ocultarBtn("cont_confirm_add_a",true);
-       this.peticionGetHttp();
-     }, error: error =>{
-       if(error.error.includes("Ya existe un usuario con ese correo")){
-         alert("Ya existe un usuario con ese correo");
-       }else if(error.error.includes("No tienes acceso a este servicio")){
-         alert("No tienes acceso a este servicio");
-         this.router.navigate(['/login']);
-       }else if(error.error.includes("contraseña")){
-        alert(error.error);
-       }else{
-         //alert("Ha ocurrido un error al introducir el administrador");
-         alert(error.error);
-       }
-     }});
+    const url = this.URL + 'user/crearUsuario';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("Ya existe un usuario con ese correo")) {
+          alert(data);
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("contraseña")) {
+          alert(data);
+        } else {
+          alert("Administrador creado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_admin", false);
+          this.funciones.ocultarBtn("cont_confirm_add_a", true);
+          this.peticionGetHttp();
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al introducir el administrador");
+        //alert(error.error);
+      }
+    });
 
- }
+  }
 
- peticionHttpActualizar(nombre : string, apellidos : string, zona : string,
-  nif : string, correo : string, pwd : string): void {
-   const headers = { 'Content-Type': 'application/json'};
-   const body = {
-    "correo": correo,
-    "pwd1": pwd,
-    "pwd2": pwd,
-    "apellidos": apellidos,
-    "nif": nif,
-    "nombre": nombre,
-    "zona": zona,
-    "rol": "admin",
-    "correoAcceso": window.sessionStorage.getItem('correo'),
-    "passwordAcceso": window.sessionStorage.getItem('password')
-  };
+  peticionHttpActualizar(nombre: string, apellidos: string, zona: string,
+    nif: string, correo: string, pwd: string): void {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "correo": correo,
+      "pwd1": pwd,
+      "pwd2": pwd,
+      "apellidos": apellidos,
+      "nif": nif,
+      "nombre": nombre,
+      "zona": zona,
+      "rol": "admin",
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
 
-   let url = this.URL + 'user/actualizarUsuario/';
-   url += correo;
-   this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
-     next: data => {
-       alert("Administrador actualizado exitosamente");
-       this.dejarVacio();
-       this.ocultarBtn("update_admin",false);
-       this.ocultarBtn("cont_confirm_udt_a",true);
-       this.peticionGetHttp();
-     }, error: error =>{
-       if(error.error.includes("No existe ningun usuario en la base de datos")){
-         alert("No existe ningun usuario en la base de datos");
-       }else if(error.error.includes("No tienes acceso a este servicio")){
-         alert("No tienes acceso a este servicio");
-         this.router.navigate(['/login']);
-       }else{
-         //alert("Ha ocurrido un error al actualizar el administrador");
-         alert(error.error);
-       }
-     }});
+    let url = this.URL + 'user/actualizarUsuario/';
+    url += correo;
+    console.log(url);
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        }else if (data.includes("No existe ningun usuario en la base de datos")) {
+          alert("No existe ese usuario en la base de datos");
+        } else {
+          alert("Administrador actualizado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_admin", false);
+          this.funciones.ocultarBtn("cont_confirm_udt_a", true);
+          this.peticionGetHttp();
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al actualizar el administrador");
+        //alert(error.error);
+      }
+    });
+  }
 
- }
-
-  dejarVacio(){
+  dejarVacio() {
     this.vaciarAvisos();
     this.vaciarCampos();
   }
 
-  vaciarCampos(){
-    this.asignarValorID("nombreA","");
-    this.asignarValorID("apellidosA","");
-    this.asignarValorID("zonaA","");
-    this.asignarValorID("nifA","");
-    this.asignarValorID("emailA","");
-    this.asignarValorID("passwordA","");
+  vaciarCampos() {
+    this.funciones.asignarValorID("nombreA", "");
+    this.funciones.asignarValorID("apellidosA", "");
+    this.funciones.asignarValorID("zonaA", "");
+    this.funciones.asignarValorID("nifA", "");
+    this.funciones.asignarValorID("emailA", "");
+    this.funciones.asignarValorID("passwordA", "");
   }
 
-  asignarValorID(id:string, valor:string){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    campo.value = valor;
-  }
-
-  vaciarAvisos(){
+  vaciarAvisos() {
     this.avisoNombre = "";
     this.avisoApellidos = "";
     this.avisoNIF = "";
@@ -288,69 +310,37 @@ export class GestionAdminsComponent implements OnInit {
     this.avisoPwd = "";
   }
 
-  logout(){
+  logout() {
     window.sessionStorage.removeItem('rol');
     window.sessionStorage.removeItem('correo');
     window.sessionStorage.removeItem('password');
     this.router.navigate(['/inicio']);
   }
 
-  disabledTodos(valor: boolean){
-    this.disabledID('nombreA', valor);
-    this.disabledID('apellidosA', valor);
-    this.disabledID('zonaA', valor);
-    this.disabledID('nifA', valor);
-    this.disabledID('emailA', valor);
-    this.disabledID('passwordA', valor);
+  disabledTodos(valor: boolean) {
+    this.funciones.disabledID('nombreA', valor);
+    this.funciones.disabledID('apellidosA', valor);
+    this.funciones.disabledID('zonaA', valor);
+    this.funciones.disabledID('nifA', valor);
+    this.funciones.disabledID('emailA', valor);
+    this.funciones.disabledID('passwordA', valor);
   }
 
-  disabledID(id:string, valor:boolean){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    campo.disabled = valor;
-  }
-
-  ocultarBtn(id:string, valor:boolean){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    if(valor){
-      campo.classList.add('oculto');
-    }else{
-      campo.classList.remove('oculto');
-    }
-  }
-
-  comprobarVacio(cadena:string):string{
-    if(cadena === ""){
-      return "Campo vacío";
-    }else{
-      return "";
-    }
-  }
-
-  validarEmail(valor: string): boolean {
-    if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)){
-     this.avisoCorreo = "";
-      return true;
-    } else {
-      this.avisoCorreo = "Formato de email incorrecto";
-      return false;
-    }
-  }
-
-  onSelect(element: Admin){
+  onSelect(element: Admin) {
     this.disabledTodos(true);
     console.log(element);
-    
-    this.asignarValorID('nombreA', element.nombre);
-    this.asignarValorID('apellidosA', element.apellidos);
-    this.asignarValorID('nifA', element.nif);
-    this.asignarValorID('zonaA', element.zona);
-    this.asignarValorID('emailA', element.correo);
-    this.asignarValorID('passwordA', element.pwd);
-    
-    this.ocultarBtn("cont_confirm_add_a",true);
-    this.ocultarBtn("cont_confirm_udt_a",true);
-    this.ocultarBtn("add_admin",false);
-    this.ocultarBtn("update_admin",false);
-    this.ocultarBtn("delete_admin",false);
+
+    this.funciones.asignarValorID('nombreA', element.nombre);
+    this.funciones.asignarValorID('apellidosA', element.apellidos);
+    this.funciones.asignarValorID('nifA', element.nif);
+    this.funciones.asignarValorID('zonaA', element.zona);
+    this.funciones.asignarValorID('emailA', element.correo);
+    this.funciones.asignarValorID('passwordA', element.pwd);
+
+    this.funciones.ocultarBtn("cont_confirm_add_a", true);
+    this.funciones.ocultarBtn("cont_confirm_udt_a", true);
+    this.funciones.ocultarBtn("add_admin", false);
+    this.funciones.ocultarBtn("update_admin", false);
+    this.funciones.ocultarBtn("delete_admin", false);
   }
 }

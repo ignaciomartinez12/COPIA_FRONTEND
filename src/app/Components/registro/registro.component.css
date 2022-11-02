@@ -1,4 +1,4 @@
-.contenedor_login_padre{
+.contenedor_login_padre {
     min-height: 100vh;
     background: url(../../../assets/bg_images/food2_bg2.jpg);
     background-repeat: no-repeat;
@@ -10,25 +10,25 @@
     align-items: center;
 }
 
-.contenedor_campos{
+.contenedor_campos {
     padding: 8px 16px;
     border: 5px solid #424242;
     padding-bottom: 16px;
 }
 
-.contenedor_campos h1{
+.contenedor_campos h1 {
     text-align: center;
     font-size: 2rem;
     margin-top: 8px;
     margin-bottom: 8px;
 }
 
-.contenedor_label{
+.contenedor_label {
     justify-content: space-between;
     margin-bottom: 8px;
 }
 
-.btn_paso{
+.btn_paso {
     margin-top: 8px;
     font-weight: bold;
     font-size: 1rem;
@@ -40,7 +40,7 @@
     background: white;
 }
 
-.o_sep{
+.o_sep {
     margin-right: 8px;
 }
 
@@ -53,30 +53,30 @@ ul {
     list-style-type: none;
     margin-left: auto;
 }
-  
+
 li {
     height: 35px;
     line-height: 30px;
-    
+
     float: left;
     margin-right: 10px;
     padding: 2px;
     font-size: 2.5rem;
 }
 
-.contenedor_pasos{
+.contenedor_pasos {
     display: flex;
     margin-top: -45px;
 }
 
-.ancho_partido{
+.ancho_partido {
     width: 49.5%;
 }
 
-.contenedor_acceder{
+.contenedor_acceder {
     justify-content: space-between;
 }
 
-.transparente{
+.transparente {
     visibility: hidden;
 }

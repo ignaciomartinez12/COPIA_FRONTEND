@@ -4,8 +4,11 @@ import { Observable } from 'rxjs';
 import { Restaurante } from 'src/app/Entities/restaurante';
 import { Plato } from 'src/app/Entities/plato';
 import { Router } from '@angular/router';
-import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
+import { DomSanitizer, EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { Url } from 'src/app/Entities/url';
+import { FuncionesService } from 'src/app/services/funcionesServices';
+import { Plato } from 'src/app/Entities/plato';
+import * as fs from 'fs';
 
 
 @Component({
@@ -14,10 +17,15 @@ import { Url } from 'src/app/Entities/url';
   styleUrls: ['./gestion-restaurantes.component.css']
 })
 export class GestionRestaurantesComponent implements OnInit {
-  private contenedor_datos!: HTMLElement;
-  private contenedor_carta!: HTMLElement;
-  private contenedor_factura!: HTMLElement;
-  
+  public previsualizacion!: string;
+  private pathImgSel: string = "";
+  public loading!: boolean;
+  public archivos: any = [];
+
+  private restauranteSelect: string;
+  private platoSelect: string;
+
+  //restaurantes
   avisoNombre: string = "";
   avisoRazon: string = "";
   avisoCategoria: string = "";
@@ -25,39 +33,28 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoDireccion: string = "";
   avisoEmail: string = "";
   avisoTelefono: string = "";
-  URL : string = new Url().urlHeroku;
 
+  URL: string = new Url().url;
+  funciones: FuncionesService;
+  listaRestaurantes: Restaurante[] = [];
+  //platos
   avisoNombreP: string = "";
   avisoPrecioP: string = "";
-  avisoVeganoP: string = "";
   avisoDescP: string = "";
   avisoFotoP: string = "";
-  
-  listaRestaurantes: Restaurante[] = [];
-  listaCarta:  Plato[] = [];
-  
+  listaPlatos: Plato[] = [];
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient, private sanitizer: DomSanitizer) {
+    this.funciones = new FuncionesService();
+    this.restauranteSelect = '';
+    this.platoSelect = '';
+  }
 
   ngOnInit(): void {
-    var cont_datos = document.getElementById("datos_v");
-    var cont_carta = document.getElementById("carta_v");
-    var cont_factura= document.getElementById("facturas_v");
-
-    if (cont_datos != null){
-      this.contenedor_datos = cont_datos;
-    }
-    if (cont_carta != null){
-      this.contenedor_carta = cont_carta;
-    }
-    if (cont_factura != null){
-      this.contenedor_factura = cont_factura;
-    }
-
     this.peticionGetHttp();
   }
 
-  aceptarCambiosCrear(){
+  aceptarCambiosCrear() {
     var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
     var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
@@ -66,28 +63,43 @@ export class GestionRestaurantesComponent implements OnInit {
     var razon_socialCampo = document.getElementById("razonRes") as HTMLInputElement;
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
 
-    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
-    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
-    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
-    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
-    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
-    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
-    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
+    var errorCampo = false;
 
-    if(telefonoCampo?.value != ""){
-      if(!this.esNumero(telefonoCampo?.value)){
-        this.avisoTelefono = "No corresponde con un numero de tlf";
-      }
-    }else{
-      return;
+    this.avisoEmail = this.funciones.comprobarVacio(correoCampo?.value);
+    if (this.avisoEmail !== "") { errorCampo = true; }
+    this.avisoTelefono = this.funciones.comprobarVacio(telefonoCampo?.value);
+    if (this.avisoTelefono !== "") { errorCampo = true; }
+    this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
+    if (this.avisoNombre !== "") { errorCampo = true; }
+    this.avisoDireccion = this.funciones.comprobarVacio(direccionCampo?.value);
+    if (this.avisoDireccion !== "") { errorCampo = true; }
+    this.avisoRazon = this.funciones.comprobarVacio(razon_socialCampo?.value);
+    if (this.avisoRazon !== "") { errorCampo = true; }
+    this.avisoCIF = this.funciones.comprobarVacio(CIFCampo?.value);
+    if (this.avisoCIF !== "") { errorCampo = true; }
+    this.avisoCategoria = this.funciones.comprobarVacio(categoriaCampo?.value);
+    if (this.avisoCategoria !== "") { errorCampo = true; }
+
+    if (!this.funciones.validarEmail(correoCampo?.value)) {
+      errorCampo = true;
     }
 
-    this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,  
-      razon_socialCampo?.value,  0, direccionCampo?.value, correoCampo?.value, 
-      Number(telefonoCampo?.value), CIFCampo?.value);
+    if (this.funciones.esNumero(telefonoCampo?.value)) {
+      this.avisoTelefono = "";
+    } else {
+      this.avisoTelefono = "Formato incorrecto";
+      errorCampo = true;
+    }
+
+    if (!errorCampo) {
+      this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,
+        razon_socialCampo?.value, 0, direccionCampo?.value, correoCampo?.value,
+        Number(telefonoCampo?.value), CIFCampo?.value);
+    }
+
   }
 
-  aceptarCambiosActualizar(){
+  aceptarCambiosActualizar() {
     var correoCampo = document.getElementById("emailRes") as HTMLInputElement;
     var categoriaCampo = document.getElementById("categoria") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccionRes") as HTMLInputElement;
@@ -97,27 +109,44 @@ export class GestionRestaurantesComponent implements OnInit {
     var telefonoCampo = document.getElementById("telRes") as HTMLInputElement;
     var valoracionCampo = document.getElementById("valoracionRes") as HTMLInputElement;
 
-    this.avisoEmail = this.comprobarVacio(correoCampo?.value);
-    this.avisoTelefono = this.comprobarVacio(telefonoCampo?.value);
-    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
-    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
-    this.avisoRazon = this.comprobarVacio(razon_socialCampo?.value);
-    this.avisoCIF = this.comprobarVacio(CIFCampo?.value);
-    this.avisoCategoria = this.comprobarVacio(categoriaCampo?.value);
+    var errorCampo = false;
 
-    if(!this.esNumero(telefonoCampo?.value)){
-      this.avisoTelefono = "No corresponde con un numero de tlf";
+    this.avisoEmail = this.funciones.comprobarVacio(correoCampo?.value);
+    if (this.avisoEmail !== "") { errorCampo = true; }
+    this.avisoTelefono = this.funciones.comprobarVacio(telefonoCampo?.value);
+    if (this.avisoTelefono !== "") { errorCampo = true; }
+    this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
+    if (this.avisoNombre !== "") { errorCampo = true; }
+    this.avisoDireccion = this.funciones.comprobarVacio(direccionCampo?.value);
+    if (this.avisoDireccion !== "") { errorCampo = true; }
+    this.avisoRazon = this.funciones.comprobarVacio(razon_socialCampo?.value);
+    if (this.avisoRazon !== "") { errorCampo = true; }
+    this.avisoCIF = this.funciones.comprobarVacio(CIFCampo?.value);
+    if (this.avisoCIF !== "") { errorCampo = true; }
+    this.avisoCategoria = this.funciones.comprobarVacio(categoriaCampo?.value);
+    if (this.avisoCategoria !== "") { errorCampo = true; }
+
+    if (!this.funciones.validarEmail(correoCampo?.value)) {
+      errorCampo = true;
     }
 
-    this.peticionHttpActualizar(nombreCampo?.value, categoriaCampo?.value,  
-      razon_socialCampo?.value, valoracionCampo?.value, direccionCampo?.value, 
-      correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value );
+    if (this.funciones.esNumero(telefonoCampo?.value)) {
+      this.avisoTelefono = "";
+    } else {
+      this.avisoTelefono = "Formato incorrecto";
+      errorCampo = true;
+    }
 
+    if (!errorCampo) {
+      this.peticionHttpActualizar(nombreCampo?.value, categoriaCampo?.value,
+        razon_socialCampo?.value, valoracionCampo?.value, direccionCampo?.value,
+        correoCampo?.value, Number(telefonoCampo?.value), CIFCampo?.value);
+    }
   }
 
-  peticionHttpCrear(nombre : string, categoria : string, razon_social : string, valoracion : GLfloat,
-     direccion : string, correo : string, telefono : number, CIF : string): void {
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpCrear(nombre: string, categoria: string, razon_social: string, valoracion: GLfloat,
+    direccion: string, correo: string, telefono: number, CIF: string): void {
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "email": correo,
       "categoria": categoria,
@@ -134,28 +163,30 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = this.URL + 'food/crearRestaurante';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Restaurante creado exitosamente");
-        this.dejarVacio();
-        this.ocultarBtn("add_res",false);
-        this.ocultarBtn("cont_confirm_add",true);
-        this.peticionGetHttp();
-      }, error: error =>{
-        if(error.error.includes("Ya existe un restaurante con ese nombre")){
-          alert("Ya existe un restaurante con ese nombre");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
+        if (data.includes("Ya existe un restaurante con ese nombre")) {
+          alert(data);
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al introducir el restaurante");
+        } else {
+          alert("Restaurante creado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_res", false);
+          this.funciones.ocultarBtn("cont_confirm_add", true);
+          this.restauranteSelect = '';
+          this.peticionGetHttp();
         }
-      }});
+      }, error: error => {
+        alert("Ha ocurrido un error al introducir el restaurante");
+      }
+    });
 
   }
 
-  peticionHttpActualizar(nombre : string, categoria : string, razon_social : string, 
-    valoracion : string, direccion : string, correo : string, telefono : number, 
-    CIF : string): void {
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpActualizar(nombre: string, categoria: string, razon_social: string,
+    valoracion: string, direccion: string, correo: string, telefono: number,
+    CIF: string): void {
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "email": correo,
       "categoria": categoria,
@@ -172,36 +203,39 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = this.URL + 'food/actualizarRestaurante';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Restaurante actualizado exitosamente");
-        this.dejarVacio();
-        this.ocultarBtn("update_res",false);
-        this.ocultarBtn("cont_confirm_udt",true);
-        this.peticionGetHttp();
-      }, error: error =>{
-        if(error.error.includes("No existe un restaurante con ese nombre")){
-          alert("No existe un restaurante con ese nombre");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
+        if (data.includes("No existe un restaurante con ese nombre")) {
+          alert(data);
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al actualizar el restaurante");
+        } else {
+          alert("Restaurante actualizado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_res", false);
+          this.funciones.ocultarBtn("cont_confirm_udt", true);
+          this.restauranteSelect = '';
+          this.peticionGetHttp();
         }
-      }});
+      }, error: error => {
+        alert("Ha ocurrido un error al actualizar el restaurante");
+      }
+    });
 
   }
 
   peticionGetHttp(): void {
-    const headers = { 
-      'Content-Type': 'application/json'}; 
+    const headers = {
+      'Content-Type': 'application/json'
+    };
 
-      const url = this.URL + 'food/consultarRestaurantes';
+    const url = this.URL + 'food/consultarRestaurantes';
     this.http.get(url, { headers, responseType: 'text' }).subscribe({
       next: data => {
         this.listaRestaurantes = [];
-        if(data.length == 0){
+        if (data.length == 0) {
           //alert(window.sessionStorage.getItem('rol'));
           //alert("No hay restaurantes");
-        }else{
+        } else {
           var listaResJSON = data.split(";");
           for (let i = 0; i < listaResJSON.length; i++) {
             //console.log(listaResJSON[i]);
@@ -211,58 +245,78 @@ export class GestionRestaurantesComponent implements OnInit {
         }
       }, error: error => {
         //this.router.navigate(['/login']);
-        //alert("Ha ocurrido un error al cargar los restaurantes");
+        alert("Ha ocurrido un error al cargar los restaurantes");
       }
     });
-  } 
-
-  cancelarCambiosCrear(){
-    this.disabledTodos(true); //bloquear campos
-    this.dejarVacio();
-    this.ocultarBtn('add_res', false); //mostrar btn_add
-    this.ocultarBtn('cont_confirm_add', true); //ocultar btns_aceptar_cancelar
   }
 
-  cancelarCambiosActualizar(){
+  cancelarCambiosCrear() {
     this.disabledTodos(true); //bloquear campos
     this.dejarVacio();
-    this.ocultarBtn('add_res', false); //mostrar btn_add
-    this.ocultarBtn('cont_confirm_udt', true); //ocultar btns_aceptar_cancelar
+    this.funciones.ocultarBtn('add_res', false); //mostrar btn_add
+
+    this.funciones.ocultarBtn('btn_datos', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_carta', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
+
+    this.funciones.ocultarBtn('cont_confirm_add', true); //ocultar btns_aceptar_cancelar
   }
 
-  activarCamposCrear(){
+  cancelarCambiosActualizar() {
+    this.disabledTodos(true); //bloquear campos
+    this.dejarVacio();
+    this.funciones.ocultarBtn('add_res', false); //mostrar btn_add
+
+    this.funciones.ocultarBtn('btn_datos', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_carta', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
+
+    this.funciones.ocultarBtn('cont_confirm_udt', true); //ocultar btns_aceptar_cancelar
+  }
+
+  activarCamposCrear() {
     this.disabledTodos(false); //habilitar campos
     this.vaciarCampos(); //vaciar campos
-    this.ocultarBtn('add_res', true); //ocultar btn_add
-    this.ocultarBtn('update_res', true); //ocultar btn_add
-    this.ocultarBtn('delete_res', true); //ocultar btn_add
-    this.ocultarBtn('cont_confirm_add', false); //mostrar btns_aceptar_cancelar    
+    this.funciones.ocultarBtn('add_res', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_res', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_res', true); //ocultar btn_add
+
+    this.funciones.ocultarBtn('btn_datos', true); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_carta', true); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_facturas', true); //ocultar btns_carta_datos
+
+    this.funciones.ocultarBtn('cont_confirm_add', false); //mostrar btns_aceptar_cancelar    
   }
 
-  activarCamposActualizar(){
+  activarCamposActualizar() {
     this.disabledTodos(false); //habilitar campos
-    this.disabledID('nombreRes',true);
+    this.funciones.disabledID('nombreRes', true);
     this.vaciarAvisos(); //vaciar campos
-    this.ocultarBtn('add_res', true); //ocultar btn_add
-    this.ocultarBtn('update_res', true); //ocultar btn_add
-    this.ocultarBtn('delete_res', true); //ocultar btn_add
-    this.ocultarBtn('cont_confirm_udt', false); //mostrar btns_aceptar_cancelar
+    this.funciones.ocultarBtn('add_res', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_res', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_res', true); //ocultar btn_add
+
+    this.funciones.ocultarBtn('btn_datos', true); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_carta', true); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_facturas', true); //ocultar btns_carta_datos
+
+    this.funciones.ocultarBtn('cont_confirm_udt', false); //mostrar btns_aceptar_cancelar
   }
 
-  eliminar(){
+  eliminar() {
     var nombreCampo = document.getElementById("nombreRes") as HTMLInputElement;
 
-    if(confirm("¿Seguro que quiere eliminar el restaurante?")){
+    if (confirm("¿Seguro que quiere eliminar el restaurante?")) {
       this.peticionHttpEliminar(nombreCampo?.value);
       this.dejarVacio();
       this.peticionGetHttp();
-    }else{
+    } else {
       //cancelar
     }
   }
 
-  peticionHttpEliminar(nombre : string){
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpEliminar(nombre: string) {
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombre,
       "correoAcceso": window.sessionStorage.getItem('correo'),
@@ -272,261 +326,270 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = this.URL + 'food/eliminarRestaurante';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Restaurante eliminado exitosamente");
-        this.dejarVacio();
-        this.ocultarBtn("add_res",false);
-        this.ocultarBtn("cont_confirm_add",true);
-        this.peticionGetHttp();
-      }, error: error =>{
-        if(error.error.includes("No existe un restaurante llamado ")){
+        if (data.includes("No existe un restaurante llamado ")) {
           alert("No existe ese restaurante en la base de datos");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al eliminar el restaurante");
+        } else {
+          alert("Restaurante eliminado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_res", false);
+          this.funciones.ocultarBtn("cont_confirm_add", true);
+          this.restauranteSelect = '';
+          this.peticionGetHttp();
         }
-      }});
-  }
-
-  esNumero(cadena:string): boolean{
-		if(cadena.length != 9){
-      return false;
-    }
-    
-    for(let i = 0; i<9; i++){
-      if(!this.esInt(cadena.charAt(i))){
-        return false;
+      }, error: error => {
+        alert("Ha ocurrido un error al eliminar el restaurante");
       }
+    });
+  }
+
+  mostrar_datos() {
+    this.ocultarTodo()
+    this.funciones.ocultarBtn("datos_v", false);
+
+    this.funciones.disabledID('add_res', false);
+    this.funciones.disabledID('update_res', false);
+    this.funciones.disabledID('delete_res', false);
+  }
+
+  mostrar_carta() {
+    if (this.restauranteSelect !== "") {
+      this.ocultarTodo()
+      this.funciones.ocultarBtn("carta_v", false);
+      this.peticionGetHttpCarta();
+
+      this.funciones.disabledID('add_res', true);
+      this.funciones.disabledID('update_res', true);
+      this.funciones.disabledID('delete_res', true);
+    } else {
+      alert("Selecciona un restaurante");
     }
 
-   return true;
   }
 
-  esInt(charac:string):boolean{
-    if(charac=='0'){
-      return true;
-    }else if(charac=='1'){
-      return true;
-    }else if(charac=='2'){
-      return true;
-    }else if(charac=='3'){
-      return true;
-    }else if(charac=='4'){
-      return true;
-    }else if(charac=='5'){
-      return true;
-    }else if(charac=='6'){
-      return true;
-    }else if(charac=='7'){
-      return true;
-    }else if(charac=='8'){
-      return true;
-    }else if(charac=='9'){
-      return true;
-    }else{
-      return false;
-    }
-  }
-
-  mostrar_datos(){
+  mostrar_facturas() {
     this.ocultarTodo()
-    this.contenedor_datos.classList.remove('oculto');
+    this.funciones.ocultarBtn("facturas_v", false);
   }
 
-  mostrar_carta(){
-    this.ocultarTodo()
-    this.contenedor_carta.classList.remove('oculto');
+  ocultarTodo() {
+    this.funciones.ocultarBtn("datos_v", true);
+    this.funciones.ocultarBtn("carta_v", true);
+    this.funciones.ocultarBtn("facturas_v", true);
   }
 
-  mostrar_facturas(){
-    this.ocultarTodo()
-    this.contenedor_factura.classList.remove('oculto');
-  }
-
-  ocultarTodo(){
-    this.contenedor_datos.classList.add('oculto');
-    this.contenedor_carta.classList.add('oculto');
-    this.contenedor_factura.classList.add('oculto');
-  }
-
-  onSelect(element: Restaurante){
+  onSelect(element: Restaurante) {
     this.disabledTodos(true);
     console.log(element);
-    
-    this.asignarValorID('emailRes', element.correo);
-    this.asignarValorID('categoria', element.categoria);
-    this.asignarValorID('direccionRes', element.direccion);
-    this.asignarValorID('nombreRes', element.nombre);
-    this.asignarValorID('CIFRes', element.CIF);
-    this.asignarValorID('razonRes', element.razon_social);
-    this.asignarValorID('telRes', String(element.telefono));
-    this.asignarValorID('valoracionRes', String(element.valoracion));
-    this.ocultarBtn("cont_confirm_add",true);
-    this.ocultarBtn("cont_confirm_udt",true);
-    this.ocultarBtn("add_res",false);
-    this.ocultarBtn("update_res",false);
-    this.ocultarBtn("delete_res",false);
+    this.restauranteSelect = element.nombre;
+
+    this.funciones.asignarValorID('emailRes', element.correo);
+    this.funciones.asignarValorID('categoria', element.categoria);
+    this.funciones.asignarValorID('direccionRes', element.direccion);
+    this.funciones.asignarValorID('nombreRes', element.nombre);
+    this.funciones.asignarValorID('CIFRes', element.CIF);
+    this.funciones.asignarValorID('razonRes', element.razon_social);
+    this.funciones.asignarValorID('telRes', String(element.telefono));
+    this.funciones.asignarValorID('valoracionRes', String(element.valoracion));
+    this.funciones.ocultarBtn("cont_confirm_add", true);
+    this.funciones.ocultarBtn("cont_confirm_udt", true);
+    this.funciones.ocultarBtn("add_res", false);
+    this.funciones.ocultarBtn("update_res", false);
+    this.funciones.ocultarBtn("delete_res", false);
+
+    this.funciones.ocultarBtn('btn_datos', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_carta', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
+    this.mostrar_datos();
   }
 
-  disabledTodos(valor: boolean){
-    this.disabledID('emailRes', valor);
-    this.disabledID('categoria', valor);
-    this.disabledID('direccionRes', valor);
-    this.disabledID('nombreRes', valor);
-    this.disabledID('CIFRes', valor);
-    this.disabledID('razonRes', valor);
-    this.disabledID('telRes', valor);
+  disabledTodos(valor: boolean) {
+    this.funciones.disabledID('emailRes', valor);
+    this.funciones.disabledID('categoria', valor);
+    this.funciones.disabledID('direccionRes', valor);
+    this.funciones.disabledID('nombreRes', valor);
+    this.funciones.disabledID('CIFRes', valor);
+    this.funciones.disabledID('razonRes', valor);
+    this.funciones.disabledID('telRes', valor);
   }
 
-  disabledID(id:string, valor:boolean){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    campo.disabled = valor;
+  vaciarCampos() {
+    this.funciones.asignarValorID("emailRes", "");
+    this.funciones.asignarValorID("categoria", "");
+    this.funciones.asignarValorID("direccionRes", "");
+    this.funciones.asignarValorID("nombreRes", "");
+    this.funciones.asignarValorID("CIFRes", "");
+    this.funciones.asignarValorID("razonRes", "");
+    this.funciones.asignarValorID("telRes", "");
+    this.funciones.asignarValorID("valoracionRes", "0");
   }
 
-  asignarValorID(id:string, valor:string){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    campo.value = valor;
+  vaciarAvisos() {
+    this.avisoNombre = "";
+    this.avisoRazon = "";
+    this.avisoCategoria = "";
+    this.avisoCIF = "";
+    this.avisoDireccion = "";
+    this.avisoEmail = "";
+    this.avisoTelefono = "";
   }
 
-  comprobarVacio(cadena:string):string{
-    if(cadena === ""){
-      return "Campo vacío";
-    }else{
-      return "";
-    }
-  }
-
-  vaciarCampos(){
-    this.asignarValorID("emailRes","");
-    this.asignarValorID("categoria","");
-    this.asignarValorID("direccionRes","");
-    this.asignarValorID("nombreRes","");
-    this.asignarValorID("CIFRes","");
-    this.asignarValorID("razonRes","");
-    this.asignarValorID("telRes","");
-    this.asignarValorID("valoracionRes","0");
-  }
-
-  ocultarBtn(id:string, valor:boolean){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    if(valor){
-      campo.classList.add('oculto');
-    }else{
-      campo.classList.remove('oculto');
-    }
-  }
-
-  vaciarAvisos(){
-    this.avisoNombreP = "";    
-    this.avisoPrecioP = "";
-    this.avisoDescP = "";
-    this.avisoVeganoP = "";
-    this.avisoFotoP = "";    
-  }
-
-  dejarVacio(){
+  dejarVacio() {
     this.vaciarAvisos();
     this.vaciarCampos();
   }
 
-  logout(){
+  logout() {
     window.sessionStorage.removeItem('rol');
     window.sessionStorage.removeItem('correo');
     window.sessionStorage.removeItem('password');
     this.router.navigate(['/inicio']);
   }
-  
-  //---------------------------------------------------------------------------------------------
-  //---------------------------------------------------------------------------------------------
-  //---------------------------------------------------------------------------------------------
-  //------------------------------CARTAS DESDE AQUI----------------------------------------------
-  //---------------------------------------------------------------------------------------------
-  //---------------------------------------------------------------------------------------------
-  //---------------------------------------------------------------------------------------------
-  //---------------------------------------------------------------------------------------------
 
-  vaciarCamposCarta(){
-    this.asignarValorID("nombreP","");
-    this.asignarValorID("prerequiredcio","");
-    this.asignarValorID("desc","");
-    this.asignarValorID("vegano","");
-    this.asignarValorID("foto","");
+  /*-------------------------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------------------------*/
+  /*------------------------------------CARTAS DESDE AQUI--------------------------------------*/
+  /*-------------------------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------------------------*/
+  vaciarCamposCarta() {
+    this.funciones.asignarValorID("nombreP", "");
+    this.funciones.asignarValorID("precio", "");
+    this.funciones.asignarValorID("desc", "");
+    this.funciones.seleccionarRadio("vegano", false);
   }
 
-  vaciarAvisosCarta(){
-    this.avisoNombreP = "";    
+  vaciarAvisosCarta() {
+    this.avisoNombreP = "";
     this.avisoPrecioP = "";
     this.avisoDescP = "";
-    this.avisoVeganoP = "";
-    this.avisoFotoP = "";    
+    this.avisoFotoP = "";
   }
 
-  dejarVacioCarta(){
+  dejarVacioCarta() {
     this.vaciarAvisosCarta();
     this.vaciarCamposCarta();
   }
 
-  aceptarCambiosCrearCarta(){
+  aceptarCambiosCrearCarta() {
+    if (this.restauranteSelect == "") {
+      alert("Selecciona un restaurante");
+      return;
+    }
+
     var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
-    var precioPCampo = document.getElementById("prerequiredcio") as HTMLInputElement;
+    var precioPCampo = document.getElementById("precio") as HTMLInputElement;
     var descripcionPCampo = document.getElementById("desc") as HTMLInputElement;
     var veganoPCampo = document.getElementById("vegano") as HTMLInputElement;
     var fotoPCampo = document.getElementById("foto") as HTMLInputElement;
- 
-    this.avisoNombreP = this.comprobarVacio(nombrePCampo?.value);
-    this.avisoPrecioP = this.comprobarVacio(precioPCampo?.value);
-    this.avisoDescP = this.comprobarVacio(descripcionPCampo?.value);
-    this.avisoVeganoP = this.comprobarVacio(veganoPCampo?.value);
-    this.avisoFotoP = this.comprobarVacio(fotoPCampo?.value);
-    
-    //COMPROBAR LA IMAGEN SUPONGO SI NO NADA
 
-    this.peticionHttpCrearCarta(nombrePCampo?.value, Number(precioPCampo?.value),  
-      descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value, nombreRestaurante);
+    var errorCampo = false;
+
+    this.avisoNombreP = this.funciones.comprobarVacio(nombrePCampo?.value);
+    if (this.avisoNombreP !== "") { errorCampo = true; }
+    this.avisoDescP = this.funciones.comprobarVacio(descripcionPCampo?.value);
+    if (this.avisoDescP !== "") { errorCampo = true; }
+
+    let aux = String(parseFloat(precioPCampo?.value));
+    console.log(parseFloat(precioPCampo?.value));
+
+    if (aux === '') {
+      errorCampo = true;
+      this.avisoPrecioP = "Campo vacío";
+    } else if (aux === 'NaN') {
+      errorCampo = true;
+      this.avisoPrecioP = "Formato incorrecto";
+    } else {
+      precioPCampo.value = String(parseFloat(precioPCampo?.value));
+      this.avisoPrecioP = "";
+    }
+
+    //this.avisoFotoP = this.funciones.comprobarVacio(fotoPCampo?.value);
+
+    if (!errorCampo) {
+      this.peticionHttpCrearCarta(nombrePCampo?.value, Number(precioPCampo?.value),
+        descripcionPCampo?.value, veganoPCampo?.value, "../../../assets/plt_images/food.png", this.restauranteSelect);
+    }
   }
 
-  aceptarCambiosActualizarCarta(){
+  aceptarCambiosActualizarCarta() {
+    if (this.restauranteSelect == "") {
+      alert("Selecciona un restaurante");
+      return
+    }
+
+    if (this.platoSelect == "") {
+      alert("Selecciona un plato");
+      return
+    }
+
     var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
-    var precioPCampo = document.getElementById("prerequiredcio") as HTMLInputElement;
+    var precioPCampo = document.getElementById("precio") as HTMLInputElement;
     var descripcionPCampo = document.getElementById("desc") as HTMLInputElement;
     var veganoPCampo = document.getElementById("vegano") as HTMLInputElement;
     var fotoPCampo = document.getElementById("foto") as HTMLInputElement;
- 
 
-    this.avisoNombreP = this.comprobarVacio(nombrePCampo?.value);
-    this.avisoPrecioP = this.comprobarVacio(precioPCampo?.value);
-    this.avisoDescP = this.comprobarVacio(descripcionPCampo?.value);
-    this.avisoVeganoP = this.comprobarVacio(veganoPCampo?.value);
-    this.avisoFotoP = this.comprobarVacio(fotoPCampo?.value);
+    var errorCampo = false;
 
-    this.peticionHttpActualizarCarta(nombrePCampo?.value, nombreViejo, Number(precioPCampo?.value),  
-    descripcionPCampo?.value, veganoPCampo?.value, fotoPCampo?.value, nombreRestaurante);
+    this.avisoNombreP = this.funciones.comprobarVacio(nombrePCampo?.value);
+    if (this.avisoNombreP !== "") { errorCampo = true; }
+    this.avisoDescP = this.funciones.comprobarVacio(descripcionPCampo?.value);
+    if (this.avisoDescP !== "") { errorCampo = true; }
 
+    let aux = String(parseFloat(precioPCampo?.value));
+    console.log(parseFloat(precioPCampo?.value));
+
+    if (aux === '') {
+      errorCampo = true;
+      this.avisoPrecioP = "Campo vacío";
+    } else if (aux === 'NaN') {
+      errorCampo = true;
+      this.avisoPrecioP = "Formato incorrecto";
+    } else {
+      precioPCampo.value = String(parseFloat(precioPCampo?.value));
+      this.avisoPrecioP = "";
+    }
+
+    //this.avisoFotoP = this.funciones.comprobarVacio(fotoPCampo?.value);
+
+    if (!errorCampo) {
+      this.peticionHttpActualizarCarta(nombrePCampo?.value, this.platoSelect, Number(precioPCampo?.value),
+        descripcionPCampo?.value, veganoPCampo?.value, "../../../assets/plt_images/food.png", this.restauranteSelect);
+    }
   }
 
-  eliminarCarta(){
+  eliminarCarta() {
+    if (this.restauranteSelect == "") {
+      alert("Selecciona un restaurante");
+      return
+    }
+    if (this.platoSelect == "") {
+      alert("Selecciona un plato");
+      return
+    }
+
     var nombrePCampo = document.getElementById("nombreP") as HTMLInputElement;
 
-    if(confirm("¿Seguro que quiere eliminar el plato?")){
-      this.peticionHttpEliminar(nombrePCampo?.value, nombreRes);
+    if (confirm("¿Seguro que quiere eliminar el plato?")) {
+      this.peticionHttpEliminarPlato(nombrePCampo?.value);
       this.dejarVacioCarta();
-      this.peticionGetHttpCarta(nombreRes);
-    }else{
+      this.peticionGetHttpCarta();
+    } else {
       //cancelar
     }
   }
 
-  peticionHttpCrearCarta(nombreP : string, precioP : number,  
-    descripcionP : string, veganoP : string, fotoP : string, nombreRes : string): void { //la foto como se pasa?
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpCrearCarta(nombreP: string, precioP: number,
+    descripcionP: string, veganoP: string, fotoP: string, nombreRes: string) {
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombreP,
       "aptoVegano": veganoP,
-      "descripcion" : descripcionP,
-      "precio" : precioP,
-      "foto" : fotoP,
-      "nombreRestaurante" : nombreRes,
+      "descripcion": descripcionP,
+      "precio": String(precioP),
+      "foto": fotoP,
+      "nombreRestaurante": nombreRes,
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
@@ -534,34 +597,35 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = this.URL + 'food/crearPlato';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Plato creado exitosamente");
-        this.dejarVacio();
-        this.ocultarBtn("add_plato",false);
-        this.ocultarBtn("cont_confirm_addP",true);
-        this.peticionGetHttpCarta(nombreRes);
-      }, error: error =>{
-        if(error.error.includes("Ya existe un restaurante con ese nombre")){
-          alert("Ya existe un restaurante con ese nombre");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
+        if (data.includes("Ya existe un plato con ese nombre")) {
+          alert(data);
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al introducir el restaurante");
+        } else {
+          alert("Plato creado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_plato", false);
+          this.funciones.ocultarBtn("cont_confirm_addP", true);
+          this.peticionGetHttpCarta();
         }
-      }});
-
+      }, error: error => {
+        alert("Ha ocurrido un error al introducir el restaurante");
+        //alert(error.error);
+      }
+    });
   }
 
-  peticionHttpActualizarCarta(nombreP : string, nombreViejo : string, precioP : number, descripcionP : string, veganoP : string, fotoP : string, nombreRes : string): void {
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpActualizarCarta(nombreP: string, nombreViejo: string, precioP: number, descripcionP: string, veganoP: string, fotoP: string, nombreRes: string): void {
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombreP,
-      "nombreViejo" : nombreViejo,
+      "nombreViejo": nombreViejo,
       "aptoVegano": veganoP,
-      "descripcion" : descripcionP,
-      "precio" : precioP,
-      "foto" : fotoP,
-      "nombreRestaurante" : nombreRes,
+      "descripcion": descripcionP,
+      "precio": String(precioP),
+      "foto": fotoP,
+      "nombreRestaurante": nombreRes,
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
@@ -569,29 +633,38 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = this.URL + 'food/actualizarPlato';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Plato actualizado exitosamente");
-        this.dejarVacioCarta();
-        this.ocultarBtn("update_plato",false);
-        this.ocultarBtn("cont_confirm_udtP",true);
-        this.peticionGetHttp();
-      }, error: error =>{
-        if(error.error.includes("No existe un restaurante con ese nombre")){
-          alert("No existe un restaurante con ese nombre");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
+        if (data.includes("Ya existe un plato con ese nombre")) {
+          alert(data);
+        } else if (data.includes("No existe un plato con ese nombre")) {
+          alert(data);
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al actualizar el restaurante");
+        } else {
+          alert("Plato actualizado exitosamente");
+          this.dejarVacioCarta();
+          this.funciones.ocultarBtn("add_plato", false);
+          this.funciones.ocultarBtn("cont_confirm_udtP", true);
+          this.peticionGetHttpCarta();
         }
-      }});
+      }, error: error => {
+        //alert("Ha ocurrido un error al actualizar el restaurante");
+        alert(error.error);
+      }
+    });
 
   }
 
-  peticionHttpEliminarPlato(nombrePlato : string, nombreRes : string){
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpEliminarPlato(nombrePlato: string) {
+    if (this.restauranteSelect == "") {
+      alert("Selecciona un restaurante");
+      return;
+    }
+
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombrePlato": nombrePlato,
-      "nombreRes": nombreRes,
+      "nombreRes": this.restauranteSelect,
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
@@ -599,47 +672,164 @@ export class GestionRestaurantesComponent implements OnInit {
     const url = this.URL + 'food/eliminarPlato';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Plato eliminado exitosamente");
-        this.dejarVacioCarta();
-        this.ocultarBtn("add_plato",false);
-        this.ocultarBtn("cont_confirm_addP",true);
-        this.peticionGetHttpCarta(nombreRes);
-      }, error: error =>{
-        if(error.error.includes("No existe un restaurante llamado ")){
-          alert("No existe ese restaurante en la base de datos");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
+        if (data.includes("No existe ese plato")) {
+          alert(data);
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al eliminar el restaurante");
-        }
-      }});
-  }
-
-  peticionGetHttpCarta(nombreRes : string): void {
-    const headers = { 
-      'Content-Type': 'application/json'}; 
-
-      const url = this.URL + 'food/getCarta/' + nombreRes;
-    this.http.get(url, { headers, responseType: 'text' }).subscribe({
-      next: data => {
-        this.listaCarta = [];
-        if(data.length == 0){
-          //alert(window.sessionStorage.getItem('rol'));
-          alert("No hay carta en ese restaurante");
-        }else{
-          var listaCartaJSON = data.split(";");
-          for (let i = 0; i < listaCartaJSON.length; i++) {
-            //console.log(listaResJSON[i]);
-            this.listaCarta.push(new Plato(listaCartaJSON[i]))
-            console.log(this.listaCarta[i]);
-          }
+        } else {
+          alert("Plato eliminado exitosamente");
+          this.dejarVacioCarta();
+          this.funciones.ocultarBtn("add_plato", false);
+          this.funciones.ocultarBtn("cont_confirm_addP", true);
+          this.peticionGetHttpCarta();
         }
       }, error: error => {
-        //this.router.navigate(['/login']);
-        //alert("Ha ocurrido un error al cargar los restaurantes");
+        alert("Ha ocurrido un error al eliminar el restaurante");
       }
     });
   }
 
+  peticionGetHttpCarta(): void {
+    if (this.restauranteSelect !== "") {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      const url = this.URL + 'food/getCarta/' + this.restauranteSelect;
+      this.http.get(url, { headers, responseType: 'text' }).subscribe({
+        next: data => {
+          this.listaPlatos = [];
+          if (data.length == 0) {
+            //alert(window.sessionStorage.getItem('rol'));
+            alert("No hay carta en ese restaurante");
+          } else {
+            var listaCartaJSON = data.split(";");
+            for (let i = 0; i < listaCartaJSON.length; i++) {
+              //console.log(listaResJSON[i]);
+              this.listaPlatos.push(new Plato(listaCartaJSON[i]))
+              console.log(this.listaPlatos[i]);
+            }
+          }
+        }, error: error => {
+          alert("Ha ocurrido un error al cargar la carta del restaurante");
+        }
+      });
+    } else {
+      alert("Selecciona un restaurante");
+    }
+  }
+
+  onSelectP(element: Plato) {
+    this.disabledTodosP(true);
+    console.log(element);
+
+    this.funciones.asignarValorID('nombreP', element.nombreP);
+    this.funciones.asignarValorID('precio', String(element.precioP));
+    this.funciones.seleccionarRadio('vegano', element.veganoP);
+    this.funciones.asignarValorID('desc', element.descripcionP);
+
+    var fotoCampo = document.getElementById("fotoPlato") as HTMLImageElement;
+    fotoCampo.src = element.fotoP;
+
+    this.funciones.ocultarBtn("cont_confirm_addP", true);
+    this.funciones.ocultarBtn("cont_confirm_udtP", true);
+    this.funciones.ocultarBtn("add_plato", false);
+    this.funciones.ocultarBtn("update_plato", false);
+    this.funciones.ocultarBtn("delete_plato", false);
+    this.platoSelect = element.nombreP;
+  }
+
+  disabledTodosP(valor: boolean) {
+    this.funciones.disabledID('nombreP', valor);
+    this.funciones.disabledID('precio', valor);
+    this.funciones.disabledID('vegano', valor);
+    this.funciones.disabledID('desc', valor);
+    this.funciones.disabledID('botonFoto', valor);
+  }
+
+  cancelarCambiosCrearP() {
+    this.disabledTodosP(true); //bloquear campos
+    this.dejarVacioCarta();
+    this.platoSelect = "";
+    this.funciones.ocultarBtn('add_plato', false); //mostrar btn_add
+    this.funciones.ocultarBtn('cont_confirm_addP', true); //ocultar btns_aceptar_cancelar
+  }
+
+  cancelarCambiosActualizarP() {
+    this.disabledTodosP(true); //bloquear campos
+    this.dejarVacioCarta();
+    this.platoSelect = "";
+    this.funciones.ocultarBtn('add_plato', false); //mostrar btn_add
+    this.funciones.ocultarBtn('cont_confirm_udtP', true); //ocultar btns_aceptar_cancelar
+  }
+
+  activarCamposCrearP() {
+    this.disabledTodosP(false); //habilitar campos
+    this.vaciarCamposCarta(); //vaciar campos
+    this.funciones.ocultarBtn('add_plato', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_plato', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_plato', true); //ocultar btn_add
+    this.funciones.ocultarBtn('cont_confirm_addP', false); //mostrar btns_aceptar_cancelar    
+  }
+
+  activarCamposActualizarP() {
+    this.disabledTodosP(false); //habilitar campos
+    this.vaciarAvisosCarta(); //vaciar campos
+    this.funciones.ocultarBtn('add_plato', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_plato', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_plato', true); //ocultar btn_add
+    this.funciones.ocultarBtn('cont_confirm_udtP', false); //mostrar btns_aceptar_cancelar
+  }
+
+  capturarFile2(event: any): any {
+    const archivoCapturado = event.target.files[0];
+    var fReader = new FileReader();
+    fReader.readAsDataURL(archivoCapturado);
+    fReader.onloadend = function (event) {
+      var img = document.getElementById("fotoPlato") as HTMLImageElement;
+      if (event.target !== null) {
+        if (event.target.result !== null) {
+          img.src = String(event.target.result);
+        } else {
+          alert("Error al cargar la foto");
+        }
+      } else {
+        alert("Error al cargar la foto");
+      }
+    }
+    var img = document.getElementById("fotoPlato") as HTMLImageElement;
+  }
+
+  capturarFile(event: any): any {
+    const archivoCapturado = event.target.files[0];
+    var fReader = new FileReader();
+    fReader.readAsDataURL(archivoCapturado);
+    fReader.onloadend = function (event) {
+      var img = document.getElementById("fotoPlato") as HTMLImageElement;
+      if (event.target !== null) {
+        if (event.target.result !== null) {
+          img.src = String(event.target.result);
+        } else {
+          alert("Error al cargar la foto");
+        }
+      } else {
+        alert("Error al cargar la foto");
+      }
+    }
+    var img = document.getElementById("fotoPlato") as HTMLImageElement;
+  }
+
+  /*subirFoto() {
+    if (this.pathImgSel !== "") {
+      var ultposicion = this.pathImgSel.lastIndexOf("/");
+      var destino = "../../../assets/plt_images/" + this.pathImgSel.substring(ultposicion);
+      //console.log(destino);
+      fs.copyFile(this.pathImgSel, 'destination.txt', (err: any) => {
+        if (err)
+          throw err;
+        alert(destino);
+      });
+    }
+  }*/
 }

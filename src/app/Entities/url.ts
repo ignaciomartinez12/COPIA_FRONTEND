@@ -1,10 +1,10 @@
 export class Url {
 
     url : string;
-    urlHeroku : string;
+    url2 : string;
 
     constructor(){
-        this.url = "http://localhost:8082/";
-        this.urlHeroku = "https://ticomobackend.herokuapp.com/";
+        this.url2 = "http://localhost:8082/";
+        this.url = "https://ticomobackendgit.herokuapp.com/";
     }
 }
