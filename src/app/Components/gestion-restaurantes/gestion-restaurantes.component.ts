@@ -515,7 +515,7 @@ export class GestionRestaurantesComponent implements OnInit {
 
     if (!errorCampo) {
       this.peticionHttpCrearCarta(nombrePCampo?.value, Number(precioPCampo?.value),
-        descripcionPCampo?.value, veganoPCampo?.value, imagen, this.restauranteSelect);
+        descripcionPCampo?.value, veganoPCampo.checked, imagen, this.restauranteSelect);
     }
   }
 
@@ -568,7 +568,7 @@ export class GestionRestaurantesComponent implements OnInit {
 
     if (!errorCampo) {
       this.peticionHttpActualizarCarta(nombrePCampo?.value, this.platoSelect, Number(precioPCampo?.value),
-        descripcionPCampo?.value, veganoPCampo?.value, imagen, this.restauranteSelect);
+        descripcionPCampo?.value, veganoPCampo.checked, imagen, this.restauranteSelect);
     }
   }
 
@@ -594,11 +594,11 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   peticionHttpCrearCarta(nombreP: string, precioP: number,
-    descripcionP: string, veganoP: string, fotoP: string, nombreRes: string) {
+    descripcionP: string, veganoP: boolean, fotoP: string, nombreRes: string) {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombreP,
-      "aptoVegano": veganoP,
+      "aptoVegano": String(veganoP),
       "descripcion": descripcionP,
       "precio": String(precioP),
       "foto": fotoP,
@@ -629,12 +629,12 @@ export class GestionRestaurantesComponent implements OnInit {
     });
   }
 
-  peticionHttpActualizarCarta(nombreP: string, nombreViejo: string, precioP: number, descripcionP: string, veganoP: string, fotoP: string, nombreRes: string): void {
+  peticionHttpActualizarCarta(nombreP: string, nombreViejo: string, precioP: number, descripcionP: string, veganoP: boolean, fotoP: string, nombreRes: string): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombreP,
       "nombreViejo": nombreViejo,
-      "aptoVegano": veganoP,
+      "aptoVegano": String(veganoP),
       "descripcion": descripcionP,
       "precio": String(precioP),
       "foto": fotoP,
