@@ -1,4 +1,5 @@
 export class Plato {
+
     nombreP : string;
     precioP : number;
     veganoP : boolean;
