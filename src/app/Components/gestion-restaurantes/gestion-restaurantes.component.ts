@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Restaurante } from 'src/app/Entities/restaurante';
+import { Plato } from 'src/app/Entities/plato';
 import { Router } from '@angular/router';
 import { DomSanitizer, EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { Url } from 'src/app/Entities/url';
@@ -32,6 +33,7 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoDireccion: string = "";
   avisoEmail: string = "";
   avisoTelefono: string = "";
+
   URL: string = new Url().url;
   funciones: FuncionesService;
   listaRestaurantes: Restaurante[] = [];
