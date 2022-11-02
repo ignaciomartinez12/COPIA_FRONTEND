@@ -5,31 +5,31 @@
             <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
             <div class="botones contenedor_horizontal">
                 <div id="cont_confirm_add_a" class="contenedor_horizontal oculto">
-                    <button  (click)="aceptarCambiosCrear()">
-                        <img id="acept_add_a"  class="img_icon" src="../../../assets/ui_images/acept.png"/></button>
-                    <button  (click)="cancelarCambiosCrear()"> 
-                        <img id="cancel_add_a" class="img_icon" src="../../../assets/ui_images/cancel.svg"/></button>
+                    <button (click)="aceptarCambiosCrear()">
+                        <img id="acept_add_a" class="img_icon" src="../../../assets/ui_images/acept.png" /></button>
+                    <button (click)="cancelarCambiosCrear()">
+                        <img id="cancel_add_a" class="img_icon" src="../../../assets/ui_images/cancel.svg" /></button>
                 </div>
                 <div id="cont_confirm_udt_a" class="contenedor_horizontal oculto">
-                    <button  (click)="aceptarCambiosActualizar()">
-                        <img id="acept_udt_a"  class="img_icon" src="../../../assets/ui_images/acept.png"/></button>
-                    <button  (click)="cancelarCambiosActualizar()"> 
-                        <img id="cancel_udt_a" class="img_icon" src="../../../assets/ui_images/cancel.svg"/></button>
+                    <button (click)="aceptarCambiosActualizar()">
+                        <img id="acept_udt_a" class="img_icon" src="../../../assets/ui_images/acept.png" /></button>
+                    <button (click)="cancelarCambiosActualizar()">
+                        <img id="cancel_udt_a" class="img_icon" src="../../../assets/ui_images/cancel.svg" /></button>
                 </div>
 
                 <div id="cont_btn_opc" class="contenedor_horizontal">
 
-                    <button id="add_admin" (click)="activarCamposCrear()"> 
-                        <img class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
-                    <button id="update_admin" class="oculto"  (click)="activarCamposActualizar()"> 
-                        <img class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
+                    <button id="add_admin" (click)="activarCamposCrear()">
+                        <img class="img_icon" src="../../../assets/ui_images/add_icon.svg" /></button>
+                    <button id="update_admin" class="oculto" (click)="activarCamposActualizar()">
+                        <img class="img_icon" src="../../../assets/ui_images/update2_icon.svg" /></button>
                     <button id="delete_admin" class="oculto" (click)="eliminar()">
-                        <img class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
+                        <img class="img_icon" src="../../../assets/ui_images/delete_icon.svg" /></button>
                 </div>
-                
+
                 <h2 class="sep">|</h2>
                 <button id="logout_admin" (click)="logout()">
-                    <img class="img_icon" src="../../../assets/ui_images/home_icon.svg"/></button>
+                    <img class="img_icon" src="../../../assets/ui_images/home_icon.svg" /></button>
             </div>
         </div>
         <div class="contenedor_campos">
@@ -44,8 +44,8 @@
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
                     <ul class="listaElementos">
-                        <li class="elementoBase" *ngFor="let element of listaAdmins" 
-                        (click)="onSelect(element)">{{ element.nombre }}</li>
+                        <li class="elementoBase" *ngFor="let element of listaAdmins" (click)="onSelect(element)">{{
+                            element.nombre }} {{ element.apellidos }}</li>
                     </ul>
                 </div>
                 <div class="contenedor_datos">
@@ -88,7 +88,8 @@
                                     <label class="texto_gris" for="emailA">Correo</label>
                                     <label class="aviso" for="emailA">{{ avisoCorreo }}</label>
                                 </div>
-                                <input class="campo_entrada" type="email" id="emailA" pattern=".+@globex\.com" size="30" disabled>
+                                <input class="campo_entrada" type="email" id="emailA" 
+                                pattern=".+@globex\.com" size="30" disabled>
                             </div>
                             <div class="campo_dato5">
                                 <div class="contenedor_label contenedor_horizontal">

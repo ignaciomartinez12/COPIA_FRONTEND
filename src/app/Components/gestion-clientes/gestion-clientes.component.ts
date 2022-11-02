@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cliente } from 'src/app/Entities/cliente';
 import { Url } from 'src/app/Entities/url';
+import { FuncionesService } from 'src/app/services/funcionesServices';
 
 @Component({
   selector: 'app-gestion-clientes',
@@ -17,18 +18,22 @@ export class GestionClientesComponent implements OnInit {
   avisoCorreo: string = "";
   avisoPwd: string = "";
   avisoDireccion: string = "";
-  URL : string = new Url().url;
-    
+  URL: string = new Url().url;
+  funciones: FuncionesService;
+
   listaClientes: Cliente[] = [];
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient) {
+    this.funciones = new FuncionesService();
+  }
 
   ngOnInit(): void {
     this.peticionGetHttp();
   }
 
   peticionGetHttp(): void {
-    const headers = { 
-      'Content-Type': 'application/json'}; 
+    const headers = {
+      'Content-Type': 'application/json'
+    };
 
     const body = {
       "correoAcceso": window.sessionStorage.getItem('correo'),
@@ -36,32 +41,32 @@ export class GestionClientesComponent implements OnInit {
     };
 
     const url = this.URL + 'user/getClients';
-    this.http.post(url, body, { headers, responseType: 'text'}).subscribe({
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        this.listaClientes = [];
-        if(data.length == 0){
-          //alert("No hay clientes");
-        }else{
-          var listaResJSON = data.split(";");
-          for (let i = 0; i < listaResJSON.length; i++) {
-            //console.log(listaResJSON[i]);
-            this.listaClientes.push(new Cliente(listaResJSON[i]))
-            console.log(this.listaClientes[i]);
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else {
+          this.listaClientes = [];
+          if (data.length == 0) {
+            //alert("No hay clientes");
+          } else {
+            var listaResJSON = data.split(";");
+            for (let i = 0; i < listaResJSON.length; i++) {
+              //console.log(listaResJSON[i]);
+              this.listaClientes.push(new Cliente(listaResJSON[i]))
+              console.log(this.listaClientes[i]);
+            }
           }
         }
       }, error: error => {
-        if(error.error.includes("No tienes acceso a este servicio")){
-          alert("No tienes acceso a este servicio");
-          this.router.navigate(['/login']);
-        }else{
-          //alert("Ha ocurrido un error al cargar los clientes");
-          alert(error.error);
-        }
+        alert("Ha ocurrido un error al cargar los clientes");
+        //alert(error.error);
       }
     });
   }
 
-  aceptarCambiosActualizar(){
+  aceptarCambiosActualizar() {
     var nombreCampo = document.getElementById("nombreC") as HTMLInputElement;
     var apellidosCampo = document.getElementById("apellidosC") as HTMLInputElement;
     var nifCampo = document.getElementById("nifC") as HTMLInputElement;
@@ -70,56 +75,69 @@ export class GestionClientesComponent implements OnInit {
     var pwdCampo = document.getElementById("passwordC") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccionC") as HTMLInputElement;
 
-    this.avisoNombre = this.comprobarVacio(nombreCampo?.value);
-    this.avisoApellidos = this.comprobarVacio(apellidosCampo?.value);
-    this.avisoTel = this.comprobarVacio(telCampo?.value);
-    this.avisoNIF = this.comprobarVacio(nifCampo?.value);
-    this.avisoCorreo = this.comprobarVacio(emailCampo?.value);
-    this.avisoPwd = this.comprobarVacio(pwdCampo?.value);
-    this.avisoDireccion = this.comprobarVacio(direccionCampo?.value);
+    var errorCampo = false;
 
-    if(!this.validarEmail(emailCampo?.value)){
-      return;
+    this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
+    if (this.avisoNombre !== "") { errorCampo = true; }
+    this.avisoApellidos = this.funciones.comprobarVacio(apellidosCampo?.value);
+    if (this.avisoApellidos !== "") { errorCampo = true; }
+    this.avisoTel = this.funciones.comprobarVacio(telCampo?.value);
+    if (this.avisoTel !== "") { errorCampo = true; }
+    this.avisoNIF = this.funciones.comprobarVacio(nifCampo?.value);
+    if (this.avisoNIF !== "") { errorCampo = true; }
+    this.avisoCorreo = this.funciones.comprobarVacio(emailCampo?.value);
+    if (this.avisoCorreo !== "") { errorCampo = true; }
+    this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
+    if (this.avisoPwd !== "") { errorCampo = true; }
+    this.avisoDireccion = this.funciones.comprobarVacio(direccionCampo?.value);
+    if (this.avisoDireccion !== "") { errorCampo = true; }
+
+    if (!this.funciones.validarEmail(emailCampo?.value)) {
+      errorCampo = true;
     }
 
-    if(!this.esNumero(telCampo?.value)){
-      return;
+    if (this.funciones.esNumero(telCampo?.value)) {
+      this.avisoTel = "";
+    } else {
+      this.avisoTel = "Formato incorrecto";
+      errorCampo = true;
     }
 
-    this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value,  
-      telCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value, direccionCampo?.value);
-
+    if (!errorCampo) {
+      this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value,
+        telCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value, direccionCampo?.value);
+    }
   }
 
-  cancelarCambiosActualizar(){
+  cancelarCambiosActualizar() {
     this.disabledTodos(true); //bloquear campos
     this.dejarVacio();
-    this.ocultarBtn('cont_confirm_udt_c', true); //ocultar btns_aceptar_cancelar
+    this.funciones.ocultarBtn('cont_confirm_udt_c', true); //ocultar btns_aceptar_cancelar
   }
 
-  activarCamposActualizar(){
+  activarCamposActualizar() {
     this.disabledTodos(false); //habilitar campos
-    this.disabledID('emailC',true);
+    this.funciones.disabledID('emailC', true);
     this.vaciarAvisos(); //vaciar campos
-    this.ocultarBtn('update_clientes', true); //ocultar btn_add
-    this.ocultarBtn('delete_clientes', true); //ocultar btn_add
-    this.ocultarBtn('cont_confirm_udt_c', false); //mostrar btns_aceptar_cancelar
+    this.funciones.ocultarBtn('update_clientes', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_clientes', true); //ocultar btn_add
+    this.funciones.ocultarBtn('cont_confirm_udt_c', false); //mostrar btns_aceptar_cancelar
   }
 
-  eliminar(){
+  eliminar() {
     var correoCampo = document.getElementById("emailC") as HTMLInputElement;
 
-    if(confirm("¿Seguro que quiere eliminar el cliente?")){
+    if (confirm("¿Seguro que quiere eliminar el cliente?")) {
       this.peticionHttpEliminar(correoCampo?.value);
       this.dejarVacio();
       this.peticionGetHttp();
-    }else{
+    } else {
       //cancelar
     }
   }
 
-  peticionHttpEliminar(correo : string){
-    const headers = { 'Content-Type': 'application/json'};
+  peticionHttpEliminar(correo: string) {
+    const headers = { 'Content-Type': 'application/json' };
     const body = {
       "correo": correo,
       "correoAcceso": window.sessionStorage.getItem('correo'),
@@ -129,96 +147,91 @@ export class GestionClientesComponent implements OnInit {
     const url = this.URL + 'user/eliminarUsuario';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        alert("Cliente eliminado exitosamente");
-        this.dejarVacio();
-        this.ocultarBtn("cont_confirm_add_c",true);
-        this.peticionGetHttp();
-      }, error: error =>{
-        if(error.error.includes("No existe ningun usuario en la base de datos")){
-          alert("No existe ese cliente en la base de datos");
-        }else if(error.error.includes("No tienes acceso a este servicio")){
+        if (data.includes("No tienes acceso a este servicio")) {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
-        }else{
-          alert("Ha ocurrido un error al eliminar el cliente");
+        } else if (data.includes("No existe ningun usuario en la base de datos")) {
+          alert("No existe ese cliente en la base de datos");
+        } else {
+          alert("Cliente eliminado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("cont_confirm_add_c", true);
+          this.peticionGetHttp();
         }
-      }});
+      }, error: error => {
+        alert("Ha ocurrido un error al eliminar el cliente");
+      }
+    });
   }
 
-  disabledTodos(valor: boolean){
-    this.disabledID('nombreC', valor);
-    this.disabledID('apellidosC', valor);
-    this.disabledID('telC', valor);
-    this.disabledID('nifC', valor);
-    this.disabledID('emailC', valor);
-    this.disabledID('passwordC', valor);
-    this.disabledID('direccionC', valor);
+  disabledTodos(valor: boolean) {
+    this.funciones.disabledID('nombreC', valor);
+    this.funciones.disabledID('apellidosC', valor);
+    this.funciones.disabledID('telC', valor);
+    this.funciones.disabledID('nifC', valor);
+    this.funciones.disabledID('emailC', valor);
+    this.funciones.disabledID('passwordC', valor);
+    this.funciones.disabledID('direccionC', valor);
   }
 
-  disabledID(id:string, valor:boolean){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    campo.disabled = valor;
-  }
-
-  peticionHttpActualizar(nombre : string, apellidos : string, telefono : string,
-    nif : string, correo : string, pwd : string, direccion : string): void {
-     const headers = { 'Content-Type': 'application/json'};
-     const body = {
+  peticionHttpActualizar(nombre: string, apellidos: string, telefono: string,
+    nif: string, correo: string, pwd: string, direccion: string): void {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
       "correo": correo,
-      "contraseña": pwd,
+      "pwd1": pwd,
+      "pwd2": pwd,
       "apellidos": apellidos,
       "nif": nif,
       "nombre": nombre,
       "telefono": telefono,
       "direccion": direccion,
-      "rol": "cliente",
+      "rol": "client",
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
-  
-     let url = this.URL + 'user/actualizarCliente/';
-     url += correo;
-     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
-       next: data => {
-         alert("Cliente actualizado exitosamente");
-         this.dejarVacio();
-         this.ocultarBtn("update_clientes",false);
-         this.ocultarBtn("cont_confirm_udt_c",true);
-         this.peticionGetHttp();
-       }, error: error =>{
-         if(error.error.includes("No existe ningun usuario en la base de datos")){
-           alert("No existe ese cliente en la base de datos");
-         }else if(error.error.includes("No tienes acceso a este servicio")){
-           alert("No tienes acceso a este servicio");
-           this.router.navigate(['/login']);
-         }else{
-           alert("Ha ocurrido un error al actualizar el cliente");
-         }
-       }});
-  
-   }
-  
-  dejarVacio(){
+
+    console.log(body.correoAcceso);
+
+    let url = this.URL + 'user/actualizarUsuario/';
+    url += correo;
+    console.log(url);
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else if (data.includes("No existe ningun usuario en la base de datos")) {
+          alert("No existe ese cliente en la base de datos");
+        } else {
+          alert("Cliente actualizado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("cont_confirm_udt_c", true);
+          this.peticionGetHttp();
+        }
+      }, error: error => {
+        //alert("Ha ocurrido un error al actualizar el cliente");
+        alert(error.error);
+      }
+    });
+  }
+
+  dejarVacio() {
     this.vaciarAvisos();
     this.vaciarCampos();
   }
 
-  vaciarCampos(){
-    this.asignarValorID("nombreC","");
-    this.asignarValorID("apellidosC","");
-    this.asignarValorID("telC","");
-    this.asignarValorID("nifC","");
-    this.asignarValorID("emailC","");
-    this.asignarValorID("passwordC","");
-    this.asignarValorID("direccionC","");
+  vaciarCampos() {
+    this.funciones.asignarValorID("nombreC", "");
+    this.funciones.asignarValorID("apellidosC", "");
+    this.funciones.asignarValorID("telC", "");
+    this.funciones.asignarValorID("nifC", "");
+    this.funciones.asignarValorID("emailC", "");
+    this.funciones.asignarValorID("passwordC", "");
+    this.funciones.asignarValorID("direccionC", "");
   }
 
-  asignarValorID(id:string, valor:string){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    campo.value = valor;
-  }
-
-  vaciarAvisos(){
+  vaciarAvisos() {
     this.avisoNombre = "";
     this.avisoApellidos = "";
     this.avisoNIF = "";
@@ -228,94 +241,27 @@ export class GestionClientesComponent implements OnInit {
     this.avisoDireccion = "";
   }
 
-  ocultarBtn(id:string, valor:boolean){
-    var campo = document.getElementById(id) as HTMLInputElement;
-    if(valor){
-      campo.classList.add('oculto');
-    }else{
-      campo.classList.remove('oculto');
-    }
-  }
-
-  comprobarVacio(cadena:string):string{
-    if(cadena === ""){
-      return "Campo vacío";
-    }else{
-      return "";
-    }
-  }
-
-  validarEmail(valor: string): boolean {
-    if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)){
-     this.avisoCorreo = "";
-      return true;
-    } else {
-      this.avisoCorreo = "Formato de email incorrecto";
-      return false;
-    }
-  }
-
-  esNumero(cadena:string): boolean{
-		if(cadena.length != 9){
-      return false;
-    }
-    
-    for(let i = 0; i<9; i++){
-      if(!this.esInt(cadena.charAt(i))){
-        return false;
-      }
-    }
-
-   return true;
-  }
-
-  esInt(charac:string):boolean{
-    if(charac=='0'){
-      return true;
-    }else if(charac=='1'){
-      return true;
-    }else if(charac=='2'){
-      return true;
-    }else if(charac=='3'){
-      return true;
-    }else if(charac=='4'){
-      return true;
-    }else if(charac=='5'){
-      return true;
-    }else if(charac=='6'){
-      return true;
-    }else if(charac=='7'){
-      return true;
-    }else if(charac=='8'){
-      return true;
-    }else if(charac=='9'){
-      return true;
-    }else{
-      return false;
-    }
-  }
-
-  logout(){
+  logout() {
     window.sessionStorage.removeItem('rol');
     window.sessionStorage.removeItem('correo');
     window.sessionStorage.removeItem('password');
     this.router.navigate(['/inicio']);
   }
 
-  onSelect(element: Cliente){
+  onSelect(element: Cliente) {
     this.disabledTodos(true);
     console.log(element);
-    
-    this.asignarValorID('nombreC', element.nombre);
-    this.asignarValorID('apellidosC', element.apellidos);
-    this.asignarValorID('nifC', element.nif);
-    this.asignarValorID('telC', String(element.telefono));
-    this.asignarValorID('emailC', element.correo);
-    this.asignarValorID('passwordC', element.pwd);
-    this.asignarValorID('direccionC', element.direccion);
-    
-    this.ocultarBtn("cont_confirm_udt_c",true);
-    this.ocultarBtn("update_clientes",false);
-    this.ocultarBtn("delete_clientes",false);
+
+    this.funciones.asignarValorID('nombreC', element.nombre);
+    this.funciones.asignarValorID('apellidosC', element.apellidos);
+    this.funciones.asignarValorID('nifC', element.nif);
+    this.funciones.asignarValorID('telC', String(element.telefono));
+    this.funciones.asignarValorID('emailC', element.correo);
+    this.funciones.asignarValorID('passwordC', element.pwd);
+    this.funciones.asignarValorID('direccionC', element.direccion);
+
+    this.funciones.ocultarBtn("cont_confirm_udt_c", true);
+    this.funciones.ocultarBtn("update_clientes", false);
+    this.funciones.ocultarBtn("delete_clientes", false);
   }
 }

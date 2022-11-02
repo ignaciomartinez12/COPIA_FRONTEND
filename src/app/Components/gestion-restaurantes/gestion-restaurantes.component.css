@@ -1,21 +1,21 @@
-.contenedor_login_padre{
+.contenedor_login_padre {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.contenedor_login_hijo{
+.contenedor_login_hijo {
     background: white;
     width: 100%;
     margin: 0px;
 }
 
-.contenedor_label{
+.contenedor_label {
     justify-content: space-between;
 }
 
-.campo_entrada{
+.campo_entrada {
     height: 40px;
     width: 100%;
     margin-bottom: 16px;
@@ -24,8 +24,8 @@
     font-size: 1rem;
 }
 
-.campo_entrada_img{
-    height: 130px;
+.campo_entrada_img {
+    height: 100px;
     width: 100%;
     object-fit: contain;
     border: 3px solid #757575;
@@ -39,7 +39,7 @@ a {
     font-weight: bold;
 }
 
-.contenedor_lista_platos{
+.contenedor_lista_platos {
     width: 100%;
     height: 296px;
     border: 3px solid #757575;
@@ -47,7 +47,7 @@ a {
 }
 
 
-.contenedor_lista_platos ul li{
+.contenedor_lista_platos ul li {
     background: white;
     border-radius: 5px;
     height: 40px;
@@ -56,47 +56,47 @@ a {
     font-size: 1rem;
 }
 
-.contenedor_lista_platos ul li:hover{
+.contenedor_lista_platos ul li:hover {
     background: #e5e5e5;
 }
 
-.botones{
+.botones {
     width: fit-content;
 }
 
-.botones2{
+.botones2 {
     /*background: yellow;*/
     margin: -1px auto 0 auto;
     width: fit-content;
 }
 
-.linea_campo{
+.linea_campo {
     justify-content: space-between;
 }
 
 /*botones restaurante*/
-.contenedor_botones_rest{
+.contenedor_botones_rest {
     height: 40px;
     /*background: green;*/
     display: flex;
 }
 
-.contenedor_botones_rest ul{
+.contenedor_botones_rest ul {
     /*background: red;*/
     width: fit-content;
     margin-left: auto;
 }
 
-.contenedor_botones_rest ul li{
+.contenedor_botones_rest ul li {
     list-style: none;
     display: inline-block;
     text-align: center;
     margin-bottom: 4px;
 }
 
-.contenedor_botones_rest ul li .btn{
+.contenedor_botones_rest ul li .btn {
     list-style: none;
-    display: inline-block;
+    /*display: inline-block;*/
     height: 30px;
     width: 80px;
     margin-left: 8px;
@@ -110,15 +110,15 @@ a {
 
 
 
-#carta{
+#carta {
     background: #f5f5f5;
 }
 
-#facturas{
+#facturas {
     background: red;
 }
 
-.contenedor_datos_rest{
+.contenedor_datos_rest {
     width: 100%;
     height: 370px;
     border: 3px solid #757575;
@@ -127,7 +127,7 @@ a {
     border-radius: 5px;
 }
 
-.contenedor_datos_rest2{
+.contenedor_datos_rest2 {
     width: 100%;
     height: 370px;
     border: 3px solid #757575;
@@ -136,7 +136,7 @@ a {
     border-radius: 5px;
 }
 
-.contenedor_datos_platos{
+.contenedor_datos_platos {
     margin-left: 8px;
     width: 70%;
     height: 334px;
@@ -144,42 +144,43 @@ a {
     padding: 24px 8px 8px 8px;
 }
 
-.cont_foto_plato img{
+.cont_foto_plato img {
     max-width: 50px;
     max-height: 50px;
     margin-right: 4px;
 }
 
-.cont_titulo_plato{
+.cont_titulo_plato {
     font-size: 1rem;
 }
 
-.contenedor_lista_botones{
+.contenedor_lista_botones {
     /*background: green;*/
     width: 30%;
 }
 
-.contenedor_botones_plato{
+.contenedor_botones_plato {
     background: #757575;
     padding: 4px;
     height: 38px;
 }
 
-#desc{
+#desc {
     padding: 4px;
     resize: none;
+    margin-bottom: 21px;
 }
 
-.img_icon3{
+.img_icon3 {
     height: 30px;
     margin: 0 8px;
 }
 
-#datos{
+#datos {
     padding: 8px;
 }
 
-button{
+button {
     appearance: none;
     border-color: transparent;
     background: transparent;

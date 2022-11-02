@@ -4,31 +4,31 @@
             <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
             <div class="botones contenedor_horizontal">
                 <div id="cont_confirm_add_r" class="contenedor_horizontal oculto">
-                    <button  (click)="aceptarCambiosCrear()">
-                        <img id="acept_add_r"  class="img_icon" src="../../../assets/ui_images/acept.png"/></button>
-                    <button  (click)="cancelarCambiosCrear()"> 
-                        <img id="cancel_add_r" class="img_icon" src="../../../assets/ui_images/cancel.svg"/></button>
+                    <button (click)="aceptarCambiosCrear()">
+                        <img id="acept_add_r" class="img_icon" src="../../../assets/ui_images/acept.png" /></button>
+                    <button (click)="cancelarCambiosCrear()">
+                        <img id="cancel_add_r" class="img_icon" src="../../../assets/ui_images/cancel.svg" /></button>
                 </div>
                 <div id="cont_confirm_udt_r" class="contenedor_horizontal oculto">
-                    <button  (click)="aceptarCambiosActualizar()">
-                        <img id="acept_udt_r"  class="img_icon" src="../../../assets/ui_images/acept.png"/></button>
-                    <button  (click)="cancelarCambiosActualizar()"> 
-                        <img id="cancel_udt_r" class="img_icon" src="../../../assets/ui_images/cancel.svg"/></button>
+                    <button (click)="aceptarCambiosActualizar()">
+                        <img id="acept_udt_r" class="img_icon" src="../../../assets/ui_images/acept.png" /></button>
+                    <button (click)="cancelarCambiosActualizar()">
+                        <img id="cancel_udt_r" class="img_icon" src="../../../assets/ui_images/cancel.svg" /></button>
                 </div>
 
                 <div id="cont_btn_opc" class="contenedor_horizontal">
 
-                    <button id="add_rider" (click)="activarCamposCrear()"> 
-                        <img class="img_icon" src="../../../assets/ui_images/add_icon.svg"/></button>
-                    <button id="update_rider" class="oculto"  (click)="activarCamposActualizar()"> 
-                        <img class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/></button>
+                    <button id="add_rider" (click)="activarCamposCrear()">
+                        <img class="img_icon" src="../../../assets/ui_images/add_icon.svg" /></button>
+                    <button id="update_rider" class="oculto" (click)="activarCamposActualizar()">
+                        <img class="img_icon" src="../../../assets/ui_images/update2_icon.svg" /></button>
                     <button id="delete_rider" class="oculto" (click)="eliminar()">
-                        <img class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/></button>
+                        <img class="img_icon" src="../../../assets/ui_images/delete_icon.svg" /></button>
                 </div>
-                
+
                 <h2 class="sep">|</h2>
                 <button id="logout_rider" (click)="logout()">
-                    <img class="img_icon" src="../../../assets/ui_images/home_icon.svg"/></button>
+                    <img class="img_icon" src="../../../assets/ui_images/home_icon.svg" /></button>
             </div>
         </div>
         <div class="contenedor_campos">
@@ -43,8 +43,8 @@
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
                     <ul class="listaElementos">
-                        <li class="elementoBase" *ngFor="let element of listaRiders" 
-                        (click)="onSelect(element)">{{ element.nombre }}</li>
+                        <li class="elementoBase" *ngFor="let element of listaRiders" (click)="onSelect(element)">{{
+                            element.nombre }}</li>
                     </ul>
                 </div>
                 <div class="contenedor_datos">
@@ -78,14 +78,15 @@
                                 <input class="campo_entrada" type="number" id="valoracionR" disabled>
                             </div>
                         </div>
-                        
+
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <div class="contenedor_label contenedor_horizontal">
                                     <label class="texto_gris" for="emailR">Correo</label>
                                     <label class="aviso" for="emailR">{{ avisoCorreo }}</label>
                                 </div>
-                                <input class="campo_entrada" type="email" id="emailR" pattern=".+@globex\.com" size="30" disabled>
+                                <input class="campo_entrada" type="email" id="emailR" pattern=".+@globex\.com" size="30"
+                                    disabled>
                             </div>
                             <div class="campo_dato5">
                                 <div class="contenedor_label contenedor_horizontal">
@@ -99,12 +100,16 @@
                             <div class="contenedor_label contenedor_horizontal">
                                 <label class="texto_gris" for="cocheR">Tipo de vehículo</label>
                                 <label class="aviso" for="cocheR">{{ avisoTipoVeh }}</label>
-                            </div>    
+                            </div>
                             <div class="campo_radio campo_entrada">
-                                <label><input type="radio" name="tipoVehiculo" id="cocheR" value="coche" disabled> Coche</label>
-                                <label><input type="radio" name="tipoVehiculo" id="motoR" value="moto" disabled> Moto</label>
-                                <label><input type="radio" name="tipoVehiculo" id="biciR" value="bici" disabled> Bicicleta</label>
-                                <label><input type="radio" name="tipoVehiculo" id="patineteR" value="patinete" disabled> Patinete</label>
+                                <label><input type="radio" name="tipoVehiculo" id="cocheR" value="coche" disabled>
+                                    Coche</label>
+                                <label><input type="radio" name="tipoVehiculo" id="motoR" value="moto" disabled>
+                                    Moto</label>
+                                <label><input type="radio" name="tipoVehiculo" id="biciR" value="bici" disabled>
+                                    Bicicleta</label>
+                                <label><input type="radio" name="tipoVehiculo" id="patineteR" value="patinete" disabled>
+                                    Patinete</label>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
@@ -120,7 +125,7 @@
                                     <label class="texto_gris" for="carnetR">Carnet</label>
                                     <label class="aviso" for="carnetR">{{ avisoCarnet }}</label>
                                 </div>
-                                <input class="campo_entrada" type="text" id="carnetR" disabled>
+                                <input class="campo_entrada_check" type="checkbox" id="carnetR" disabled>
                             </div>
                         </div>
                     </div>

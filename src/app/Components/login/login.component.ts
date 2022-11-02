@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Url } from 'src/app/Entities/url';
+import { FuncionesService } from 'src/app/services/funcionesServices';
 //import {enc, SHA256} from "crypto-js";
 
 @Component({
@@ -13,88 +14,71 @@ export class LoginComponent implements OnInit {
   avisoEmail: string = "";
   avisoPwd: string = "";
   tipoUser: string = "";
-  URL : string = new Url().url;
+  URL: string = new Url().url;
+  funciones: FuncionesService;
 
   constructor(private router: Router, private http: HttpClient) {
-    this.avisoEmail = "";
-    this.avisoPwd = "";
-    this.tipoUser = "";
-
+    this.funciones = new FuncionesService();
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
 
-  }
-
-  acceder(){
+  acceder() {
     var correoCampo = document.getElementById("email") as HTMLInputElement;
     var pwdCampo = document.getElementById("password") as HTMLInputElement;
 
-    //correo vacio?
-    if (correoCampo?.value === "") 
-    {
-      this.avisoEmail= "Campo vacío";
+    this.avisoEmail = this.funciones.comprobarVacio(correoCampo?.value);
+    if (this.avisoEmail === "") { } else { return; }
+
+    if (!this.funciones.validarEmail(correoCampo?.value)) {
+      this.avisoEmail = "Formato de correo incorrecto";
       return;
     } else {
-      this.avisoEmail= "";
-    }
-    if(!this.validarEmail(correoCampo?.value)){
-      return;
+      this.avisoEmail = "";
     }
 
-    
-    //correo pwd?
-    if (pwdCampo?.value === "") 
-    {
-      this.avisoPwd= "Campo vacío";
-      return;
-    } else {
-      this.avisoPwd= "";
-    }
+    this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
+    if (this.avisoPwd === "") { } else { return; }
 
     this.peticionHttp(correoCampo?.value, pwdCampo?.value);
   }
 
-  peticionHttp(correo:string, pwd: string): void {
-    const headers = { 
+  peticionHttp(correo: string, pwd: string): void {
+    const headers = {
       'Content-Type': 'application/json'
     };
     const body = {
       "correo": correo,
-      "pwd":pwd
+      "pwd": pwd
     };
 
     const url = this.URL + 'user/login';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        window.sessionStorage.removeItem('rol');
-        window.sessionStorage.setItem('rol', data);
-        window.sessionStorage.removeItem('correo');
-        window.sessionStorage.setItem('correo', correo);
-        window.sessionStorage.removeItem('password');
-        window.sessionStorage.setItem('password', pwd);
+        if (data.includes("Usuario o password desconocidas")) {
+          this.avisoEmail = "Usuario o contraseña desconocidas";
+        } else {
+          window.sessionStorage.removeItem('rol');
+          window.sessionStorage.setItem('rol', data);
+          window.sessionStorage.removeItem('correo');
+          window.sessionStorage.setItem('correo', correo);
+          window.sessionStorage.removeItem('password');
+          window.sessionStorage.setItem('password', pwd);
 
-        this.avisoEmail = "Iniciando sesión";
-        this.router.navigate(['/gestion']);
+          this.avisoEmail = "Iniciando sesión";
+
+          if(data === "client"){
+            alert("Acceso a la aplicación exitoso como cliente");
+            this.router.navigate(['/inicio']);
+          }else{
+            this.router.navigate(['/gestion']);
+          }
+        }
       },
       error: error => {
         console.log(error);
-        if(error.error.includes("Usuario o password desconocidas")){
-          this.avisoEmail = "Usuario o contraseña desconocidas";
-        }else{
-          this.avisoEmail = "Ha ocurrido algún error al iniciar";
-        }
+        alert("Ha ocurrido un error al iniciar sesión");
       }
     });
-  }
-
-  validarEmail(valor: string): boolean {
-    if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)){
-     this.avisoEmail = "";
-      return true;
-    } else {
-      this.avisoEmail = "Formato de email incorrecto";
-      return false;
-    }
   }
 }
