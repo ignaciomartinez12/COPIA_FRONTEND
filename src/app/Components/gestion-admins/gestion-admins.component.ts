@@ -123,6 +123,7 @@ export class GestionAdminsComponent implements OnInit {
     if (this.avisoPwd !== "") { errorCampo = true; }
 
     if (!this.funciones.validarEmail(emailCampo?.value)) {
+      alert("Error formato correo");
       errorCampo = true;
     }
 
