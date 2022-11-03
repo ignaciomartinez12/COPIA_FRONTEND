@@ -155,7 +155,7 @@ export class GestionClientesComponent implements OnInit {
         } else {
           alert("Cliente eliminado exitosamente");
           this.dejarVacio();
-          this.funciones.ocultarBtn("cont_confirm_add_c", true);
+          //this.funciones.ocultarBtn("cont_confirm_add_c", true);
           this.peticionGetHttp();
         }
       }, error: error => {
