@@ -115,6 +115,7 @@ export class GestionRidersComponent implements OnInit {
     }
 
     if (!this.funciones.validarEmail(emailCampo?.value)) {
+      alert("Error formato correo");
       errorCampo = true;
     }
 
