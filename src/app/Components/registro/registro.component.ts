@@ -112,10 +112,12 @@ export class RegistroComponent implements OnInit {
     if (pwdCampo?.value !== pwdDosCampo?.value) {
       this.avisoPwdDos = "Las contraseñas no coinciden";
     }
-
-    this.peticionHttp(nombreCampo?.value, apellidosCampo?.value, nifCampo?.value,
-      numeroTlfCampo?.value, direccionCampo?.value, usuarioCampo?.value, pwdCampo?.value,
-      pwdDosCampo?.value);
+    
+    if (!errorCampo) {
+      this.peticionHttp(nombreCampo?.value, apellidosCampo?.value, nifCampo?.value,
+        numeroTlfCampo?.value, direccionCampo?.value, usuarioCampo?.value, pwdCampo?.value,
+        pwdDosCampo?.value);
+    }
   }
 
   peticionHttp(nombre: string, apellidos: string, nif: string, telefono: string,
