@@ -301,7 +301,10 @@ export class GestionRidersComponent implements OnInit {
         } else if (data.includes("No tienes acceso a este servicio")) {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
-        } else {
+        } else if (data.includes("contraseña")) {
+          alert(data);
+        }
+        else {
           alert("Rider actualizado exitosamente");
         this.dejarVacio();
         this.funciones.ocultarBtn("add_rider", false);
