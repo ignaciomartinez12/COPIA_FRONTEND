@@ -42,7 +42,7 @@
             </div>
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
-                    <ul class="listaElementos">
+                    <ul id="listaRiders" class="listaElementos">
                         <li class="elementoBase" *ngFor="let element of listaRiders" (click)="onSelect(element)">{{
                             element.nombre }}</li>
                     </ul>

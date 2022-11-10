@@ -9,8 +9,9 @@ export class Rider {
     tipoVehiculo : number;
     matricula : string;
     carnet: boolean;
+    pos : number;
     
-    constructor(json:string){
+    constructor(json:string, pos:number){
         var jsonObject = JSON.parse(json);
         this.nombre = jsonObject.nombre;
         this.apellidos = jsonObject.apellidos;
@@ -21,5 +22,6 @@ export class Rider {
         this.tipoVehiculo= jsonObject.tipoVehiculo;
         this.matricula = jsonObject.matricula;
         this.carnet = Boolean(jsonObject.carnet);
+        this.pos = pos;
     }
 }

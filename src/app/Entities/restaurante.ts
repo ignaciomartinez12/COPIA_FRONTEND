@@ -8,8 +8,9 @@ export class Restaurante {
     correo : string;
     telefono : number;
     CIF : string;
+    pos: number;
     
-    constructor(json:string){
+    constructor(json:string, pos:number){
         var jsonObject = JSON.parse(json);
         this.nombre = jsonObject.nombre;
         this.categoria = jsonObject.categoria;
@@ -20,5 +21,6 @@ export class Restaurante {
         this.correo = jsonObject.email;
         this.telefono = parseInt(jsonObject.telefono);
         this.CIF = jsonObject.cif;
+        this.pos = pos;
     }
 }

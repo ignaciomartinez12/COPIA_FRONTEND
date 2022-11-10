@@ -16,7 +16,6 @@ import { GestionRidersComponent } from './Components/gestion-riders/gestion-ride
 import { GestionAdminsComponent } from './Components/gestion-admins/gestion-admins.component';
 import { GestionPedidosComponent } from './Components/gestion-pedidos/gestion-pedidos.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,

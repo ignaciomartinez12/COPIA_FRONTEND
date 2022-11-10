@@ -379,3 +379,7 @@ input[type="checkbox"]:disabled {
     margin-top: 16px;
     margin-bottom: 32px;
 }
+
+.resaltado{
+    color: #fc8a15;
+}
