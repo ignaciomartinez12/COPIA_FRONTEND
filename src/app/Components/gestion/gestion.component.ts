@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FuncionesService } from 'src/app/services/funcionesServices';
 
 @Component({
   selector: 'app-gestion',
@@ -6,92 +7,60 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./gestion.component.css']
 })
 export class GestionComponent implements OnInit {
-  private rol: string= '';
-  private contenedor_admins!: HTMLElement;
-  private contenedor_clientes!: HTMLElement;
-  private contenedor_riders!: HTMLElement;
-  private contenedor_restaurantes!: HTMLElement;
-  private contenedor_pedidos!: HTMLElement;
+  funciones: FuncionesService;
 
-  constructor() { }
-
-  ngOnInit(): void {
-    var contenedor_admins = document.getElementById("g_admins");
-    var contenedor_clientes = document.getElementById("g_clientes");
-    var contenedor_riders = document.getElementById("g_riders");
-    var contenedor_restaurantes = document.getElementById("g_restaurantes");
-    var contenedor_pedidos = document.getElementById("g_pedidos");
-
-    var btn_admins = document.getElementById("g_admins_btn");
-    var btn_clientes = document.getElementById("g_clientes_btn");
-    var btn_riders = document.getElementById("g_riders_btn");
-    var btn_restaurantes = document.getElementById("g_restaurantes_btn");
-    var btn_pedidos = document.getElementById("g_pedidos_btn");
-
-    if (contenedor_admins != null) {
-      this.contenedor_admins = contenedor_admins;
-    }
-    if (contenedor_clientes != null) {
-      this.contenedor_clientes = contenedor_clientes;
-    }
-    if (contenedor_riders != null) {
-      this.contenedor_riders = contenedor_riders;
-    }
-    if (contenedor_restaurantes != null) {
-      this.contenedor_restaurantes = contenedor_restaurantes;
-    }
-    if (contenedor_pedidos != null) {
-      this.contenedor_pedidos = contenedor_pedidos;
-    }
-
-    if(this.rol === 'rider'){
-      this.quitarOculto(this.contenedor_riders, btn_riders);
-    }else if(this.rol === 'admin'){
-      this.quitarOculto(this.contenedor_admins, btn_admins);
-      this.quitarOculto(this.contenedor_clientes, btn_clientes);
-      this.quitarOculto(this.contenedor_riders, btn_riders);
-      this.quitarOculto(this.contenedor_restaurantes, btn_restaurantes);
-      this.quitarOculto(this.contenedor_pedidos, btn_pedidos);
-    }
+  constructor() {
+    this.funciones = new FuncionesService();
   }
 
-  quitarOculto(contenedor:HTMLElement, boton:HTMLElement|null){
-    contenedor.classList.remove('oculto');
-      if (boton != null) {
-        boton.classList.remove('oculto');
-      }
+  ngOnInit(): void {
+    if (window.sessionStorage.getItem('rol') === 'rider') {
+      this.funciones.ocultarBtn('g_pedidos', false);
+      this.funciones.ocultarBtn('g_pedidos_btn', false);
+    } else if (window.sessionStorage.getItem('rol') === 'admin') {
+      this.funciones.ocultarBtn('g_admins', false);
+      this.funciones.ocultarBtn('g_admins_btn', false);
+      this.funciones.ocultarBtn('g_clientes', true);
+      this.funciones.ocultarBtn('g_clientes_btn', false);
+      this.funciones.ocultarBtn('g_riders', true);
+      this.funciones.ocultarBtn('g_riders_btn', false);
+      this.funciones.ocultarBtn('g_restaurantes', true);
+      this.funciones.ocultarBtn('g_restaurantes_btn', false);
+      this.funciones.ocultarBtn('g_pedidos', true);
+      this.funciones.ocultarBtn('g_pedidos_btn', false);
+    }
   }
 
   mostrarAdmins() {
     this.ocultarTodos();
-    this.contenedor_admins.classList.remove('oculto');
+    this.funciones.ocultarBtn('g_admins', false);
   }
 
   mostrarClientes() {
     this.ocultarTodos();
-    this.contenedor_clientes.classList.remove('oculto');
+    this.funciones.ocultarBtn('g_clientes', false);
   }
 
   mostrarRiders() {
     this.ocultarTodos();
-    this.contenedor_riders.classList.remove('oculto');
+    this.funciones.ocultarBtn('g_riders', false);
   }
 
   mostrarRestaurantes() {
     this.ocultarTodos();
-    this.contenedor_restaurantes.classList.remove('oculto');
+    this.funciones.ocultarBtn('g_restaurantes', false);
   }
 
   mostrarPedidos() {
     this.ocultarTodos();
-    this.contenedor_pedidos.classList.remove('oculto');
+    this.funciones.ocultarBtn('g_pedidos', false);
   }
 
   ocultarTodos() {
-    this.contenedor_admins.classList.add('oculto');
-    this.contenedor_clientes.classList.add('oculto');
-    this.contenedor_riders.classList.add('oculto');
-    this.contenedor_restaurantes.classList.add('oculto');
-    this.contenedor_pedidos.classList.add('oculto');
+    this.funciones.ocultarBtn('g_admins', true);
+    this.funciones.ocultarBtn('g_clientes', true);
+    this.funciones.ocultarBtn('g_riders', true);
+    this.funciones.ocultarBtn('g_restaurantes', true);
+    this.funciones.ocultarBtn('g_pedidos', true);
   }
 }

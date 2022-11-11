@@ -87,6 +87,10 @@
     justify-content: center;
 }
 
+.trabajo:hover{
+    background: #eBeBeB;
+}
+
 .trabajo h2{
     margin: 16px 0 0 0;
     text-align: center;

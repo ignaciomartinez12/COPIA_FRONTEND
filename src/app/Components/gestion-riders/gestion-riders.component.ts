@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Rider } from 'src/app/Entities/rider';
+import { Url } from 'src/app/Entities/url';
+import { FuncionesService } from 'src/app/services/funcionesServices';
 
 @Component({
   selector: 'app-gestion-riders',
@@ -10,292 +12,449 @@ import { Rider } from 'src/app/Entities/rider';
 })
 
 export class GestionRidersComponent implements OnInit {
-  private contenedor_campos!: HTMLElement;
-  avisoVehiculo: string = "";
   avisoNombre: string = "";
-  avisoCarnet: string = "";
-  avisoContraseña: string = "";
-  avisoNIF: string = "";
-  avisoEmail: string = "";
   avisoApellidos: string = "";
+  avisoNIF: string = "";
+  avisoCorreo: string = "";
+  avisoPwd: string = "";
+  avisoTipoVeh: string = "";
+  avisoMatricula: string = "";
+  avisoCarnet: string = "";
+  URL: string = new Url().url;
+  funciones: FuncionesService;
 
-  listaAdministradores: Rider[] = [];
+  listaRiders: Rider[] = [];
 
-  constructor(private router: Router, private http: HttpClient) { 
-    
+  constructor(private router: Router, private http: HttpClient) {
+    this.funciones = new FuncionesService();
   }
 
   ngOnInit(): void {
-  
-  var campoRyder = document.getElementById("contenedor_camposRider");
- 
-  if (campoRyder != null){
-    this.contenedor_campos = campoRyder;
+    this.peticionGetHttp();
   }
-}
 
-aceptarCambiosCrear(){
-  var nombreRyCampo = document.getElementById("nombreRy") as HTMLInputElement;
-  var apellidosRyCampo = document.getElementById("apellidosRy") as HTMLInputElement;
-  var nifRyCampo = document.getElementById("nifRy") as HTMLInputElement;
-  var valoracionRyCampo = document.getElementById("valoracionRy") as HTMLInputElement;
-  var emailRyCampo = document.getElementById("emailRy") as HTMLInputElement;
-  var pwdRyCampo = document.getElementById("passwordRy") as HTMLInputElement;
-  var tVehiculoRyCampo = document.querySelectorAll('input[name="tipoVehiculo"]');
-  var matriculaRyCampo = document.getElementById("matriculaRy") as HTMLInputElement;
-  var carnetRyCampo = document.getElementById("carnetRy") as HTMLInputElement;
+  peticionGetHttp(): void {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
 
-  this.avisoEmailAdmin = this.comprobarVacio(emailAdmCampo?.value);
-  this.avisoPwdAdmin = this.comprobarVacio(pwdAdmCampo?.value);
-  this.avisoNIFAdmin= this.comprobarVacio(nifAdmCampo?.value);
-  this.avisoZonaAdmin = this.comprobarVacio(zonaAdmCampo?.value);
-  this.avisoApellidosAdmin = this.comprobarVacio(apellidosAdmCampo?.value);
-  this.avisoNombreAdmin = this.comprobarVacio(nombreAdmCampo?.value);
-  
-   //Comprobar que sigue un patron ****@***.*** , buscar como se hace)
-   if (pwdRyCampo?.value === "") 
-   {
-    this.avisoRegistroRyders= "Te falta rellenar un campo para completar el registro";
-     return;
-   } else {
-     this.avisoRegistroRyders= "";
-   }
+    const body = {
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
 
-   let seleccionV = "";
-    Array.prototype.forEach.call(tVehiculoRyCampo, function (item) {
-      if(item.checked === true){
-        seleccionV = item.value;
+    const url = this.URL + 'user/getRiders';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else {
+          this.listaRiders = [];
+          if (data.length == 0) {
+            //alert("No hay riders");
+          } else {
+            var listaResJSON = data.split(";");
+            for (let i = 0; i < listaResJSON.length; i++) {
+              //console.log(listaResJSON[i]);
+              this.listaRiders.push(new Rider(listaResJSON[i], i))
+              console.log(this.listaRiders[i]);
+            }
+          }
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al cargar los riders");
+        //alert(error.error);
+      }
+    });
+  }
+
+  aceptarCambiosCrear() {
+    var errorCampo = false;
+    var nombreCampo = document.getElementById("nombreR") as HTMLInputElement;
+    var apellidosCampo = document.getElementById("apellidosR") as HTMLInputElement;
+    var nifCampo = document.getElementById("nifR") as HTMLInputElement;
+    var emailCampo = document.getElementById("emailR") as HTMLInputElement;
+    var pwdCampo = document.getElementById("passwordR") as HTMLInputElement;
+
+    var cocheCampo = document.getElementById("cocheR") as HTMLInputElement;
+    var motoCampo = document.getElementById("motoR") as HTMLInputElement;
+    var biciCampo = document.getElementById("biciR") as HTMLInputElement;
+    var patineteCampo = document.getElementById("patineteR") as HTMLInputElement;
+
+    var matriculaCampo = document.getElementById("matriculaR") as HTMLInputElement;
+    var carnetCampo = document.getElementById("carnetR") as HTMLInputElement;
+
+    this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
+    if (this.avisoNombre !== "") { errorCampo = true; }
+    this.avisoApellidos = this.funciones.comprobarVacio(apellidosCampo?.value);
+    if (this.avisoApellidos !== "") { errorCampo = true; }
+    this.avisoNIF = this.funciones.comprobarVacio(nifCampo?.value);
+    if (this.avisoNIF !== "") { errorCampo = true; }
+    this.avisoCorreo = this.funciones.comprobarVacio(emailCampo?.value);
+    if (this.avisoCorreo !== "") { errorCampo = true; }
+    this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
+    if (this.avisoPwd !== "") { errorCampo = true; }
+
+    var tipoVeh = 0;
+    if (this.funciones.comprobarSeleccionado(cocheCampo)) {
+      tipoVeh = 1;
+    } else if (this.funciones.comprobarSeleccionado(motoCampo)) {
+      tipoVeh = 2;
+    } else if (this.funciones.comprobarSeleccionado(biciCampo)) {
+      tipoVeh = 3;
+    } else if (this.funciones.comprobarSeleccionado(patineteCampo)) {
+      tipoVeh = 4;
+    }
+
+    if (tipoVeh == 0) {
+      this.avisoTipoVeh = "Selecciona un tipo de vehículo";
+      errorCampo = true;
+    } else {
+      this.avisoTipoVeh = "";
+    }
+
+    if (!this.funciones.validarEmail(emailCampo?.value)) {
+      errorCampo = true;
+    }
+
+    if (tipoVeh == 1 || tipoVeh == 2) {
+      this.avisoMatricula = this.funciones.comprobarVacio(matriculaCampo?.value);
+      if (this.avisoMatricula !== "") { errorCampo = true; }
+      if (!carnetCampo.checked) {
+        errorCampo = true;
+        this.avisoCarnet = "Este tipo de vehiculo necesita carnet";
+      } else {
+        this.avisoCarnet = "";
+      }
+    }
+
+    if (!errorCampo) {
+      this.peticionHttpCrear(nombreCampo?.value, apellidosCampo?.value, nifCampo?.value,
+        emailCampo?.value, pwdCampo?.value, tipoVeh, matriculaCampo?.value, carnetCampo?.checked);
+    }
+  }
+
+  peticionHttpCrear(nombre: string, apellidos: string, nif: string, correo: string,
+    pwd: string, tipoVeh: number, matricula: string, carnet: boolean): void {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "nombre": nombre,
+      "apellidos": apellidos,
+      "nif": nif,
+      "valoracion": "0",
+      "correo": correo,
+      "pwd1": pwd,
+      "pwd2": pwd,
+      "tipoVehiculo": String(tipoVeh),
+      "matricula": matricula,
+      "carnet": String(carnet),
+      "rol": "rider",
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'user/crearUsuario';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("Ya existe un usuario con ese correo")) {
+          alert(data);
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else if (data.includes("contraseña")) {
+          alert(data);
+        } else {
+          alert("Rider creado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_rider", false);
+          this.funciones.ocultarBtn("cont_confirm_add_r", true);
+          this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRiders');
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al introducir el administrador");
+        //alert(error.error);
       }
     });
 
-   
-   
-  //CUIDADO CON LOS AVISOS, HAY QUE CAMBIARLOS O IMPLEMENTARLOS DE ALGUNA FORMA
-  this.peticionHttpCrear(nombreRyCampo?.value, apellidosRyCampo?.value, nifRyCampo?.value, valoracionRyCampo?.value, emailRyCampo?.value, pwdRyCampo?.value, seleccionV, matriculaRyCampo?.value, carnetRyCampo?.value);
-}
-
-peticionHttpCrear(nombreRy: string, apellidosRy: string, nifRy: string, valoracionRy: string, emailRy: string, pwdRy: string, seleccionVRy: string, matriculaRy: string, carnetRy: string): void {
-  const headers = { 'Content-Type': 'application/json'};
-  const body = {
-    "nombre": nombreRy,
-    "apellidos": apellidosRy, 
-    "nif": nifRy, 
-    "valoracion": valoracionRy,
-    "correo": emailRy,
-    "pwd1": pwdRy, 
-    "pwd2": pwdRy,
-    "tipovehiculo": seleccionVRy,
-    "matricula": matriculaRy, 
-    "carnet": carnetRy,
-    "rol": "rider",
-    "correoAcceso": window.sessionStorage.getItem('correo'),
-    "passwordAcceso": window.sessionStorage.getItem('password')
-  };
-
-  const url = 'http://localhost:8082/user/crearUsuario';
-  this.http.post(url, body, { headers, responseType: 'text' }).subscribe(data => {  
-  if(data === "Registro completado"){
-    this.avisoRegistroRyders = "Ryder creado correctamente"; 
   }
-  });
-}
 
+  dejarVacio() {
+    this.vaciarAvisos();
+    this.vaciarCampos();
+    
+  }
 
+  vaciarCampos() {
+    this.funciones.asignarValorID("nombreR", "");
+    this.funciones.asignarValorID("apellidosR", "");
+    this.funciones.asignarValorID("nifR", "");
+    this.funciones.asignarValorID("valoracionR", "0");
+    this.funciones.asignarValorID("emailR", "");
+    this.funciones.asignarValorID("passwordR", "");
+    this.funciones.asignarValorID("matriculaR", "");
+    this.funciones.seleccionarRadio("carnetR", false);
+  }
 
+  vaciarAvisos() {
+    this.avisoNombre = "";
+    this.avisoApellidos = "";
+    this.avisoNIF = "";
+    this.avisoCorreo = "";
+    this.avisoPwd = "";
+    this.avisoTipoVeh = "";
+    this.avisoMatricula = "";
+    this.avisoCarnet = "";
+  }
 
-aceptarCambiosActualizar(){
-  var nombreAdmCampo = document.getElementById("nombreA") as HTMLInputElement;
-  var apellidosAdmCampo = document.getElementById("apellidosA") as HTMLInputElement;
-  var zonaAdmCampo = document.getElementById("zonaA") as HTMLInputElement;
-  var nifAdmCampo = document.getElementById("nifA") as HTMLInputElement;
-  var emailAdmCampo = document.getElementById("emailA") as HTMLInputElement;
-  var pwdAdmCampo = document.getElementById("passwordA") as HTMLInputElement;
+  aceptarCambiosActualizar() {
+    var errorCampo = false;
+    var nombreCampo = document.getElementById("nombreR") as HTMLInputElement;
+    var apellidosCampo = document.getElementById("apellidosR") as HTMLInputElement;
+    var nifCampo = document.getElementById("nifR") as HTMLInputElement;
+    var emailCampo = document.getElementById("emailR") as HTMLInputElement;
+    var pwdCampo = document.getElementById("passwordR") as HTMLInputElement;
 
-  this.avisoEmailAdmin = this.comprobarVacio(emailAdmCampo?.value);
-  this.avisoPwdAdmin = this.comprobarVacio(pwdAdmCampo?.value);
-  this.avisoNIFAdmin= this.comprobarVacio(nifAdmCampo?.value);
-  this.avisoZonaAdmin = this.comprobarVacio(zonaAdmCampo?.value);
-  this.avisoApellidosAdmin = this.comprobarVacio(apellidosAdmCampo?.value);
-  this.avisoNombreAdmin = this.comprobarVacio(nombreAdmCampo?.value);
-  
+    var cocheCampo = document.getElementById("cocheR") as HTMLInputElement;
+    var motoCampo = document.getElementById("motoR") as HTMLInputElement;
+    var biciCampo = document.getElementById("biciR") as HTMLInputElement;
+    var patineteCampo = document.getElementById("patineteR") as HTMLInputElement;
 
-  this.peticionHttpActualizar(nombreAdmCampo?.value, apellidosAdmCampo?.value, zonaAdmCampo?.value, nifAdmCampo?.value, emailAdmCampo?.value, pwdAdmCampo?.value);
-}
+    var matriculaCampo = document.getElementById("matriculaR") as HTMLInputElement;
+    var carnetCampo = document.getElementById("carnetR") as HTMLInputElement;
 
-peticionGetHttp(): void {
-  const headers = { 
-    'Content-Type': 'application/json'}; 
+    this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
+    if (this.avisoNombre !== "") { errorCampo = true; }
+    this.avisoApellidos = this.funciones.comprobarVacio(apellidosCampo?.value);
+    if (this.avisoApellidos !== "") { errorCampo = true; }
+    this.avisoNIF = this.funciones.comprobarVacio(nifCampo?.value);
+    if (this.avisoNIF !== "") { errorCampo = true; }
+    this.avisoCorreo = this.funciones.comprobarVacio(emailCampo?.value);
+    if (this.avisoCorreo !== "") { errorCampo = true; }
+    this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
+    if (this.avisoPwd !== "") { errorCampo = true; }
 
-  const url = 'http://localhost:8082/food/consultarAdministradores';
-  this.http.get(url, { headers, responseType: 'text' }).subscribe({
-    next: data => {
-      this.listaAdministradores = [];
-      if(data.length == 0){
-        //alert(window.sessionStorage.getItem('rol'));
-        //alert("No hay restaurantes");
-      }else{
-        var listaResJSON = data.split(";");
-        for (let i = 0; i < listaResJSON.length; i++) {
-          //console.log(listaResJSON[i]);
-          this.listaAdministradores.push(new Administrador(listaResJSON[i]))
-          console.log(this.listaAdministradores[i]);
-        }
-      }
-    }, error: error => {
-      
-      //this.router.navigate(['/login']);
-      alert("Ha ocurrido un error al cargar los administradores");
+    var tipoVeh = 0;
+    if (this.funciones.comprobarSeleccionado(cocheCampo)) {
+      tipoVeh = 1;
+    } else if (this.funciones.comprobarSeleccionado(motoCampo)) {
+      tipoVeh = 2;
+    } else if (this.funciones.comprobarSeleccionado(biciCampo)) {
+      tipoVeh = 3;
+    } else if (this.funciones.comprobarSeleccionado(patineteCampo)) {
+      tipoVeh = 4;
     }
-  });
-} 
 
+    if (tipoVeh == 0) {
+      this.avisoTipoVeh = "Selecciona un tipo de vehículo";
+      errorCampo = true;
+    } else {
+      this.avisoTipoVeh = "";
+    }
 
-eliminar(){
-  var nombreCampo = document.getElementById("nombreA") as HTMLInputElement;
+    if (!this.funciones.validarEmail(emailCampo?.value)) {
+      errorCampo = true;
+    }
 
-  if(confirm("¿Seguro que quiere eliminar el administrador?")){
-    this.peticionHttpEliminar(nombreCampo?.value);
+    if (tipoVeh == 1 || tipoVeh == 2) {
+      this.avisoMatricula = this.funciones.comprobarVacio(matriculaCampo?.value);
+      if (this.avisoMatricula !== "") { errorCampo = true; }
+      if (!carnetCampo.checked) {
+        errorCampo = true;
+        this.avisoCarnet = "Este tipo de vehiculo necesita carnet";
+      } else {
+        this.avisoCarnet = "";
+      }
+    }
+
+    if (!errorCampo) {
+      this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value, nifCampo?.value,
+        emailCampo?.value, pwdCampo?.value, tipoVeh, matriculaCampo?.value, carnetCampo?.checked);
+    }
+  }
+
+  peticionHttpActualizar(nombre: string, apellidos: string, nif: string, correo: string,
+    pwd: string, tipoVeh: number, matricula: string, carnet: boolean): void {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "nombre": nombre,
+      "apellidos": apellidos,
+      "nif": nif,
+      "valoracion": "0",
+      "correo": correo,
+      "pwd1": pwd,
+      "pwd2": pwd,
+      "tipoVehiculo": String(tipoVeh),
+      "matricula": matricula,
+      "carnet": String(carnet),
+      "rol": "rider",
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    let url = this.URL + 'user/actualizarUsuario/';
+    url += correo;
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("No existe ningun usuario en la base de datos")) {
+          alert("No existe ese usuario en la base de datos");
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else {
+          alert("Rider actualizado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_rider", false);
+          this.funciones.ocultarBtn("cont_confirm_udt_r", true);
+          this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRiders');
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al actualizar el rider");
+        //alert(error.error);
+      }
+    });
+  }
+
+  cancelarCambiosCrear() {
+    this.disabledTodos(true); //bloquear campos
     this.dejarVacio();
-    this.peticionGetHttp();
-  }else{
-    //cancelar
+    this.funciones.ocultarBtn('add_rider', false); //mostrar btn_add
+    this.funciones.ocultarBtn('cont_confirm_add_r', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaRiders');
   }
-}
 
-
-
-mostrar_datos(){
-  this.ocultarTodo()
-  this.contenedor_datos.classList.remove('oculto');
-}
-
-
-
-
-ocultarTodo(){
-  this.contenedor_datos.classList.add('oculto');
- 
-}
-
-onSelect(element: Administrador){
-  this.disabledTodos(true);
-  console.log(element);
-  
-  this.asignarValorID('emailAdm', element.correo);
-  this.asignarValorID('zonaAdm', element.nombre);
-  this.asignarValorID('NIFAdm', element.CIF);
-  this.asignarValorID('nombreAdmin', element.razon_social);
-  this.asignarValorID('contraseñaAdmin', String(element.telefono));
-  this.asignarValorID('apellidosAdm', String(element.valoracion));
-  this.ocultarBtn("cont_confirm_add",true);
-  this.ocultarBtn("cont_confirm_udt",true);
-  this.ocultarBtn("add_res",false);
-  this.ocultarBtn("update_res",false);
-  this.ocultarBtn("delete_res",false);
-}
-
-disabledTodos(valor: boolean){
-  this.disabledID('emailAdm', valor);
-  this.disabledID('nombreAdm', valor);
-  this.disabledID('apellidosAdm,', valor);
-  this.disabledID('NIFAdm', valor);
-  this.disabledID('zonaAdm', valor);
-  this.disabledID('contraseñaAdm', valor);
-  
-}
-
-
-cancelarCambiosCrear(){
-  this.disabledTodos(true); //bloquear campos
-  this.dejarVacio();
-  this.ocultarBtn('add_adm', false); //mostrar btn_add
-  this.ocultarBtn('cont_confirm_add_adm', true); //ocultar btns_aceptar_cancelar
-}
-
-cancelarCambiosActualizar(){
-  this.disabledTodos(true); //bloquear campos
-  this.dejarVacio();
-  this.ocultarBtn('add_adm', false); //mostrar btn_add
-  this.ocultarBtn('cont_confirm_udt_adm', true); //ocultar btns_aceptar_cancelar
-}
-
-activarCamposCrear(){
-  this.disabledTodos(false); //habilitar campos
-  this.vaciarCampos(); //vaciar campos
-  this.ocultarBtn('add_adm', true); //ocultar btn_add
-  this.ocultarBtn('update_adm', true); //ocultar btn_add
-  this.ocultarBtn('delete_adm', true); //ocultar btn_add
-  this.ocultarBtn('cont_confirm_add_adm', false); //mostrar btns_aceptar_cancelar    
-}
-
-activarCamposActualizar(){
-  this.disabledTodos(false); //habilitar campos
-  this.disabledID('nombreAdm',true);
-  this.vaciarAvisos(); //vaciar campos
-  this.ocultarBtn('add_adm', true); //ocultar btn_add
-  this.ocultarBtn('update_adm', true); //ocultar btn_add
-  this.ocultarBtn('delete_adm', true); //ocultar btn_add
-  this.ocultarBtn('cont_confirm_udt_adm', false); //mostrar btns_aceptar_cancelar
-}
-
-
-disabledID(id:string, valor:boolean){
-  var campo = document.getElementById(id) as HTMLInputElement;
-  campo.disabled = valor;
-}
-
-asignarValorID(id:string, valor:string){
-  var campo = document.getElementById(id) as HTMLInputElement;
-  campo.value = valor;
-}
-
-comprobarVacio(cadena:string):string{
-  if(cadena === ""){
-    return "Campo vacío";
-  }else{
-    return "";
+  cancelarCambiosActualizar() {
+    this.disabledTodos(true); //bloquear campos
+    this.dejarVacio();
+    this.funciones.ocultarBtn('add_rider', false); //mostrar btn_add
+    this.funciones.ocultarBtn('cont_confirm_udt_r', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaRiders');
   }
-}
 
-vaciarCampos(){
-  this.asignarValorID("emailAdm","");
-  this.asignarValorID("apellidosAdm","");
-  this.asignarValorID("nombreAdm","");
-  this.asignarValorID("NIFAdm","");
-  this.asignarValorID("zonaAdm","");
-  this.asignarValorID("contraseñaAdm","");
-}
-
-ocultarBtn(id:string, valor:boolean){
-  var campo = document.getElementById(id) as HTMLInputElement;
-  if(valor){
-    campo.classList.add('oculto');
-  }else{
-    campo.classList.remove('oculto');
+  activarCamposCrear() {
+    this.disabledTodos(false); //habilitar campos
+    this.vaciarCampos(); //vaciar campos
+    this.funciones.ocultarBtn('add_rider', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_rider', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_rider', true); //ocultar btn_add
+    this.funciones.ocultarBtn('cont_confirm_add_r', false); //mostrar btns_aceptar_cancelar    
   }
-}
 
-vaciarAvisos(){
-  this.avisoEmail = "";
-  this.avisoNombre= "";
-  this.avisoNIF = "";
-  this.avisoApellidos = "";
-  this.avisoContraseña = "";
-  this.avisoZona = "";
-  
-}
+  activarCamposActualizar() {
+    this.disabledTodos(false); //habilitar campos
+    this.funciones.disabledID('emailR', true);
+    this.vaciarAvisos(); //vaciar campos
+    this.funciones.ocultarBtn('add_rider', true); //ocultar btn_add
+    this.funciones.ocultarBtn('update_rider', true); //ocultar btn_add
+    this.funciones.ocultarBtn('delete_rider', true); //ocultar btn_add
+    this.funciones.ocultarBtn('cont_confirm_udt_r', false); //mostrar btns_aceptar_cancelar
+  }
 
-dejarVacio(){
-  this.vaciarAvisos();
-  this.vaciarCampos();
-}
+  eliminar() {
+    var correoCampo = document.getElementById("emailR") as HTMLInputElement;
 
-logout(){
-  window.sessionStorage.removeItem('rol');
-  window.sessionStorage.removeItem('correo');
-  window.sessionStorage.removeItem('password');
-  this.router.navigate(['/inicio']);
-}
-}
+    if (confirm("¿Seguro que quiere eliminar el rider?")) {
+      this.peticionHttpEliminar(correoCampo?.value);
+      this.dejarVacio();
+      this.peticionGetHttp();
+      this.funciones.apagarElementosLista('listaRiders');
+    } else {
+      //cancelar
+    }
+  }
 
+  peticionHttpEliminar(correo: string) {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "correo": correo,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'user/eliminarUsuario';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("No existe ningun usuario en la base de datos")) {
+          alert("No existe ese usuario en la base de datos");
+        } else if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else {
+          alert("Rider eliminado exitosamente");
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_rider", false);
+          this.funciones.ocultarBtn("cont_confirm_add_r", true);
+          this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRiders');
+        }
+
+      }, error: error => {
+        alert("Ha ocurrido un error al eliminar el rider");
+      }
+    });
+  }
+
+  disabledTodos(valor: boolean) {
+    this.funciones.disabledID('nombreR', valor);
+    this.funciones.disabledID('apellidosR', valor);
+    this.funciones.disabledID('nifR', valor);
+    this.funciones.disabledID('emailR', valor);
+    this.funciones.disabledID('passwordR', valor);
+
+    this.funciones.disabledID('cocheR', valor);
+    this.funciones.disabledID('motoR', valor);
+    this.funciones.disabledID('biciR', valor);
+    this.funciones.disabledID('patineteR', valor);
+
+    this.funciones.disabledID('matriculaR', valor);
+    this.funciones.disabledID('carnetR', valor);
+  }
+
+  logout() {
+    window.sessionStorage.removeItem('rol');
+    window.sessionStorage.removeItem('correo');
+    window.sessionStorage.removeItem('password');
+    this.router.navigate(['/inicio']);
+  }
+
+  onSelect(element: Rider) {
+    this.disabledTodos(true);
+    console.log(element);
+
+    this.funciones.apagarElementosLista('listaRiders');
+    this.funciones.resaltarElementoLista('listaRiders', element.pos);
+
+    this.funciones.asignarValorID('nombreR', element.nombre);
+    this.funciones.asignarValorID('apellidosR', element.apellidos);
+    this.funciones.asignarValorID('nifR', element.nif);
+    this.funciones.asignarValorID('emailR', element.correo);
+    this.funciones.asignarValorID('passwordR', element.pwd);
+    this.funciones.asignarValorID('valoracionR', String(element.valoracion));
+
+    this.funciones.seleccionarRadio('cocheR', false);
+    this.funciones.seleccionarRadio('motoR', false);
+    this.funciones.seleccionarRadio('biciR', false);
+    this.funciones.seleccionarRadio('patineteR', false);
+
+    if (element.tipoVehiculo == 1) {
+      this.funciones.seleccionarRadio('cocheR', true);
+    } else if (element.tipoVehiculo == 2) {
+      this.funciones.seleccionarRadio('motoR', true);
+    } else if (element.tipoVehiculo == 3) {
+      this.funciones.seleccionarRadio('biciR', true);
+    } else if (element.tipoVehiculo == 4) {
+      this.funciones.seleccionarRadio('patineteR', true);
+    }
+
+    this.funciones.asignarValorID('matriculaR', element.matricula);
+    this.funciones.seleccionarRadio('carnetR', element.carnet);
+
+    this.funciones.ocultarBtn("cont_confirm_add_r", true);
+    this.funciones.ocultarBtn("cont_confirm_udt_r", true);
+    this.funciones.ocultarBtn("add_rider", false);
+    this.funciones.ocultarBtn("update_rider", false);
+    this.funciones.ocultarBtn("delete_rider", false);
+  }
 }

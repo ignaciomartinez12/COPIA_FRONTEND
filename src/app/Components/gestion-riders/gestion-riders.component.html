@@ -3,13 +3,32 @@
         <div class="contenedor_header3 contenedor_horizontal">
             <img class="img_logo2" src="../../../assets/ui_images/logo3.png" alt="">
             <div class="botones contenedor_horizontal">
-                <img id="add" class="img_icon" src="../../../assets/ui_images/add_icon.svg"/>
-                <img id="update" class="img_icon" src="../../../assets/ui_images/update2_icon.svg"/>
-                <img id="delete" class="img_icon" src="../../../assets/ui_images/delete_icon.svg"/>
+                <div id="cont_confirm_add_r" class="contenedor_horizontal oculto">
+                    <button (click)="aceptarCambiosCrear()">
+                        <img id="acept_add_r" class="img_icon" src="../../../assets/ui_images/acept.png" /></button>
+                    <button (click)="cancelarCambiosCrear()">
+                        <img id="cancel_add_r" class="img_icon" src="../../../assets/ui_images/cancel.svg" /></button>
+                </div>
+                <div id="cont_confirm_udt_r" class="contenedor_horizontal oculto">
+                    <button (click)="aceptarCambiosActualizar()">
+                        <img id="acept_udt_r" class="img_icon" src="../../../assets/ui_images/acept.png" /></button>
+                    <button (click)="cancelarCambiosActualizar()">
+                        <img id="cancel_udt_r" class="img_icon" src="../../../assets/ui_images/cancel.svg" /></button>
+                </div>
+
+                <div id="cont_btn_opc" class="contenedor_horizontal">
+
+                    <button id="add_rider" (click)="activarCamposCrear()">
+                        <img class="img_icon" src="../../../assets/ui_images/add_icon.svg" /></button>
+                    <button id="update_rider" class="oculto" (click)="activarCamposActualizar()">
+                        <img class="img_icon" src="../../../assets/ui_images/update2_icon.svg" /></button>
+                    <button id="delete_rider" class="oculto" (click)="eliminar()">
+                        <img class="img_icon" src="../../../assets/ui_images/delete_icon.svg" /></button>
+                </div>
+
                 <h2 class="sep">|</h2>
-                <a href="../inicio/inicio.html">
-                    <img id="logout" class="img_icon" src="../../../assets/ui_images/home_icon.svg"/>
-                </a>
+                <button id="logout_rider" (click)="logout()">
+                    <img class="img_icon" src="../../../assets/ui_images/home_icon.svg" /></button>
             </div>
         </div>
         <div class="contenedor_campos">
@@ -23,66 +42,96 @@
             </div>
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
-                    <ul class="listaElementos">
-                        <li class="elementoBase">Elemento 1</li>
-                        <li class="elementoBase">Elemento 2</li>
-                        <li class="elementoBase">Elemento 3</li>
+                    <ul id="listaRiders" class="listaElementos">
+                        <li class="elementoBase" *ngFor="let element of listaRiders" (click)="onSelect(element)">{{
+                            element.nombre }}</li>
                     </ul>
                 </div>
                 <div class="contenedor_datos">
                     <div id="datos" class="contenedor_datos_rest">
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="nombre">Nombre</label>
-                                <input class="campo_entrada" type="text" id="nombreRy" required>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="nombreR">Nombre</label>
+                                    <label class="aviso" for="nombreR">{{ avisoNombre }}</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="nombreR" disabled>
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="apellidos">Apellidos</label>
-                                <input class="campo_entrada" type="text" id="apellidosRy" required>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="apellidosR">Apellidos</label>
+                                    <label class="aviso" for="apellidosR">{{ avisoApellidos }}</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="apellidosR" disabled>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="nif">NIF</label>
-                                <input class="campo_entrada" type="text" id="nifRy">
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="nifR">NIF</label>
+                                    <label class="aviso" for="nifR">{{ avisoNIF }}</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="nifR" disabled>
                             </div>
-                            <!-- FALLA 53-56 -->
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="valoracion">Valoración</label>
-                                <input class="campo_entrada" type="number" id="valoracionRy" >
+                                <label class="texto_gris" for="valoracionR">Valoración</label>
+                                <input class="campo_entrada" type="number" id="valoracionR" disabled>
                             </div>
                         </div>
-                        
+
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="email">Correo</label>
-                                <input class="campo_entrada" type="email" id="emailRy" pattern=".+@globex\.com" size="30" required>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="emailR">Correo</label>
+                                    <label class="aviso" for="emailR">{{ avisoCorreo }}</label>
+                                </div>
+                                <input class="campo_entrada" type="email" id="emailR" pattern=".+@globex\.com" size="30"
+                                    disabled>
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="password">Contraseña</label>
-                                <input class="campo_entrada" type="password" id="passwordRy" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size="30" required>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="passwordR">Contraseña</label>
+                                    <label class="aviso" for="passwordR">{{ avisoPwd }}</label>
+                                </div>
+                                <input class="campo_entrada" type="password" id="passwordR" disabled>
+                            </div>
+                            <div class="campo_dato6">
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="activoR">Cuenta Activa</label>
+                                </div>
+                                <input class="campo_entrada_check" type="checkbox" id="activoR" disabled>
                             </div>
                         </div>
                         <div class="linea_campo campo_dato3">
-                            <label class="texto_gris" for="matricula">Tipo de Vehículo</label>
-                                
+                            <div class="contenedor_label contenedor_horizontal">
+                                <label class="texto_gris" for="cocheR">Tipo de vehículo</label>
+                                <label class="aviso" for="cocheR">{{ avisoTipoVeh }}</label>
+                            </div>
                             <div class="campo_radio campo_entrada">
-                                <label><input type="radio" name="tipoVehiculo" id="cocheRy" value="coche"> Coche</label>
-                                <label><input type="radio" name="tipoVehiculo" id="motoRy" value="moto"> Moto</label>
-                                <label><input type="radio" name="tipoVehiculo" id="biciRy" value="bici"> Bicicleta</label>
-                                <label><input type="radio" name="tipoVehiculo" id="patineteRy" value="patinete"> Patinete</label>
+                                <label><input type="radio" name="tipoVehiculo" id="cocheR" value="coche" disabled>
+                                    Coche</label>
+                                <label><input type="radio" name="tipoVehiculo" id="motoR" value="moto" disabled>
+                                    Moto</label>
+                                <label><input type="radio" name="tipoVehiculo" id="biciR" value="bici" disabled>
+                                    Bicicleta</label>
+                                <label><input type="radio" name="tipoVehiculo" id="patineteR" value="patinete" disabled>
+                                    Patinete</label>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
-                                <label class="texto_gris" for="matricula">Matrícula</label>
-                                <input class="campo_entrada" type="text" id="matriculaRy" required>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="matriculaR">Matrícula</label>
+                                    <label class="aviso" for="matriculaR">{{ avisoMatricula }}</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="matriculaR" disabled>
                             </div>
                             <div class="campo_dato5">
-                                <label class="texto_gris" for="carnet">Carnet</label>
-                                <input class="campo_entrada" type="text" id="carnetRy" required>
-                                <label class="aviso" >{{ avisoRegistroRyders }}</label>
-                                <button (click)="crearRyder()" id="crearRyder" class="btn_acceder ancho_partido">Registrar Ryder</button>
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="carnetR">Carnet</label>
+                                    <label class="aviso" for="carnetR">{{ avisoCarnet }}</label>
+                                </div>
+                                <input class="campo_entrada_check" type="checkbox" id="carnetR" disabled>
                             </div>
                         </div>
                     </div>
