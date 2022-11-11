@@ -302,6 +302,11 @@ label{
     padding-left: 4px;
 }
 
+.campo_dato6{
+    width: 15%;
+    padding-left: 4px;
+}
+
 .label_lista{
     width: 20%;
 }
@@ -312,6 +317,11 @@ label{
 .label_lista2{
     width: 30%;
 }
+
+.label_lista3{
+    width: 33%;
+}
+
 .label_datos2{
     width: 70%;
 }
