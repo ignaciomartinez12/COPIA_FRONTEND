@@ -15,6 +15,7 @@ import { GestionClientesComponent } from './Components/gestion-clientes/gestion-
 import { GestionRidersComponent } from './Components/gestion-riders/gestion-riders.component';
 import { GestionAdminsComponent } from './Components/gestion-admins/gestion-admins.component';
 import { GestionPedidosComponent } from './Components/gestion-pedidos/gestion-pedidos.component';
+import { PedidosClientesComponent } from './Components/pedidos-clientes/pedidos-clientes.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { GestionPedidosComponent } from './Components/gestion-pedidos/gestion-pe
     GestionClientesComponent,
     GestionRidersComponent,
     GestionAdminsComponent,
-    GestionPedidosComponent
+    GestionPedidosComponent,
+    PedidosClientesComponent
   ],
   imports: [
     BrowserModule,

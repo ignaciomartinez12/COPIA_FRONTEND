@@ -330,6 +330,11 @@ label{
     height: 4px;
 }
 
+.labels2{
+    height: 4px;
+    margin-top: 20px;
+}
+
 /*** checkbox ***/
 input[type="checkbox"] {
     appearance: none;
@@ -392,4 +397,28 @@ input[type="checkbox"]:disabled {
 
 .resaltado{
     color: #fc8a15;
+}
+
+.contenedor_tex_portada2{
+    background: rgba( 66, 66, 66, 0.4 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 6px );
+    -webkit-backdrop-filter: blur( 6px );
+    border-radius: 10px;
+
+    width: 95%;
+    height: 570px;
+    margin: 24px 0;
+    padding: 30px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /*border-radius: 25px;*/
+}
+
+.sect{
+    align-content: center;
+
 }

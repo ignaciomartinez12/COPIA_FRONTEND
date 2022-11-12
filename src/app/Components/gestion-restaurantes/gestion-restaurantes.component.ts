@@ -20,7 +20,7 @@ export class GestionRestaurantesComponent implements OnInit {
   public loading!: boolean;
   public archivos: any = [];
 
-  private restauranteSelect: string;
+  public restauranteSelect: string;
   private platoSelect: string;
   public platoFoto: string;
 
