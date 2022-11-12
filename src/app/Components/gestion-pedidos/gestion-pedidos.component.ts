@@ -46,6 +46,16 @@ export class GestionPedidosComponent implements OnInit {
 
   }
 
+  asignar_ped(){
+    this.peticionHttpAsignar();
+
+  }
+
+  entregar_ped(){
+    this.peticionHttpEntregar();
+
+  }
+
   peticionGetHttp(): void {
     const headers = {
       'Content-Type': 'application/json'
@@ -104,6 +114,47 @@ export class GestionPedidosComponent implements OnInit {
         }
       }, error: error => {
         alert("Ha ocurrido un error al asignar el pedido");
+      }
+    });
+  }
+
+
+  peticionHttpEntregar(): void {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "idPedido": this.pedidoSel.id,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'pedido/asignarsePedido';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("No te corresponde entregar este pedido")) {
+          alert(data);
+        } else if (data.includes("No existe ese pedido")) {
+          alert(data);
+
+        }else if (data.includes("El pedido ya ha sido entregado")) {
+          alert(data);
+
+        }else if (data.includes("Debes asignarte primero")) {
+          alert(data);
+
+
+        } else {
+          alert("Pedido entregado exitosamente");
+          this.peticionGetPedidosPrepHttp(this.pedidoSel.restaurante);
+          this.pedidosAsignados--;
+          //this.peticionGetPedidosRepHttp();
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al entregar el pedido");
       }
     });
   }
