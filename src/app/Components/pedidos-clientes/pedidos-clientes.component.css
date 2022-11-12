@@ -291,3 +291,91 @@ hr {
     width: 100%;
     height: 300px;
 }
+
+.estrella_vacia{
+    background-image: url(../../../assets/ui_images/estrella-vacia.png);
+}
+
+.estrella_rellena{
+    background-image: url(../../../assets/ui_images/estrella-rellena.png);
+}
+
+.img_estrella{
+    width: 40px;
+    height: 40px;
+}
+
+.contenedor_valorar_pedidos{
+    /*height: 500px;*/
+    width: 350px;
+    background: white;
+    
+    border: 3px solid #757575;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.contenedor_estrellas{
+    margin: 0 auto 8px auto;
+    width: 220px;
+    /*background: red;*/
+}
+
+.cabecera_valorar{
+    background: #757575;
+    justify-content: space-between;
+    padding: 4px 16px;
+    color: white;
+}
+.cabecera_valorar h1{
+    width: 280px;
+    text-align: center;
+}
+
+.contenedor_valorar_pedidos h2{
+    font-size: 1rem;
+    color: #fc8a15;
+    font-weight: bold;
+}
+
+.contenedor_valorar_pedidos p{
+    font-size: 1rem;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.contenedor_valorar_pedidos textarea{
+    font-size: 0.9rem;
+    width: 100%;
+    resize:none;
+    height: 50px;
+}
+
+.contenedor_valorar{
+    padding: 8px 16px;
+}
+
+#btn_enviarValRes, #btn_enviarValRid{
+    width: 150px;
+    height: 40px;
+    margin: 4px auto 0 auto;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1rem;
+    color: white;
+    line-height: 35px;
+    border: 3px solid #fc8a15;
+    background: #fc8a15;
+    border-radius: 5px;
+}
+
+.linea_btn{
+    width: 100%;
+    display: flex;
+}
+
+.cont_valoracion{
+    position: absolute;
+}

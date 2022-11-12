@@ -66,7 +66,7 @@
             </div>
         </div>
         <!-- Carrito -->
-        <div id="contenedor_carrito">
+        <div id="contenedor_carrito" class="oculto">
             <div class="contenedor_datos2">
                 <h1 class="texto_naranja">Carrito</h1>
                 <div class="labels2 contenedor_horizontal">
@@ -122,7 +122,7 @@
 
 
         <!-- Pedidos -->
-        <div id="contenedor_pedidos" class="oculto">
+        <div id="contenedor_pedidos">
             <div class="contenedor_datos2">
                 <h1 class="texto_naranja">Pedidos</h1>
                 <div class="labels2 contenedor_horizontal">
@@ -173,7 +173,7 @@
                             </div>
                             <div class="importeRecibo">
                                 <hr>
-                                <p><strong>Importe total: {{ pedidoSel.total }}</strong></p>
+                                <p><strong>Importe total: {{ pedidoSel.total }} €</strong></p>
                             </div>
                         </div>
                         <button id="btn_cancelarPed" >Cancelar Pedido</button>
@@ -184,5 +184,57 @@
         
         <!-- Usuario -->
 
+    </div>
+    <!-- Valorar Pedidos -->
+    <div class="cont_valoracion oculto">
+        <div class="contenedor_valorar_pedidos">
+            <div class="contenedor_horizontal cabecera_valorar">
+                <h1>Valorar Pedido</h1>
+                <button>
+                    <img id="cerrarValorar" class="img_icon" src="../../../assets/ui_images/close_icon.svg"/></button>
+            </div>
+            <div class="contenedor_valorar">
+                <h2>Restaurante</h2>
+                <p>{{ pedidoSel.restaurante }}</p>
+                <div class="contenedor_horizontal contenedor_estrellas">
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                </div>
+                <label class="texto_gris" for="comentario1">Comentario:</label>
+                <textarea class="campo_entrada_img" id="comentario1"></textarea>
+                <div class="linea_btn">
+                    <button id="btn_enviarValRes" >Enviar Valoración</button> 
+                </div>
+            </div>
+            <div class="contenedor_valorar">
+                <h2>Rider</h2>
+                <p>{{ pedidoSel.rider }}</p>
+                <div class="contenedor_horizontal contenedor_estrellas">
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                </div>
+                <label class="texto_gris" for="comentario2">Comentario:</label>
+                <textarea class="campo_entrada_img" id="comentario2"></textarea>
+                <div class="linea_btn">
+                    <button id="btn_enviarValRid">Enviar Valoración</button> 
+                </div>
+            </div>
+        </div>
     </div>
 </section>
