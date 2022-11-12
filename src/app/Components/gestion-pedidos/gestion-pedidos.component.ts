@@ -33,7 +33,7 @@ export class GestionPedidosComponent implements OnInit {
 
   onSelect(element:Restaurante){
     console.log(element);
-    this.peticionGetPedidosHttp(element.nombre);
+    this.peticionGetPedidosPrepHttp(element.nombre);
   }
 
   onSelectPedRep(element:Pedido){
@@ -76,34 +76,34 @@ export class GestionPedidosComponent implements OnInit {
   peticionHttpAsignar(): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
-      "email": correo,
-      "categoria": categoria,
-      "razonSocial": razon_social,
-      "valoracion": String(valoracion),
-      "direccion": direccion,
-      "nombre": nombre,
-      "telefono": String(telefono),
-      "cif": CIF,
+      "idPedido": this.pedidoSel.id,
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = this.URL + 'food/crearRestaurante';
+    const url = this.URL + 'pedido/asignarsePedido';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        if (data.includes("Ya existe un restaurante con ese nombre")) {
+        if (data.includes("No tienes acceso a este servicio")) {
           alert(data);
-        } else if (data.includes("No tienes acceso a este servicio")) {
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
           this.router.navigate(['/login']);
+        } else if (data.includes("No se ha podido asignar el pedido")) {
+          alert(data);
+        } else if (data.includes("El pedido ya ha sido asignado")) {
+          alert(data);
+
+        }else if (data.includes("El pedido ya ha sido entregado")) {
+          alert(data);
+
         } else {
-          alert("Restaurante creado exitosamente");
-         
-          this.peticionGetPedidosPrepHttp();
-          
+          alert("Pedido asignado exitosamente");
+          this.peticionGetPedidosPrepHttp(this.pedidoSel.restaurante);
+          this.pedidosAsignados++;
         }
       }, error: error => {
-        alert("Ha ocurrido un error al introducir el restaurante");
+        alert("Ha ocurrido un error al asignar el pedido");
       }
     });
   }
