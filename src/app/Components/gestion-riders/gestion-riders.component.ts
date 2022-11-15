@@ -21,11 +21,11 @@ export class GestionRidersComponent implements OnInit {
   avisoMatricula: string = "";
   avisoCarnet: string = "";
   URL: string = new Url().url;
-  funciones : FuncionesService;
+  funciones: FuncionesService;
 
   listaRiders: Rider[] = [];
 
-  constructor(private router: Router, private http: HttpClient) { 
+  constructor(private router: Router, private http: HttpClient) {
     this.funciones = new FuncionesService();
   }
 
@@ -57,7 +57,7 @@ export class GestionRidersComponent implements OnInit {
             var listaResJSON = data.split(";");
             for (let i = 0; i < listaResJSON.length; i++) {
               //console.log(listaResJSON[i]);
-              this.listaRiders.push(new Rider(listaResJSON[i]))
+              this.listaRiders.push(new Rider(listaResJSON[i], i))
               console.log(this.listaRiders[i]);
             }
           }
@@ -119,13 +119,13 @@ export class GestionRidersComponent implements OnInit {
       errorCampo = true;
     }
 
-    if(tipoVeh == 1 || tipoVeh == 2){
+    if (tipoVeh == 1 || tipoVeh == 2) {
       this.avisoMatricula = this.funciones.comprobarVacio(matriculaCampo?.value);
       if (this.avisoMatricula !== "") { errorCampo = true; }
-      if (!carnetCampo.checked){ 
+      if (!carnetCampo.checked) {
         errorCampo = true;
         this.avisoCarnet = "Este tipo de vehiculo necesita carnet";
-      }else{
+      } else {
         this.avisoCarnet = "";
       }
     }
@@ -158,12 +158,12 @@ export class GestionRidersComponent implements OnInit {
     const url = this.URL + 'user/crearUsuario';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
-        if(data.includes("Ya existe un usuario con ese correo")){
+        if (data.includes("Ya existe un usuario con ese correo")) {
           alert(data);
-        }else if(data.includes("No tienes acceso a este servicio")){
+        } else if (data.includes("No tienes acceso a este servicio")) {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
-        }else if (data.includes("contraseña")) {
+        } else if (data.includes("contraseña")) {
           alert(data);
         } else {
           alert("Rider creado exitosamente");
@@ -171,6 +171,7 @@ export class GestionRidersComponent implements OnInit {
           this.funciones.ocultarBtn("add_rider", false);
           this.funciones.ocultarBtn("cont_confirm_add_r", true);
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRiders');
         }
       }, error: error => {
         alert("Ha ocurrido un error al introducir el administrador");
@@ -183,6 +184,7 @@ export class GestionRidersComponent implements OnInit {
   dejarVacio() {
     this.vaciarAvisos();
     this.vaciarCampos();
+    
   }
 
   vaciarCampos() {
@@ -256,13 +258,13 @@ export class GestionRidersComponent implements OnInit {
       errorCampo = true;
     }
 
-    if(tipoVeh == 1 || tipoVeh == 2){
+    if (tipoVeh == 1 || tipoVeh == 2) {
       this.avisoMatricula = this.funciones.comprobarVacio(matriculaCampo?.value);
       if (this.avisoMatricula !== "") { errorCampo = true; }
-      if (!carnetCampo.checked){ 
+      if (!carnetCampo.checked) {
         errorCampo = true;
         this.avisoCarnet = "Este tipo de vehiculo necesita carnet";
-      }else{
+      } else {
         this.avisoCarnet = "";
       }
     }
@@ -306,10 +308,11 @@ export class GestionRidersComponent implements OnInit {
         }
         else {
           alert("Rider actualizado exitosamente");
-        this.dejarVacio();
-        this.funciones.ocultarBtn("add_rider", false);
-        this.funciones.ocultarBtn("cont_confirm_udt_r", true);
-        this.peticionGetHttp();
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_rider", false);
+          this.funciones.ocultarBtn("cont_confirm_udt_r", true);
+          this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRiders');
         }
       }, error: error => {
         alert("Ha ocurrido un error al actualizar el rider");
@@ -323,6 +326,7 @@ export class GestionRidersComponent implements OnInit {
     this.dejarVacio();
     this.funciones.ocultarBtn('add_rider', false); //mostrar btn_add
     this.funciones.ocultarBtn('cont_confirm_add_r', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaRiders');
   }
 
   cancelarCambiosActualizar() {
@@ -330,6 +334,7 @@ export class GestionRidersComponent implements OnInit {
     this.dejarVacio();
     this.funciones.ocultarBtn('add_rider', false); //mostrar btn_add
     this.funciones.ocultarBtn('cont_confirm_udt_r', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaRiders');
   }
 
   activarCamposCrear() {
@@ -358,6 +363,7 @@ export class GestionRidersComponent implements OnInit {
       this.peticionHttpEliminar(correoCampo?.value);
       this.dejarVacio();
       this.peticionGetHttp();
+      this.funciones.apagarElementosLista('listaRiders');
     } else {
       //cancelar
     }
@@ -381,12 +387,13 @@ export class GestionRidersComponent implements OnInit {
           this.router.navigate(['/login']);
         } else {
           alert("Rider eliminado exitosamente");
-        this.dejarVacio();
-        this.funciones.ocultarBtn("add_rider", false);
-        this.funciones.ocultarBtn("cont_confirm_add_r", true);
-        this.peticionGetHttp();
+          this.dejarVacio();
+          this.funciones.ocultarBtn("add_rider", false);
+          this.funciones.ocultarBtn("cont_confirm_add_r", true);
+          this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRiders');
         }
-        
+
       }, error: error => {
         alert("Ha ocurrido un error al eliminar el rider");
       }
@@ -419,6 +426,9 @@ export class GestionRidersComponent implements OnInit {
   onSelect(element: Rider) {
     this.disabledTodos(true);
     console.log(element);
+
+    this.funciones.apagarElementosLista('listaRiders');
+    this.funciones.resaltarElementoLista('listaRiders', element.pos);
 
     this.funciones.asignarValorID('nombreR', element.nombre);
     this.funciones.asignarValorID('apellidosR', element.apellidos);
