@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { Pedido } from 'src/app/Entities/pedido';
 import { Plato } from 'src/app/Entities/plato';
 import { Restaurante } from 'src/app/Entities/restaurante';
+
 import { FuncionesService } from 'src/app/services/funcionesServices';
 import { Url } from 'src/app/Entities/url';
 import { DomSanitizer, EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-gestion-pedidos',
@@ -20,8 +22,10 @@ export class GestionPedidosComponent implements OnInit {
   listaPedidosRepartir: Pedido[] = [];
   listaPedidosPreparacion: Pedido[] = [];
   pedidoSel : Pedido;
+
   URL: string = new Url().url;
   pedidosAsignados: number = 0;
+
   
   constructor(private router: Router, private http: HttpClient) {
     this.pedidoSel = new Pedido(1, "", 0);
@@ -119,6 +123,7 @@ export class GestionPedidosComponent implements OnInit {
   }
 
 
+
   peticionHttpEntregar(): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
@@ -194,6 +199,7 @@ export class GestionPedidosComponent implements OnInit {
   }
 
  
+
 
   logout() {
     window.sessionStorage.removeItem('rol');
