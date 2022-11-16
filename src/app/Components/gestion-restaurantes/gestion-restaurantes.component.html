@@ -42,13 +42,14 @@
             </div>
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
-                    <ul class="listaElementos">
+                    <ul id="listaRestaurantes" class="listaElementos">
                         <li class="elementoBase" *ngFor="let element of listaRestaurantes" (click)="onSelect(element)">
                             {{ element.nombre }}</li>
                     </ul>
                 </div>
                 <div class="contenedor_datos">
                     <div id="contenedor_btn_ventanas" class="contenedor_botones_rest">
+                        <label class="texto_gris">Restaurante seleccionado: {{ restauranteSelect }}</label>
                         <ul>
                             <li>
                                 <button id="btn_datos" (click)="mostrar_datos()" class="btn">Datos</button>
@@ -140,8 +141,8 @@
                         <div class="contenido contenedor_horizontal">
                             <div class="contenedor_lista_botones">
                                 <div class="contenedor_lista_platos">
-                                    <ul class="listaElementos">
-                                        <li class="elementoBase" *ngFor="let element of listaPlatos" (click)="onSelectP(element)">
+                                    <ul id="listaPlatos" class="listaElementos">
+                                        <li class="elementoBase" *ngFor="let element of listaPlatos" (click)="onSelectP(element)" >
                                             <div class="contenedor_horizontal">
                                                 <div class="cont_foto_plato">
                                                     <img src="{{ element.fotoP }}" alt="">

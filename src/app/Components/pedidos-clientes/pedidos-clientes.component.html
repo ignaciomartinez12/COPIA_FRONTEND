@@ -1,0 +1,240 @@
+<div class="Menu_bar contenedor_header contenedor_horizontal">
+    <div class="logo">
+        <a routerLink="/inicio">
+            <img class="img_logo" src="../../assets/ui_images/logo3.png" alt="" />
+        </a>
+    </div>
+    <div class="botones contenedor_horizontal">
+        <div id="cont_btnsCli" class="contenedor_horizontal">
+            <button>
+                <img id="pedirCli" class="img_icon" src="../../../assets/ui_images/knife-fork_.png" /></button>
+            <button>
+                <img id="carritoCli" class="img_icon" src="../../../assets/ui_images/shopping-cart2.png" /></button>
+            <button>
+                <img id="pedidoCli" class="img_icon" src="../../../assets/ui_images/bolsa-de-la-compra2.png" /></button>
+            <button>
+                <img id="datosCli" class="img_icon" src="../../../assets/ui_images/usuario.png" /></button>
+        </div>
+        <h2 class="sep">|</h2>
+        <button id="logout_res" (click)="logout()">
+            <img class="img_icon" src="../../../assets/ui_images/home_icon.svg" /></button>
+    </div>
+</div>
+<section class="portada">
+    
+    <div class="contenedor_tex_portada2">
+        <!-- Pedir -->
+        <div class="contenedor_pedir" class="oculto">
+            <div class="contenedor_horizontal">
+                <div class="label_listaRest">
+                    <h2 class="label_cuadroPedir">Restaurantes</h2>
+                </div>
+                <div class="label_listaCarta">
+                    <h2 class="label_cuadroPedir">Carta</h2>
+                </div>
+            </div>
+            <div class="contenedor_listas contenedor_horizontal">
+                <div class="contenedor_listaRest">
+                    <ul id="listaRestaurantesPedCli" class="listaElementos">
+                        <li class="elementoBase" *ngFor="let element of listaRestaurantes" (click)="onSelectRes(element)">
+                            {{ element.nombre }}</li>
+                    </ul>
+                </div>
+                <div class="contenedorSep"></div>
+                <div class="contenedor_listaCarta">
+                    <ul id="listaCartaPedCli" class="listaElementos">
+                        <li *ngFor="let element of listaPlatos">
+                            <div class="card_plato">
+                                <div class="cont_foto">
+                                    <img class="fotoPlatoP" src="../../../assets/plt_images/food.png" alt="">
+                                </div>
+                                <h3>{{ element.nombreP }}</h3>
+                                <div class="contenedor_precioBotones contenedor_horizontal">
+                                    <p><strong>{{ element.precioP }}€</strong></p>
+                                    <div class="par_btn contenedor_horizontal">
+                                        <button>
+                                            <img class="img_iconCarta" src="../../../assets/ui_images/lupa2.png" /></button>
+                                        <button>
+                                            <img class="img_iconCarta" src="../../../assets/ui_images/shopping-cart3.png" /></button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Carrito -->
+        <div id="contenedor_carrito" class="oculto">
+            <div class="contenedor_datos2">
+                <h1 class="texto_naranja">Carrito</h1>
+                <div class="labels2 contenedor_horizontal">
+                    <div class="label_lista3">
+                        <h2 class="label_cuadro">Pedido pendiente</h2>
+                    </div>
+                    <div class="label_lista3">
+                        <h2 class="label_cuadro">Platos</h2>
+                    </div>
+                    <div class="label_lista3"></div>
+                </div>
+                <div class="contenido contenedor_horizontal contenedor_label">
+                    <div class="columna_recibo">
+                        <div class="contenedor_lista_pedidos" id="cont_lista_pedPend">
+                            <ul id="listaPedidosPendientes" class="listaElementos">
+                                <li class="elementoBase" *ngFor="let element of listaPedidosPendientes" (click)="onSelectPedPend(element)">
+                                    {{ element.id }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="contenedor_horizontal">
+                            <button id="btn_cancelarPedCarr" >Cancelar</button>
+                            <button id="btn_ordenarPedCarr" >Ordenar</button>
+                        </div>
+                    </div>
+    
+                    <div class="contenedor_listaCarta2">
+                        <ul id="listaPlatosPedCli" class="listaElementos">
+                            <li *ngFor="let element of listaPlatosPedidoSel">
+                                <div class="card_plato">
+                                    <div class="cont_foto">
+                                        <img class="fotoPlatoP" src="../../../assets/plt_images/food.png" alt="">
+                                    </div>
+                                    <h3>{{ element.nombreP }}</h3>
+                                    <div class="contenedor_precioBotones contenedor_horizontal">
+                                        <p><strong>{{ element.precioP }}€</strong></p>
+                                        <div class="par_btn contenedor_horizontal">
+                                            <button id="btn_subCant">
+                                                <img class="img_iconCarta" src="../../../assets/ui_images/sub_icon.svg" /></button>
+                                            <p class="cant"><strong>1</strong></p>
+                                            <button id="btn_addCant">
+                                                <img class="img_iconCarta" src="../../../assets/ui_images/add_icon.svg" /></button>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Pedidos -->
+        <div id="contenedor_pedidos">
+            <div class="contenedor_datos2">
+                <h1 class="texto_naranja">Pedidos</h1>
+                <div class="labels2 contenedor_horizontal">
+                    <div class="label_lista3">
+                        <h2 class="label_cuadro">En progreso</h2>
+                    </div>
+                    <div class="label_lista3">
+                        <h2 class="label_cuadro">Entregados</h2>
+                    </div>
+                    <div class="label_lista3"></div>
+                </div>
+                <div class="contenido contenedor_horizontal contenedor_label">
+                
+                    <div class="contenedor_lista_pedidos">
+                        <ul id="listaPedidosEnProgreso" class="listaElementos">
+                            <li class="elementoBase" *ngFor="let element of listaPedidosEnProgreso" (click)="onSelectPedProg(element)">
+                                {{ element.id }}
+                            </li>
+                        </ul>
+                    </div>
+    
+                    <div class="contenedor_lista_pedidos">
+                        <ul id="listaPedidosEntregados" class="listaElementos">
+                            <li class="elementoBase" *ngFor="let element of listaPedidosEntregados" (click)="onSelectPedEnt(element)">
+                                {{ element.id }}
+                            </li>
+                        </ul>
+                    </div>
+    
+                    <div class="columna_recibo">
+                        <div class="contenedor_recibo">
+                            <img id="bordeRecibo" src="../../../assets/ui_images/borde-recibo.png" alt="">
+                            <div class="datosRecibo">
+                                <h2>Pedido</h2>
+                                <p>Restaurante: <strong>{{ pedidoSel.restaurante }}</strong></p>
+                                <p>Código: {{ pedidoSel.id }}</p>
+                                <hr>
+                            </div>
+                            <div class="platosRecibo">
+                                <ul id="listaPlatosPedido" class="listaElementos">
+                                    <li class="elementoBase" *ngFor="let element of listaPlatosPedidoSel">
+                                        <div class="lineaPlato">
+                                            <p>{{ element.nombreP }}</p>
+                                            <p>{{ element.precioP }}</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="importeRecibo">
+                                <hr>
+                                <p><strong>Importe total: {{ pedidoSel.total }} €</strong></p>
+                            </div>
+                        </div>
+                        <button id="btn_cancelarPed" >Cancelar Pedido</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Usuario -->
+
+    </div>
+    <!-- Valorar Pedidos -->
+    <div class="cont_valoracion oculto">
+        <div class="contenedor_valorar_pedidos">
+            <div class="contenedor_horizontal cabecera_valorar">
+                <h1>Valorar Pedido</h1>
+                <button>
+                    <img id="cerrarValorar" class="img_icon" src="../../../assets/ui_images/close_icon.svg"/></button>
+            </div>
+            <div class="contenedor_valorar">
+                <h2>Restaurante</h2>
+                <p>{{ pedidoSel.restaurante }}</p>
+                <div class="contenedor_horizontal contenedor_estrellas">
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                </div>
+                <label class="texto_gris" for="comentario1">Comentario:</label>
+                <textarea class="campo_entrada_img" id="comentario1"></textarea>
+                <div class="linea_btn">
+                    <button id="btn_enviarValRes" >Enviar Valoración</button> 
+                </div>
+            </div>
+            <div class="contenedor_valorar">
+                <h2>Rider</h2>
+                <p>{{ pedidoSel.rider }}</p>
+                <div class="contenedor_horizontal contenedor_estrellas">
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                    <button>
+                        <img class="img_estrella" src="../../../assets/ui_images/estrella-vacia.png"/></button>
+                </div>
+                <label class="texto_gris" for="comentario2">Comentario:</label>
+                <textarea class="campo_entrada_img" id="comentario2"></textarea>
+                <div class="linea_btn">
+                    <button id="btn_enviarValRid">Enviar Valoración</button> 
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

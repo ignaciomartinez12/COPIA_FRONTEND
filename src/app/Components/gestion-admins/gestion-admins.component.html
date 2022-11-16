@@ -43,7 +43,7 @@
             </div>
             <div class="contenido contenedor_horizontal">
                 <div class="contenedor_lista">
-                    <ul class="listaElementos">
+                    <ul id="listaAdmins" class="listaElementos">
                         <li class="elementoBase" *ngFor="let element of listaAdmins" (click)="onSelect(element)">{{
                             element.nombre }} {{ element.apellidos }}</li>
                     </ul>

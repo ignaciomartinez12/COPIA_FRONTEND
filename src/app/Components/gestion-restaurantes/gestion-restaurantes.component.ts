@@ -20,7 +20,7 @@ export class GestionRestaurantesComponent implements OnInit {
   public loading!: boolean;
   public archivos: any = [];
 
-  private restauranteSelect: string;
+  public restauranteSelect: string;
   private platoSelect: string;
   public platoFoto: string;
 
@@ -172,8 +172,8 @@ export class GestionRestaurantesComponent implements OnInit {
           this.dejarVacio();
           this.funciones.ocultarBtn("add_res", false);
           this.funciones.ocultarBtn("cont_confirm_add", true);
-          this.restauranteSelect = '';
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRestaurantes');
         }
       }, error: error => {
         alert("Ha ocurrido un error al introducir el restaurante");
@@ -212,8 +212,8 @@ export class GestionRestaurantesComponent implements OnInit {
           this.dejarVacio();
           this.funciones.ocultarBtn("add_res", false);
           this.funciones.ocultarBtn("cont_confirm_udt", true);
-          this.restauranteSelect = '';
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRestaurantes');
         }
       }, error: error => {
         alert("Ha ocurrido un error al actualizar el restaurante");
@@ -238,7 +238,7 @@ export class GestionRestaurantesComponent implements OnInit {
           var listaResJSON = data.split(";");
           for (let i = 0; i < listaResJSON.length; i++) {
             //console.log(listaResJSON[i]);
-            this.listaRestaurantes.push(new Restaurante(listaResJSON[i]))
+            this.listaRestaurantes.push(new Restaurante(listaResJSON[i],i))
             console.log(this.listaRestaurantes[i]);
           }
         }
@@ -259,6 +259,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
 
     this.funciones.ocultarBtn('cont_confirm_add', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaRestaurantes');
   }
 
   cancelarCambiosActualizar() {
@@ -271,6 +272,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
 
     this.funciones.ocultarBtn('cont_confirm_udt', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaRestaurantes');
   }
 
   activarCamposCrear() {
@@ -309,6 +311,7 @@ export class GestionRestaurantesComponent implements OnInit {
       this.peticionHttpEliminar(nombreCampo?.value);
       this.dejarVacio();
       this.peticionGetHttp();
+      this.funciones.apagarElementosLista('listaRestaurantes');
     } else {
       //cancelar
     }
@@ -335,8 +338,8 @@ export class GestionRestaurantesComponent implements OnInit {
           this.dejarVacio();
           this.funciones.ocultarBtn("add_res", false);
           this.funciones.ocultarBtn("cont_confirm_add", true);
-          this.restauranteSelect = '';
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaRestaurantes');
         }
       }, error: error => {
         alert("Ha ocurrido un error al eliminar el restaurante");
@@ -383,6 +386,9 @@ export class GestionRestaurantesComponent implements OnInit {
     this.disabledTodos(true);
     console.log(element);
     this.restauranteSelect = element.nombre;
+
+    this.funciones.apagarElementosLista('listaRestaurantes');
+    this.funciones.resaltarElementoLista('listaRestaurantes', element.pos);
 
     this.funciones.asignarValorID('emailRes', element.correo);
     this.funciones.asignarValorID('categoria', element.categoria);
@@ -438,6 +444,7 @@ export class GestionRestaurantesComponent implements OnInit {
   dejarVacio() {
     this.vaciarAvisos();
     this.vaciarCampos();
+    this.restauranteSelect = '';
   }
 
   logout() {
@@ -469,6 +476,7 @@ export class GestionRestaurantesComponent implements OnInit {
   dejarVacioCarta() {
     this.vaciarAvisosCarta();
     this.vaciarCamposCarta();
+    this.platoSelect = "";
   }
 
   aceptarCambiosCrearCarta() {
@@ -588,6 +596,7 @@ export class GestionRestaurantesComponent implements OnInit {
       this.peticionHttpEliminarPlato(nombrePCampo?.value);
       this.dejarVacioCarta();
       this.peticionGetHttpCarta();
+      this.funciones.apagarElementosLista('listaPlatos');
     } else {
       //cancelar
     }
@@ -621,6 +630,7 @@ export class GestionRestaurantesComponent implements OnInit {
           this.funciones.ocultarBtn("add_plato", false);
           this.funciones.ocultarBtn("cont_confirm_addP", true);
           this.peticionGetHttpCarta();
+          this.funciones.apagarElementosLista('listaPlatos');
         }
       }, error: error => {
         alert("Ha ocurrido un error al introducir el restaurante");
@@ -659,6 +669,7 @@ export class GestionRestaurantesComponent implements OnInit {
           this.funciones.ocultarBtn("add_plato", false);
           this.funciones.ocultarBtn("cont_confirm_udtP", true);
           this.peticionGetHttpCarta();
+          this.funciones.apagarElementosLista('listaPlatos');
         }
       }, error: error => {
         //alert("Ha ocurrido un error al actualizar el restaurante");
@@ -696,6 +707,7 @@ export class GestionRestaurantesComponent implements OnInit {
           this.funciones.ocultarBtn("add_plato", false);
           this.funciones.ocultarBtn("cont_confirm_addP", true);
           this.peticionGetHttpCarta();
+          this.funciones.apagarElementosLista('listaPlatos');
         }
       }, error: error => {
         alert("Ha ocurrido un error al eliminar el restaurante");
@@ -722,7 +734,7 @@ export class GestionRestaurantesComponent implements OnInit {
             var listaCartaJSON = data.split(";;");
             for (let i = 0; i < listaCartaJSON.length; i++) {
               //console.log(listaResJSON[i]);
-              this.listaPlatos.push(new Plato(listaCartaJSON[i]))
+              this.listaPlatos.push(new Plato(listaCartaJSON[i],i))
               console.log(this.listaPlatos[i]);
             }
           }
@@ -738,6 +750,9 @@ export class GestionRestaurantesComponent implements OnInit {
   onSelectP(element: Plato) {
     this.disabledTodosP(true);
     console.log(element);
+
+    this.funciones.apagarElementosLista('listaPlatos');
+    this.funciones.resaltarElementoLista('listaPlatos', element.pos);
 
     this.funciones.asignarValorID('nombreP', element.nombreP);
     this.funciones.asignarValorID('precio', String(element.precioP));
@@ -766,17 +781,17 @@ export class GestionRestaurantesComponent implements OnInit {
   cancelarCambiosCrearP() {
     this.disabledTodosP(true); //bloquear campos
     this.dejarVacioCarta();
-    this.platoSelect = "";
     this.funciones.ocultarBtn('add_plato', false); //mostrar btn_add
     this.funciones.ocultarBtn('cont_confirm_addP', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaPlatos');
   }
 
   cancelarCambiosActualizarP() {
     this.disabledTodosP(true); //bloquear campos
     this.dejarVacioCarta();
-    this.platoSelect = "";
     this.funciones.ocultarBtn('add_plato', false); //mostrar btn_add
     this.funciones.ocultarBtn('cont_confirm_udtP', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaPlatos');
   }
 
   activarCamposCrearP() {

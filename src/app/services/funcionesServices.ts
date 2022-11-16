@@ -90,4 +90,27 @@ export class FuncionesService {
   comprobarSeleccionado(element: HTMLInputElement): boolean {
     return element.checked;
   }
+
+  apagarElementosLista(idLista:string){
+    var lista = document.getElementById(idLista) as HTMLUListElement;
+    if (lista.children != null){
+      for (let i = 0; i < lista.children.length; i++) {
+        lista.children[i].classList.remove('resaltado');
+      }
+    }else{
+      console.log("lista nula: "+idLista);
+      
+    }
+    console.log("resaltado quitado: "+idLista);
+  }
+
+  resaltarElementoLista (idLista:string, pos:number){
+    var lista = document.getElementById(idLista) as HTMLUListElement;
+    if (lista.children != null){
+      lista.children[pos].classList.add('resaltado');
+    }else{
+      console.log("lista nula: "+idLista);
+    }
+    console.log("resaltado quitado: "+idLista);
+  }
 }

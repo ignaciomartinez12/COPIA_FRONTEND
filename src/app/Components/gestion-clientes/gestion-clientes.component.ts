@@ -54,7 +54,7 @@ export class GestionClientesComponent implements OnInit {
             var listaResJSON = data.split(";");
             for (let i = 0; i < listaResJSON.length; i++) {
               //console.log(listaResJSON[i]);
-              this.listaClientes.push(new Cliente(listaResJSON[i]))
+              this.listaClientes.push(new Cliente(listaResJSON[i],i))
               console.log(this.listaClientes[i]);
             }
           }
@@ -113,6 +113,7 @@ export class GestionClientesComponent implements OnInit {
     this.disabledTodos(true); //bloquear campos
     this.dejarVacio();
     this.funciones.ocultarBtn('cont_confirm_udt_c', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaClientes');
   }
 
   activarCamposActualizar() {
@@ -131,6 +132,7 @@ export class GestionClientesComponent implements OnInit {
       this.peticionHttpEliminar(correoCampo?.value);
       this.dejarVacio();
       this.peticionGetHttp();
+      this.funciones.apagarElementosLista('listaClientes');
     } else {
       //cancelar
     }
@@ -157,6 +159,7 @@ export class GestionClientesComponent implements OnInit {
           this.dejarVacio();
           //this.funciones.ocultarBtn("cont_confirm_add_c", true);
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaClientes');
         }
       }, error: error => {
         alert("Ha ocurrido un error al eliminar el cliente");
@@ -208,6 +211,7 @@ export class GestionClientesComponent implements OnInit {
           this.dejarVacio();
           this.funciones.ocultarBtn("cont_confirm_udt_c", true);
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaClientes');
         }
       }, error: error => {
         //alert("Ha ocurrido un error al actualizar el cliente");
@@ -251,6 +255,9 @@ export class GestionClientesComponent implements OnInit {
   onSelect(element: Cliente) {
     this.disabledTodos(true);
     console.log(element);
+
+    this.funciones.apagarElementosLista('listaClientes');
+    this.funciones.resaltarElementoLista('listaClientes', element.pos);
 
     this.funciones.asignarValorID('nombreC', element.nombre);
     this.funciones.asignarValorID('apellidosC', element.apellidos);

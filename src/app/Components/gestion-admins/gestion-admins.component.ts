@@ -54,7 +54,7 @@ export class GestionAdminsComponent implements OnInit {
             var listaResJSON = data.split(";");
             for (let i = 0; i < listaResJSON.length; i++) {
               //console.log(listaResJSON[i]);
-              this.listaAdmins.push(new Admin(listaResJSON[i]))
+              this.listaAdmins.push(new Admin(listaResJSON[i],i))
               console.log(this.listaAdmins[i]);
             }
           }
@@ -138,6 +138,7 @@ export class GestionAdminsComponent implements OnInit {
     this.dejarVacio();
     this.funciones.ocultarBtn('add_admin', false); //mostrar btn_add
     this.funciones.ocultarBtn('cont_confirm_add_a', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaAdmins');
   }
 
   cancelarCambiosActualizar() {
@@ -145,11 +146,13 @@ export class GestionAdminsComponent implements OnInit {
     this.dejarVacio();
     this.funciones.ocultarBtn('add_admin', false); //mostrar btn_add
     this.funciones.ocultarBtn('cont_confirm_udt_a', true); //ocultar btns_aceptar_cancelar
+    this.funciones.apagarElementosLista('listaAdmins');
   }
 
   activarCamposCrear() {
     this.disabledTodos(false); //habilitar campos
     this.vaciarCampos(); //vaciar campos
+    this.funciones.apagarElementosLista('listaAdmins');
     this.funciones.ocultarBtn('add_admin', true); //ocultar btn_add
     this.funciones.ocultarBtn('update_admin', true); //ocultar btn_add
     this.funciones.ocultarBtn('delete_admin', true); //ocultar btn_add
@@ -173,6 +176,7 @@ export class GestionAdminsComponent implements OnInit {
       this.peticionHttpEliminar(correoCampo?.value);
       this.dejarVacio();
       this.peticionGetHttp();
+      this.funciones.apagarElementosLista('listaAdmins');
     } else {
       //cancelar
     }
@@ -200,6 +204,7 @@ export class GestionAdminsComponent implements OnInit {
           this.funciones.ocultarBtn("add_admin", false);
           this.funciones.ocultarBtn("cont_confirm_add_a", true);
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaAdmins');
         }
       }, error: error => {
         alert("Ha ocurrido un error al eliminar el administrador");
@@ -239,6 +244,7 @@ export class GestionAdminsComponent implements OnInit {
           this.funciones.ocultarBtn("add_admin", false);
           this.funciones.ocultarBtn("cont_confirm_add_a", true);
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaAdmins');
         }
       }, error: error => {
         alert("Ha ocurrido un error al introducir el administrador");
@@ -280,6 +286,7 @@ export class GestionAdminsComponent implements OnInit {
           this.funciones.ocultarBtn("add_admin", false);
           this.funciones.ocultarBtn("cont_confirm_udt_a", true);
           this.peticionGetHttp();
+          this.funciones.apagarElementosLista('listaAdmins');
         }
       }, error: error => {
         alert("Ha ocurrido un error al actualizar el administrador");
@@ -330,6 +337,9 @@ export class GestionAdminsComponent implements OnInit {
   onSelect(element: Admin) {
     this.disabledTodos(true);
     console.log(element);
+
+    this.funciones.apagarElementosLista('listaAdmins');
+    this.funciones.resaltarElementoLista('listaAdmins', element.pos);
 
     this.funciones.asignarValorID('nombreA', element.nombre);
     this.funciones.asignarValorID('apellidosA', element.apellidos);

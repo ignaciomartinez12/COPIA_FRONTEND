@@ -302,6 +302,11 @@ label{
     padding-left: 4px;
 }
 
+.campo_dato6{
+    width: 15%;
+    padding-left: 4px;
+}
+
 .label_lista{
     width: 20%;
 }
@@ -312,12 +317,22 @@ label{
 .label_lista2{
     width: 30%;
 }
+
+.label_lista3{
+    width: 33%;
+}
+
 .label_datos2{
     width: 70%;
 }
 
 .labels{
     height: 4px;
+}
+
+.labels2{
+    height: 4px;
+    margin-top: 20px;
 }
 
 /*** checkbox ***/
@@ -378,4 +393,32 @@ input[type="checkbox"]:disabled {
     font-size: 2rem;
     margin-top: 16px;
     margin-bottom: 32px;
+}
+
+.resaltado{
+    color: #fc8a15;
+}
+
+.contenedor_tex_portada2{
+    background: rgba( 66, 66, 66, 0.4 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 6px );
+    -webkit-backdrop-filter: blur( 6px );
+    border-radius: 10px;
+
+    width: 95%;
+    height: 570px;
+    margin: 24px 0;
+    padding: 30px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /*border-radius: 25px;*/
+}
+
+.sect{
+    align-content: center;
+
 }
