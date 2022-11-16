@@ -33,7 +33,7 @@ export class GestionPedidosComponent implements OnInit {
 
   onSelect(element:Restaurante){
     console.log(element);
-    this.peticionGetPedidosPrepHttp(element.nombre);
+    this.peticionGetPedidosPrepHttp();
   }
 
   onSelectPedRep(element:Pedido){
@@ -109,7 +109,7 @@ export class GestionPedidosComponent implements OnInit {
 
         } else {
           alert("Pedido asignado exitosamente");
-          this.peticionGetPedidosPrepHttp(this.pedidoSel.restaurante);
+          this.peticionGetPedidosPrepHttp();
           this.pedidosAsignados++;
         }
       }, error: error => {
@@ -127,7 +127,7 @@ export class GestionPedidosComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = this.URL + 'pedido/asignarsePedido';
+    const url = this.URL + 'pedido/entregarPedido';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         if (data.includes("No tienes acceso a este servicio")) {
@@ -149,7 +149,7 @@ export class GestionPedidosComponent implements OnInit {
 
         } else {
           alert("Pedido entregado exitosamente");
-          this.peticionGetPedidosPrepHttp(this.pedidoSel.restaurante);
+          this.peticionGetPedidosPrepHttp();
           this.pedidosAsignados--;
           //this.peticionGetPedidosRepHttp();
         }
@@ -159,12 +159,12 @@ export class GestionPedidosComponent implements OnInit {
     });
   }
 
-  peticionGetPedidosPrepHttp(restaurante: string): void {
+  peticionGetPedidosPrepHttp(): void {
     const headers = {
       'Content-Type': 'application/json'
     };
 
-    const url = this.URL + 'pedido/consultarPedidosRes/{'+restaurante+'}';
+    const url = this.URL + 'pedido/consultarPedidosRes/{'+this.pedidoSel.restaurante+'}';
     this.http.get(url, { headers, responseType: 'text' }).subscribe({
       next: data => {
         this.listaPedidosPreparacion = [];
