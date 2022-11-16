@@ -1,3 +1,4 @@
+
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -355,3 +356,4 @@ export class GestionAdminsComponent implements OnInit {
     this.funciones.ocultarBtn("delete_admin", false);
   }
 }
+

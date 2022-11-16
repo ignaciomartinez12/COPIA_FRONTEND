@@ -5,7 +5,9 @@ export class Pedido {
     listaPlatos : string;
     total : number;
     pos : number;
-    rider : string;
+
+    estado : number;
+
     
     constructor(mode:number, json:string, pos:number){
         if(mode == 0){
@@ -13,16 +15,20 @@ export class Pedido {
             this.id = jsonObject.id;
             this.restaurante = jsonObject.restaurante;
             this.listaPlatos = jsonObject.platos;
-            this.total = jsonObject.total;
-            this.pos = pos;
-            this.rider = jsonObject.rider;
+
+            this.total = Number(jsonObject.total);
+            this.pos = Number(pos);
+            this.estado =  Number(jsonObject.estado);
+
         }else{
             this.id = "0";
             this.restaurante = "";
             this.listaPlatos = "";
             this.total = 0;
             this.pos = 0;
-            this.rider = "";
+
+            this.estado = -1;
+
         }
     }
 }

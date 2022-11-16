@@ -14,8 +14,10 @@ import { GestionRestaurantesComponent } from './Components/gestion-restaurantes/
 import { GestionClientesComponent } from './Components/gestion-clientes/gestion-clientes.component';
 import { GestionRidersComponent } from './Components/gestion-riders/gestion-riders.component';
 import { GestionAdminsComponent } from './Components/gestion-admins/gestion-admins.component';
+
 import { GestionPedidosComponent } from './Components/gestion-pedidos/gestion-pedidos.component';
 import { PedidosClientesComponent } from './Components/pedidos-clientes/pedidos-clientes.component';
+
 
 @NgModule({
   declarations: [
