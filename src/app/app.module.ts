@@ -17,6 +17,7 @@ import { GestionAdminsComponent } from './Components/gestion-admins/gestion-admi
 
 import { GestionPedidosComponent } from './Components/gestion-pedidos/gestion-pedidos.component';
 import { PedidosClientesComponent } from './Components/pedidos-clientes/pedidos-clientes.component';
+import { PedidosRiderComponent } from './Components/pedidos-rider/pedidos-rider/pedidos-rider.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { PedidosClientesComponent } from './Components/pedidos-clientes/pedidos-
     GestionRidersComponent,
     GestionAdminsComponent,
     GestionPedidosComponent,
-    PedidosClientesComponent
+    PedidosClientesComponent,
+    PedidosRiderComponent
   ],
   imports: [
     BrowserModule,

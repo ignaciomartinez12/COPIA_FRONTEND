@@ -21,12 +21,14 @@ export class GestionPedidosComponent implements OnInit {
   listaPlatosPedidoSel: Plato[] = [];
   listaPedidosRepartir: Pedido[] = [];
   listaPedidosPreparacion: Pedido[] = [];
-  pedidoSel : Pedido;
+  pedidoSel: Pedido;
+  restauranteSel: string = "";
+  funciones = new FuncionesService();
 
   URL: string = new Url().url;
   pedidosAsignados: number = 0;
 
-  
+
   constructor(private router: Router, private http: HttpClient) {
     this.pedidoSel = new Pedido(1, "", 0);
   }
@@ -35,27 +37,41 @@ export class GestionPedidosComponent implements OnInit {
     this.peticionGetHttp();
   }
 
-  onSelect(element:Restaurante){
+  onSelect(element: Restaurante) {
     console.log(element);
+    this.restauranteSel = element.nombre;
     this.peticionGetPedidosPrepHttp();
+
+    this.funciones.apagarElementosLista('listaRestaurantesPed');
+    this.funciones.resaltarElementoLista('listaRestaurantesPed', element.pos);
   }
 
-  onSelectPedRep(element:Pedido){
+  onSelectPedRep(element: Pedido) {
     console.log(element);
 
   }
 
-  onSelectPedPrep(element:Pedido){
+  onSelectPedPrep(element: Pedido) {
     console.log(element);
+    this.pedidoSel = element;
+    this.ocultarTodo();
+    this.funciones.ocultarBtn('asignar_ped',false);
 
+    this.funciones.apagarElementosLista('listaPedidosPreparacion');
+    this.funciones.resaltarElementoLista('listaPedidosPreparacion', element.pos);
   }
 
-  asignar_ped(){
+  ocultarTodo() {
+    this.funciones.ocultarBtn('asignar_ped',true);
+    this.funciones.ocultarBtn('entregar_ped',true);
+  }
+
+  asignar_ped() {
     this.peticionHttpAsignar();
 
   }
 
-  entregar_ped(){
+  entregar_ped() {
     this.peticionHttpEntregar();
 
   }
@@ -76,7 +92,7 @@ export class GestionPedidosComponent implements OnInit {
           var listaResJSON = data.split(";");
           for (let i = 0; i < listaResJSON.length; i++) {
             //console.log(listaResJSON[i]);
-            this.listaRestaurantes.push(new Restaurante(listaResJSON[i],i))
+            this.listaRestaurantes.push(new Restaurante(listaResJSON[i], i))
             console.log(this.listaRestaurantes[i]);
           }
         }
@@ -108,7 +124,7 @@ export class GestionPedidosComponent implements OnInit {
         } else if (data.includes("El pedido ya ha sido asignado")) {
           alert(data);
 
-        }else if (data.includes("El pedido ya ha sido entregado")) {
+        } else if (data.includes("El pedido ya ha sido entregado")) {
           alert(data);
 
         } else {
@@ -145,10 +161,10 @@ export class GestionPedidosComponent implements OnInit {
         } else if (data.includes("No existe ese pedido")) {
           alert(data);
 
-        }else if (data.includes("El pedido ya ha sido entregado")) {
+        } else if (data.includes("El pedido ya ha sido entregado")) {
           alert(data);
 
-        }else if (data.includes("Debes asignarte primero")) {
+        } else if (data.includes("Debes asignarte primero")) {
           alert(data);
 
 
@@ -168,38 +184,49 @@ export class GestionPedidosComponent implements OnInit {
     const headers = {
       'Content-Type': 'application/json'
     };
+    const body = {
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
 
-    const url = this.URL + 'pedido/consultarPedidosRes/{'+this.pedidoSel.restaurante+'}';
-    this.http.get(url, { headers, responseType: 'text' }).subscribe({
+    const url = this.URL + 'pedido/consultarPedidosPreRider/' + this.restauranteSel;
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         this.listaPedidosPreparacion = [];
         this.listaPedidosRepartir = [];
         if (data.length == 0) {
           //alert(window.sessionStorage.getItem('rol'));
-          //alert("No hay restaurantes");
+          alert("Este restaurante no tiene pedidos en preparación");
         } else {
-          var listaPedJSON = data.split(";");
-          for (let i = 0; i < listaPedJSON.length; i++) {
-            //console.log(listaResJSON[i]);
-            let pedido = new Pedido (0,listaPedJSON[i],i);
-            if(pedido.estado == 0){
-              this.listaPedidosPreparacion.push(pedido);
-
+          if (data.includes("No tienes acceso a este servicio")) {
+            alert("No tienes acceso a este servicio");
+            this.router.navigate(['/login']);
+          } else if (data.includes("No hay pedidos")) {
+            alert("Este restaurant no tiene pedidos");
+          } else if (data.includes("No existe ese restaurante")) {
+            alert("No existe ese restaurante");
+          } else if (data.includes("Tu cuenta no se encuentra activa")) {
+            alert("Tu cuenta no se encuentra activa");
+          } else {
+            var listaPedJSON = data.split(";;;");
+            for (let i = 0; i < listaPedJSON.length; i++) {
+              //console.log(listaResJSON[i]);
+              let pedido = new Pedido(0, listaPedJSON[i], i);
+              if (pedido.estado == 0) {
+                this.listaPedidosPreparacion.push(pedido);
+              }
+              console.log(this.listaPedidosPreparacion[i]);
+              console.log(this.listaPedidosRepartir[i]);
             }
-
-            console.log(this.listaPedidosPreparacion[i]);
-            console.log(this.listaPedidosRepartir[i]);
           }
         }
       }, error: error => {
         //this.router.navigate(['/login']);
-        alert("Ha ocurrido un error al cargar los pedidos");
+        //alert("Ha ocurrido un error al cargar los pedidos");
+        alert(error.message);
       }
     });
   }
-
- 
-
 
   logout() {
     window.sessionStorage.removeItem('rol');

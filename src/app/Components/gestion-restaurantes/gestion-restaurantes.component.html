@@ -60,6 +60,9 @@
                                 <button id="btn_carta" (click)="mostrar_carta()" class="btn">Carta</button>
                             </li>
                             <li>
+                                <button id="btn_pedidos" (click)="mostrar_pedidos()" class="btn">Pedidos</button>
+                            </li>
+                            <li>
                                 <button id="btn_facturas" (click)="mostrar_facturas()" class="btn">Facturas</button>
                             </li>
                         </ul>
@@ -228,8 +231,99 @@
                             </div>
                         </div>
                     </div>
-                    <div id="facturas_v" class="oculto">
+                    <div id="facturas_v" class="oculto contenedor_datos_rest">
+                        <div class="contenedor_horizontal linea_campo">
+                            <div class="cont_camp">
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="fechaIni">Fecha de Inicio</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="fechaIni">
+                            </div>
+                            <div class="cont_camp">
+                                <div class="contenedor_label contenedor_horizontal">
+                                    <label class="texto_gris" for="fechaFin">Fecha de Fin</label>
+                                </div>
+                                <input class="campo_entrada" type="text" id="fechaFin">
+                            </div>
+                            <button id="btn_consultFact" >Consultar Facturación</button>
+                        </div>
+                        <h2 class="desc_fact">La facturación para el periodo especificado es: 100€</h2>
+                    </div>
+                    <div id="pedidos_v" class="oculto contenedor_datos_rest">
+                        <div class="labels contenedor_horizontal">
+                            <div class="label_lista2">
+                                <h2 class="label_cuadro2">Pedidos</h2>
+                            </div>
+                            <div class="label_datos2">
+                                <h2 class="label_cuadro2">Datos del Pedido</h2>
+                            </div>
+                        </div>
+                        <div class="contenido contenedor_horizontal">
+                            <div class="contenedor_lista_botones">
+                                <div class="contenedor_lista_pedidos">
+                                    <ul id="listaPedidos" class="listaElementos">
+                                        <li class="elementoBase" *ngFor="let element of listaPedidosRes" >
+                                            <div class="contenedor_horizontal">
+                                              <p>{{ element.id }} </p> 
+                                              <p>{{ element.estado }}</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="contenedor_datos_pedidos">
+                                <div id="datos_pedidos">
+                                    <div class="linea_campo contenedor_horizontal">
+                                        <div class="campo_dato3">
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label class="texto_gris" for="clientePed">Cliente</label>
+                                            </div>
+                                            <input class="campo_entrada" type="text" id="clientePed" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="linea_campo contenedor_horizontal">
+                                        <div class="campo_dato3">
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label class="texto_gris" for="riderPed">Rider</label>
+                                            </div>
+                                            <input class="campo_entrada" type="text" id="riderPed" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="linea_campo contenedor_horizontal">
+                                        <div class="campo_dato3">
+                                            <div class="contenedor_label contenedor_horizontal">
+                                                <label class="texto_gris" for="fechaPed">Fecha creación</label>
+                                            </div>
+                                            <input class="campo_entrada" type="text" id="fechaPed" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="contenedor_recibo">
 
+                                <img id="bordeRecibo" src="../../../assets/ui_images/borde-recibo2.png" alt="">
+                                <div class="datosRecibo">
+                                    <h2>Pedido</h2>
+                                    <p>Restaurante: <strong>{{ pedidoSel.restaurante }}</strong></p>
+                                    <p>Código: {{ pedidoSel.id }}</p>
+                                    <hr>
+                                </div>
+                                <div class="platosRecibo">
+                                    <ul id="listaPlatosPedido" class="listaElementos">
+                                        <li class="elementoBase" *ngFor="let element of listaPlatosPedidoSel">
+                                            <div class="lineaPlato">
+                                                <p>{{ element.nombreP }}</p>
+                                                <p>{{ element.precioP }}</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="importeRecibo">
+                                    <hr>
+                                    <p><strong>Importe total: {{ pedidoSel.total }}</strong></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

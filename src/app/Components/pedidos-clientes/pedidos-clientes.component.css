@@ -305,6 +305,44 @@ hr {
     height: 40px;
 }
 
+.img_estrella2{
+    width: 20px;
+    height: 20px;
+}
+
+.correo_val{
+    color: #757575;
+    font-size: 1rem;
+}
+
+.cont_correo{
+    /*background: red;*/
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.contenedor_pts{
+    /*background: yellow;*/
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.contenedor_val{
+    /*background: green;*/
+    width: 100%;
+}
+
+.contenedor_vals{
+    height: 395px;
+}
+
+.rank{
+    font-size: 5rem;
+}
+
 .contenedor_valorar_pedidos{
     /*height: 500px;*/
     width: 350px;

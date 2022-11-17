@@ -5,6 +5,7 @@ import { InicioComponent } from './Components/inicio/inicio.component';
 import { LoginComponent } from './Components/login/login.component';
 import { Page404Component } from './Components/page404/page404.component';
 import { PedidosClientesComponent } from './Components/pedidos-clientes/pedidos-clientes.component';
+import { PedidosRiderComponent } from './Components/pedidos-rider/pedidos-rider/pedidos-rider.component';
 import { RegistroComponent } from './Components/registro/registro.component';
 
 //rutas de navegacion
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'registro', component: RegistroComponent},
   { path: 'gestion', component: GestionComponent},
+  { path: 'gestion-rider', component: PedidosRiderComponent},
   { path: 'pedir', component: PedidosClientesComponent},
   { path: '**', component: Page404Component}
 ];

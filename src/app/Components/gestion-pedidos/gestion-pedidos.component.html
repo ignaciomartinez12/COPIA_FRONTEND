@@ -47,7 +47,7 @@
                         <div class="contenedor_lista_pedidos">
                             <ul id="listaPedidosPreparacion" class="listaElementos">
                                 <li class="elementoBase" *ngFor="let element of listaPedidosPreparacion" (click)="onSelectPedPrep(element)">
-                                    {{ element.id }}
+                                    {{ element.cliente }}
                                 </li>
                             </ul>
                         </div>
@@ -66,7 +66,7 @@
                             <div class="datosRecibo">
                                 <h2>Pedido</h2>
                                 <p>Restaurante: <strong>{{ pedidoSel.restaurante }}</strong></p>
-                                <p>Código: {{ pedidoSel.id }}</p>
+                                <p>Cliente: {{ pedidoSel.cliente }}</p>
                                 <hr>
                             </div>
                             <div class="platosRecibo">
