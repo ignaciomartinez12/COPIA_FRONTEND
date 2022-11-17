@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, LOCALE_ID } from "@angular/core";
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +6,8 @@ import { Injectable } from "@angular/core";
 
 export class FuncionesService {
 
-  constructor() { }
+  constructor(){}
+  
 
   validarEmail(valor: string): boolean {
     if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)) {
@@ -113,4 +114,5 @@ export class FuncionesService {
     }
     console.log("resaltado quitado: "+idLista);
   }
+
 }

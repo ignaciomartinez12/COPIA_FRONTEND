@@ -8,6 +8,7 @@ export class Pedido {
     rider : string;
     estado : number;
     cliente : string;
+    fecha : string;
 
     
     constructor(mode:number, json:string, pos:number){
@@ -21,6 +22,7 @@ export class Pedido {
             this.pos = Number(pos);
             this.estado =  Number(jsonObject.estado);
             this.cliente = jsonObject.cliente;
+            this.fecha = jsonObject.fecha;
         }else{
             this.id = "0";
             this.restaurante = "";
@@ -30,6 +32,7 @@ export class Pedido {
             this.rider = "";
             this.estado = -1;
             this.cliente = "";
+            this.fecha = "";
         }
     }
 }

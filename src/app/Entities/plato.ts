@@ -1,5 +1,3 @@
-import * as internal from "stream";
-
 export class Plato {
 
     nombreP : string;

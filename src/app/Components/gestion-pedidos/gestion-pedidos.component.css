@@ -141,3 +141,10 @@ button {
 hr{
     margin: 4px 0;
 }
+
+.fechaRecibo{
+    color: #757575;
+    font-size: 0.7rem;
+    margin-top: 4px;
+    margin-right: 16px;
+}
