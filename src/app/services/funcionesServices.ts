@@ -66,6 +66,80 @@ export class FuncionesService {
     }
   }
 
+
+  esFechaValida(fecha: string): boolean {
+    var partesFecha = fecha.split("-");
+
+    if (partesFecha.length != 3) {
+      return false;
+    }
+
+    if (this.comprobarAnio(partesFecha[0])) {
+      return false;
+    }
+
+    if (this.comprobarMes(partesFecha[1])) {
+      return false;
+    }
+
+    if (this.comprobarDia(partesFecha[2])) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  comprobarAnio(anio: string): boolean {
+    if (anio.length != 4) {
+      return false;
+    }
+
+    if (!this.esInt(anio)) {
+      return false;
+    }
+
+    if (Number(anio) < 1900) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  comprobarMes(mes: string): boolean {
+    if (mes.length != 2) {
+      return false;
+    }
+
+    if (!this.esInt(mes)) {
+      return false;
+    }
+
+    if (Number(mes) < 1 || Number(mes) > 12) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  comprobarDia(dia: string): boolean {
+    if (dia.length != 2) {
+      return false;
+    }
+
+    if (!this.esInt(dia)) {
+      return false;
+    }
+
+    if (Number(dia) < 1 || Number(dia) > 31) {
+      return false;
+    }
+
+    return true;
+  }
+
   ocultarBtn(id: string, valor: boolean) {
     var campo = document.getElementById(id) as HTMLInputElement;
     if (valor) {
@@ -94,27 +168,27 @@ export class FuncionesService {
     return element.checked;
   }
 
-  apagarElementosLista(idLista:string){
+  apagarElementosLista(idLista: string) {
     var lista = document.getElementById(idLista) as HTMLUListElement;
-    if (lista.children != null){
+    if (lista.children != null) {
       for (let i = 0; i < lista.children.length; i++) {
         lista.children[i].classList.remove('resaltado');
       }
-    }else{
-      console.log("lista nula: "+idLista);
-      
+    } else {
+      console.log("lista nula: " + idLista);
+
     }
-    console.log("resaltado quitado: "+idLista);
+    console.log("resaltado quitado: " + idLista);
   }
 
-  resaltarElementoLista (idLista:string, pos:number){
+  resaltarElementoLista(idLista: string, pos: number) {
     var lista = document.getElementById(idLista) as HTMLUListElement;
-    if (lista.children != null){
+    if (lista.children != null) {
       lista.children[pos].classList.add('resaltado');
-    }else{
-      console.log("lista nula: "+idLista);
+    } else {
+      console.log("lista nula: " + idLista);
     }
-    console.log("resaltado quitado: "+idLista);
+    console.log("resaltado quitado: " + idLista);
   }
 
   genPlatosPedido(pedido: Pedido, restaurante: string): LineaPlato[] {

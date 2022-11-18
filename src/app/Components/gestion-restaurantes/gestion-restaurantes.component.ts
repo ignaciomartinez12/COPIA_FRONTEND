@@ -43,6 +43,7 @@ export class GestionRestaurantesComponent implements OnInit {
   funciones: FuncionesService;
   listaRestaurantes: Restaurante[] = [];
   listaPedidosRes: Pedido[] = [];
+  facturacion: string  = "";
   //platos
   avisoNombreP: string = "";
   avisoPrecioP: string = "";
@@ -356,9 +357,102 @@ export class GestionRestaurantesComponent implements OnInit {
     });
   }
 
+  peticionHttpGetPedidos() {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password'),
+      "restaurante": this.restauranteSelect
+    };
+
+    const url = this.URL + 'pedido/consultarPedidosRes/{'+this.restauranteSelect+'}';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaPedidosRes = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if(data.includes("No hay pedidos")){
+          alert(data);
+        }else if(data.includes("Tu cuenta no se encuentra activa")){
+          alert(data);
+          this.router.navigate(['/login']);
+        }else if(data.includes("No existe ese restaurante")){
+          alert(data);
+        } else {
+          var listaPedJSON = data.split(";;;");
+          for (let i = 0; i < listaPedJSON.length; i++) {
+            //console.log(listaResJSON[i]);
+            let pedido = new Pedido(0, listaPedJSON[i], i);
+            this.listaPedidosRes.push(pedido);
+            console.log(this.listaPedidosRes[i]);
+            
+          }
+          };
+        
+      }, error: error => {
+        alert("Ha ocurrido un error al obtener los pedidos");
+      }
+    });
+  }
+
+  peticionHttpGetFacturacion() {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password'),
+      "restaurante": this.restauranteSelect,
+      "fechaInicio": window.sessionStorage.getItem('fechaInicio'),
+      "fechaFin": window.sessionStorage.getItem('fechaFin')
+    };
+
+    const url = this.URL + 'pedido/consultarFacturacionRes';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaPedidosRes = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if(data.includes("El restaurante no tiene pedidos")){
+          alert(data);
+        }else if(data.includes("Tu cuenta no se encuentra activa")){
+          alert(data);
+          this.router.navigate(['/login']);
+        }else if(data.includes("No hay pedidos entre esas fechas")){
+          alert(data);
+        } else {
+         
+            this.facturacion = Number(data).toFixed(2);
+            console.log(this.facturacion);
+            
+          };
+        
+      }, error: error => {
+        alert("Ha ocurrido un error al obtener la facturacion");
+      }
+    });
+  }
+
+  consultarFact(){
+    var fechaInicio = document.getElementById("fechaIni") as HTMLInputElement;
+    var fechaFin = document.getElementById("fechaFin") as HTMLInputElement;
+  
+    if(this.funciones.esFechaValida(fechaInicio?.value) && this.funciones.esFechaValida(fechaFin?.value)){
+     
+      this.peticionHttpGetFacturacion();
+
+    }else{
+      alert("Ingrese una fecha valida con el formato aaaa-mm-dd");
+    }
+  }
+
   mostrar_pedidos(){
     this.ocultarTodo()
     this.funciones.ocultarBtn("pedidos_v", false);
+    this.peticionHttpGetPedidos();
+
 
     this.funciones.disabledID('add_res', false);
     this.funciones.disabledID('update_res', false);
@@ -392,6 +486,7 @@ export class GestionRestaurantesComponent implements OnInit {
   mostrar_facturas() {
     this.ocultarTodo()
     this.funciones.ocultarBtn("facturas_v", false);
+   
   }
 
   ocultarTodo() {

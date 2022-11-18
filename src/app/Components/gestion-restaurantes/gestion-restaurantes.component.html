@@ -249,9 +249,10 @@
                                 </div>
                                 <input class="campo_entrada" type="text" id="fechaFin">
                             </div>
-                            <button id="btn_consultFact" >Consultar Facturación</button>
+                            
+                            <button id="btn_consultFact" (click)="consultarFact()" class="btn" >Consultar Facturación</button>
                         </div>
-                        <h2 class="desc_fact">La facturación para el periodo especificado es: 100€</h2>
+                        <h2 class="desc_fact">La facturación para el periodo especificado es: {{ facturacion }}€</h2>
                     </div>
                     <div id="pedidos_v" class="oculto contenedor_datos_rest">
                         <div class="labels contenedor_horizontal">
