@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Pedido } from 'src/app/Entities/pedido';
 import { Plato } from 'src/app/Entities/plato';
 import { Restaurante } from 'src/app/Entities/restaurante';
+import { Url } from 'src/app/Entities/url';
 import { FuncionesService } from 'src/app/services/funcionesServices';
 
 @Component({
@@ -14,6 +15,7 @@ import { FuncionesService } from 'src/app/services/funcionesServices';
 export class PedidosClientesComponent implements OnInit {
 
   funciones: FuncionesService;
+  URL: string = new Url().url;
 
   listaRestaurantes: Restaurante[] = [];
   listaPlatos: Plato[] = [];
@@ -31,6 +33,66 @@ export class PedidosClientesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.peticionGetHttp();
+  }
+
+  peticionGetHttp(): void {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    const url = this.URL + 'food/consultarRestaurantes';
+    this.http.get(url, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaRestaurantes = [];
+        if (data.length == 0) {
+          //alert(window.sessionStorage.getItem('rol'));
+          //alert("No hay restaurantes");
+        } else {
+          var listaResJSON = data.split(";");
+          for (let i = 0; i < listaResJSON.length; i++) {
+            //console.log(listaResJSON[i]);
+            this.listaRestaurantes.push(new Restaurante(listaResJSON[i],i))
+            console.log(this.listaRestaurantes[i]);
+          }
+        }
+      }, error: error => {
+        //this.router.navigate(['/login']);
+        alert("Ha ocurrido un error al cargar los restaurantes");
+      }
+    });
+  }
+
+  peticionGetHttpCarta(): void {
+    if (this.restauranteSel !== "") {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      const url = this.URL + 'food/getCarta/' + this.restauranteSel;
+      this.http.get(url, { headers, responseType: 'text' }).subscribe({
+        next: data => {
+          //console.log(data);
+
+          this.listaPlatos = [];
+          if (data.length == 0) {
+            //alert(window.sessionStorage.getItem('rol'));
+            alert("No hay carta en ese restaurante");
+          } else {
+            var listaCartaJSON = data.split(";;");
+            for (let i = 0; i < listaCartaJSON.length; i++) {
+              //console.log(listaResJSON[i]);
+              this.listaPlatos.push(new Plato(listaCartaJSON[i],i))
+              console.log(this.listaPlatos[i]);
+            }
+          }
+        }, error: error => {
+          alert("Ha ocurrido un error al cargar la carta del restaurante");
+        }
+      });
+    } else {
+      alert("Selecciona un restaurante");
+    }
   }
 
   logout() {
@@ -41,7 +103,8 @@ export class PedidosClientesComponent implements OnInit {
   }
 
   onSelectRes(element:Restaurante){
-
+    this.restauranteSel = element.nombre;
+    this.peticionGetHttpCarta();
   }
 
   onSelectPlt(element:Plato){

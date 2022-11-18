@@ -69,8 +69,7 @@ export class LoginComponent implements OnInit {
           this.avisoEmail = "Iniciando sesión";
 
           if(data === "client"){
-            alert("Acceso a la aplicación exitoso como cliente");
-            this.router.navigate(['/inicio']);
+            this.router.navigate(['/pedir']);
           }else if(data === "rider"){
             this.router.navigate(['/gestion-rider']);
           }else if(data === "admin"){

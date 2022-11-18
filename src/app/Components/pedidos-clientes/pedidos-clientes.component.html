@@ -37,11 +37,16 @@
                 <div class="contenedor_listaRest">
                     <ul id="listaRestaurantesPedCli" class="listaElementos">
                         <li class="elementoBase" *ngFor="let element of listaRestaurantes" (click)="onSelectRes(element)">
-                            {{ element.nombre }}</li>
+                            <div class="contenedor_horizontal linea_campo">
+                                <p>{{ element.nombre }}</p>
+                                <button>{{ element.valoracion }} pts.</button>
+                            </div>
+                            
+                        </li>
                     </ul>
                 </div>
                 <div class="contenedorSep"></div>
-                <div class="contenedor_listaCarta">
+                <div id="cont_platosRes" class="contenedor_listaCarta">
                     <ul id="listaCartaPedCli" class="listaElementos">
                         <li *ngFor="let element of listaPlatos">
                             <div class="card_plato">

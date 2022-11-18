@@ -149,7 +149,7 @@ export class GestionPedidosComponent implements OnInit {
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         if (data.includes("No tienes acceso a este servicio")) {
-          alert(data);
+          alert("No tienes acceso a este servicio - ap");
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
           this.router.navigate(['/login']);
@@ -184,7 +184,7 @@ export class GestionPedidosComponent implements OnInit {
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         if (data.includes("No tienes acceso a este servicio")) {
-          alert(data);
+          alert("No tienes acceso a este servicio - ep");
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
           this.router.navigate(['/login']);
@@ -225,7 +225,7 @@ export class GestionPedidosComponent implements OnInit {
           alert("Este restaurante no tiene pedidos en preparación");
         } else {
           if (data.includes("No tienes acceso a este servicio")) {
-            alert("No tienes acceso a este servicio");
+            alert("No tienes acceso a este servicio - cpp");
             this.router.navigate(['/login']);
           } else if (data.includes("No hay pedidos")) {
             alert("Este restaurant no tiene pedidos");
@@ -268,7 +268,7 @@ export class GestionPedidosComponent implements OnInit {
         this.listaPedidosRepartir = [];
 
         if (data.includes("No tienes acceso a este servicio")) {
-          alert(data);
+          alert("No tienes acceso a este servicio - cpe");
           this.router.navigate(['/login']);
         } else if (data.includes("No hay pedidos")) {
           alert(data);

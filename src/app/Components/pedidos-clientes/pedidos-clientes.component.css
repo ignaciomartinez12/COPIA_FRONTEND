@@ -50,7 +50,7 @@ button {
     height: 450px;
     /*background: red;*/
     padding: 24px 8px 8px 8px;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 .contenedor_listaCarta ul li {
@@ -416,4 +416,14 @@ hr {
 
 .cont_valoracion{
     position: absolute;
+}
+
+#cont_platosRes::-webkit-scrollbar {
+    border-radius: 2px;
+	width: 6px;
+	background-color: #42424270;
+}
+
+#cont_platosRes::-webkit-scrollbar-thumb {
+	background-color: #f5f5f5;
 }
