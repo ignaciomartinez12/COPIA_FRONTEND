@@ -103,7 +103,11 @@
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="valoracionRes">Valoración</label>
-                                <input class="campo_entrada" type="number" id="valoracionRes" disabled>
+                                <div class="contenedor_horizontal">
+                                    <input class="campo_entrada" type="text" id="valoracionRes" disabled>
+                                    <button id="btn_valsRes">
+                                        Consultar valoraciones</button>
+                                </div>
                             </div>
                         </div>
                         <div class="linea_campo contenedor_horizontal">
@@ -327,6 +331,55 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- valoraciones restaurante -->
+    <div id="contenedor_valoracionesRes" class="cont_valoracion ocultos">
+        <div class="contenedor_valorar_pedidos">
+            <div class="contenedor_horizontal cabecera_valorar">
+                <h1>Valoraciones</h1>
+                <button>
+                    <img id="cerrarValoraciones" class="img_icon" src="../../../assets/ui_images/close_icon.svg"/></button>
+            </div>
+            <div class="contenedor_valorar">
+                <h2>Restaurante</h2>
+                <p>Pizería Carlos</p>
+                <h2>Valoraciones</h2>
+                <div class="contenedor_vals">
+                    <div class="contenedor_val">
+                        <div class="contenedor_horizontal">
+                            <div class="cont_correo">
+                                <h4 class="correo_val">juan@gmail.com</h4>
+                            </div>
+                            
+                            <div class="contenedor_pts contenedor_horizontal">
+                                <button>
+                                    <img class="img_estrella2" src="../../../assets/ui_images/estrella-rellena.png"/></button>
+                                <h4 class="correo_val"> 3</h4>
+                            </div>
+                        </div>
+                        <textarea class="campo_entrada_img">Me ha encantado el kebab, xd</textarea>
+                    </div>
+                    <div class="contenedor_val">
+                        <div class="contenedor_horizontal">
+                            <div class="cont_correo">
+                                <h4 class="correo_val">paco@gmail.com</h4>
+                            </div>
+                            
+                            <div class="contenedor_pts contenedor_horizontal">
+                                <button>
+                                    <img class="img_estrella2" src="../../../assets/ui_images/estrella-rellena.png"/></button>
+                                <h4 class="correo_val"> 1</h4>
+                            </div>
+                        </div>
+                        <textarea class="campo_entrada_img">Mu caro</textarea>
+                    </div>
+                </div>
+                
+                
+            </div>
+            
         </div>
     </div>
 </div>

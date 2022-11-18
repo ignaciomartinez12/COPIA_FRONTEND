@@ -129,7 +129,10 @@
         <!-- Pedidos -->
         <div id="contenedor_pedidos" class="oculto">
             <div class="contenedor_datos2">
-                <h1 class="texto_naranja">Pedidos</h1>
+                <div class="contenedor_horizontal linea_campo">
+                    <h1 class="texto_naranja">Pedidos</h1>
+                    <button id="btn_cancelarPed" >Cancelar Pedido</button>
+                </div>
                 <div class="labels2 contenedor_horizontal">
                     <div class="label_lista3">
                         <h2 class="label_cuadro">En progreso</h2>
@@ -144,7 +147,7 @@
                     <div class="contenedor_lista_pedidos">
                         <ul id="listaPedidosEnProgreso" class="listaElementos">
                             <li class="elementoBase" *ngFor="let element of listaPedidosEnProgreso" (click)="onSelectPedProg(element)">
-                                {{ element.id }}
+                                {{ element.restaurante }}
                             </li>
                         </ul>
                     </div>
@@ -152,36 +155,45 @@
                     <div class="contenedor_lista_pedidos">
                         <ul id="listaPedidosEntregados" class="listaElementos">
                             <li class="elementoBase" *ngFor="let element of listaPedidosEntregados" (click)="onSelectPedEnt(element)">
-                                {{ element.id }}
+                                {{ element.restaurante }}
                             </li>
                         </ul>
                     </div>
     
                     <div class="columna_recibo">
                         <div class="contenedor_recibo">
-                            <img id="bordeRecibo" src="../../../assets/ui_images/borde-recibo.png" alt="">
+                            <div class="contenedor_horizontal linea_campo">
+                                <img id="bordeRecibo" src="../../../assets/ui_images/borde-recibo.png" alt="">
+                                <p class="fechaRecibo">{{ pedidoSel.fecha }}</p>
+                            </div>
                             <div class="datosRecibo">
                                 <h2>Pedido</h2>
                                 <p>Restaurante: <strong>{{ pedidoSel.restaurante }}</strong></p>
-                                <p>Código: {{ pedidoSel.id }}</p>
+                                <p>Cliente: {{ pedidoSel.cliente }}</p>
                                 <hr>
                             </div>
                             <div class="platosRecibo">
                                 <ul id="listaPlatosPedido" class="listaElementos">
                                     <li class="elementoBase" *ngFor="let element of listaPlatosPedidoSel">
                                         <div class="lineaPlato">
-                                            <p>{{ element.nombreP }}</p>
-                                            <p>{{ element.precioP }}</p>
+                                            <p><strong>{{ element.nombreP }}</strong></p>
+                                            <div class="contenedor_horizontal linea_campo">
+                                                <p>Uds: {{ element.cantidad }}</p>
+                                                <p><strong>{{ element.precioP }} €</strong></p>
+                                            </div>
+                                            
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                             <div class="importeRecibo">
                                 <hr>
-                                <p><strong>Importe total: {{ pedidoSel.total }} €</strong></p>
+                                <div class="contenedor_horizontal linea_campo">
+                                    <p><strong>Importe total: </strong></p>
+                                    <p><strong>{{ pedidoSelTotal }} €</strong></p>
+                                </div>
                             </div>
                         </div>
-                        <button id="btn_cancelarPed" >Cancelar Pedido</button>
                     </div>
                 </div>
             </div>
