@@ -846,4 +846,36 @@ export class GestionRestaurantesComponent implements OnInit {
     }
     reader.readAsBinaryString(file);
   }
+
+  //TENGO QUE REVISAR ESTO MAÑANA
+  peticionGetHttpValoracionRes(): void {
+    if (this.restauranteSelect !== "") {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const body = {
+        "restaurante": this.restauranteSelect,
+        "correoAcceso": window.sessionStorage.getItem('correo'),
+        "passwordAcceso": window.sessionStorage.getItem('password')
+      };
+
+      const url = this.URL + 'pedido/consultarValoracionRestaurante';
+      this.http.get(url, { headers, responseType: 'text' }).subscribe({
+        next: data => {
+          console.log(data);
+
+          if (data.length == 0) {
+            //alert(window.sessionStorage.getItem('rol'));
+            alert("No hay valoracion para este restaurante");
+          } else {
+            //valoracionRes = 
+          }
+        }, error: error => {
+          alert("Ha ocurrido un error al cargar la valoración del restaurante");
+        }
+      });
+    } else {
+      alert("Selecciona un restaurante");
+    }
+  }
 }
