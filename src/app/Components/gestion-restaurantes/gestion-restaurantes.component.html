@@ -67,6 +67,7 @@
                             </li>
                         </ul>
                     </div>
+                    <!-- Datos -->
                     <div id="datos_v" class="contenedor_datos_rest2">
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato3">
@@ -105,7 +106,7 @@
                                 <label class="texto_gris" for="valoracionRes">Valoración</label>
                                 <div class="contenedor_horizontal">
                                     <input class="campo_entrada" type="text" id="valoracionRes" disabled>
-                                    <button id="btn_valsRes">
+                                    <button id="btn_valsRes" (click)="mostrarValoracionesRes()">
                                         Consultar valoraciones</button>
                                 </div>
                             </div>
@@ -138,6 +139,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Carta -->
                     <div id="carta_v" class="oculto contenedor_datos_rest">
                         <div class="labels contenedor_horizontal">
                             <div class="label_lista2">
@@ -151,7 +153,8 @@
                             <div class="contenedor_lista_botones">
                                 <div class="contenedor_lista_platos">
                                     <ul id="listaPlatos" class="listaElementos">
-                                        <li class="elementoBase" *ngFor="let element of listaPlatos" (click)="onSelectP(element)" >
+                                        <li class="elementoBase" *ngFor="let element of listaPlatos"
+                                            (click)="onSelectP(element)">
                                             <div class="contenedor_horizontal">
                                                 <div class="cont_foto_plato">
                                                     <img src="{{ element.fotoP }}" alt="">
@@ -167,25 +170,33 @@
                                     <div class="botones2 contenedor_horizontal">
                                         <div id="cont_confirm_addP" class="contenedor_horizontal oculto">
                                             <button (click)="aceptarCambiosCrearCarta()">
-                                                <img id="acept_addP" class="img_icon3" src="../../../assets/ui_images/acept.png" /></button>
+                                                <img id="acept_addP" class="img_icon3"
+                                                    src="../../../assets/ui_images/acept.png" /></button>
                                             <button (click)="cancelarCambiosCrearP()">
-                                                <img id="cancel_addP" class="img_icon3" src="../../../assets/ui_images/cancel.svg" /></button>
+                                                <img id="cancel_addP" class="img_icon3"
+                                                    src="../../../assets/ui_images/cancel.svg" /></button>
                                         </div>
                                         <div id="cont_confirm_udtP" class="contenedor_horizontal oculto">
                                             <button (click)="aceptarCambiosActualizarCarta()">
-                                                <img id="acept_udtP" class="img_icon3" src="../../../assets/ui_images/acept.png" /></button>
+                                                <img id="acept_udtP" class="img_icon3"
+                                                    src="../../../assets/ui_images/acept.png" /></button>
                                             <button (click)="cancelarCambiosActualizarP()">
-                                                <img id="cancel_udtP" class="img_icon3" src="../../../assets/ui_images/cancel.svg" /></button>
+                                                <img id="cancel_udtP" class="img_icon3"
+                                                    src="../../../assets/ui_images/cancel.svg" /></button>
                                         </div>
-                        
+
                                         <div id="cont_btn_opcP" class="contenedor_horizontal">
-                        
+
                                             <button id="add_plato" (click)="activarCamposCrearP()">
-                                                <img class="img_icon3" src="../../../assets/ui_images/add_icon.svg" /></button>
-                                            <button id="update_plato" class="oculto" (click)="activarCamposActualizarP()">
-                                                <img class="img_icon3" src="../../../assets/ui_images/update2_icon.svg" /></button>
+                                                <img class="img_icon3"
+                                                    src="../../../assets/ui_images/add_icon.svg" /></button>
+                                            <button id="update_plato" class="oculto"
+                                                (click)="activarCamposActualizarP()">
+                                                <img class="img_icon3"
+                                                    src="../../../assets/ui_images/update2_icon.svg" /></button>
                                             <button id="delete_plato" class="oculto" (click)="eliminarCarta()">
-                                                <img class="img_icon3" src="../../../assets/ui_images/delete_icon.svg" /></button>
+                                                <img class="img_icon3"
+                                                    src="../../../assets/ui_images/delete_icon.svg" /></button>
                                         </div>
                                     </div>
                                 </div>
@@ -221,7 +232,8 @@
                                                 <label class="aviso" for="botonFoto">{{ avisoFotoP }}</label>
                                             </div>
                                             <img id="fotoPlato" class="campo_entrada_img" [src]="platoFoto" alt="">
-                                            <input (change)="capturarFile($event)" accept=".png" type="file" id="botonFoto" disabled>
+                                            <input (change)="capturarFile($event)" accept=".png" type="file"
+                                                id="botonFoto" disabled>
                                         </div>
                                         <div class="campo_dato5">
                                             <div class="contenedor_label contenedor_horizontal">
@@ -235,6 +247,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Facturas -->
                     <div id="facturas_v" class="oculto contenedor_datos_rest">
                         <div class="contenedor_horizontal linea_campo">
                             <div class="cont_camp">
@@ -249,11 +262,13 @@
                                 </div>
                                 <input class="campo_entrada" type="text" id="fechaFin">
                             </div>
-                            
-                            <button id="btn_consultFact" (click)="consultarFact()" class="btn" >Consultar Facturación</button>
+
+                            <button id="btn_consultFact" (click)="consultarFact()" class="btn">Consultar
+                                Facturación</button>
                         </div>
                         <h2 class="desc_fact">La facturación para el periodo especificado es: {{ facturacion }}€</h2>
                     </div>
+                    <!--Pedidos-->
                     <div id="pedidos_v" class="oculto contenedor_datos_rest">
                         <div class="labels contenedor_horizontal">
                             <div class="label_lista2">
@@ -267,11 +282,8 @@
                             <div class="contenedor_lista_botones">
                                 <div class="contenedor_lista_pedidos">
                                     <ul id="listaPedidos" class="listaElementos">
-                                        <li class="elementoBase" *ngFor="let element of listaPedidosRes" >
-                                            <div class="contenedor_horizontal">
-                                              <p>{{ element.id }} </p> 
-                                              <p>{{ element.estado }}</p>
-                                            </div>
+                                        <li class="elementoBase" *ngFor="let element of listaPedidosRes" (click)="onSelectPed(element)">
+                                            {{ element.cliente }}
                                         </li>
                                     </ul>
                                 </div>
@@ -281,9 +293,9 @@
                                     <div class="linea_campo contenedor_horizontal">
                                         <div class="campo_dato3">
                                             <div class="contenedor_label contenedor_horizontal">
-                                                <label class="texto_gris" for="clientePed">Cliente</label>
+                                                <label class="texto_gris" for="estadoPed">Estado</label>
                                             </div>
-                                            <input class="campo_entrada" type="text" id="clientePed" disabled>
+                                            <input class="campo_entrada" type="text" id="estadoPed" disabled>
                                         </div>
                                     </div>
                                     <div class="linea_campo contenedor_horizontal">
@@ -294,38 +306,42 @@
                                             <input class="campo_entrada" type="text" id="riderPed" disabled>
                                         </div>
                                     </div>
-                                    <div class="linea_campo contenedor_horizontal">
-                                        <div class="campo_dato3">
-                                            <div class="contenedor_label contenedor_horizontal">
-                                                <label class="texto_gris" for="fechaPed">Fecha creación</label>
-                                            </div>
-                                            <input class="campo_entrada" type="text" id="fechaPed" disabled>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="contenedor_recibo">
 
-                                <img id="bordeRecibo" src="../../../assets/ui_images/borde-recibo2.png" alt="">
+                                <div class="contenedor_horizontal linea_campo">
+                                    <img id="bordeRecibo" src="../../../assets/ui_images/borde-recibo2.png" alt="">
+                                    <p class="fechaRecibo">{{ pedidoSel.fecha }}</p>
+                                </div>
+                                
                                 <div class="datosRecibo">
                                     <h2>Pedido</h2>
                                     <p>Restaurante: <strong>{{ pedidoSel.restaurante }}</strong></p>
-                                    <p>Código: {{ pedidoSel.id }}</p>
+                                    <p>Cliente: {{ pedidoSel.cliente }}</p>
                                     <hr>
                                 </div>
+
                                 <div class="platosRecibo">
                                     <ul id="listaPlatosPedido" class="listaElementos">
                                         <li class="elementoBase" *ngFor="let element of listaPlatosPedidoSel">
                                             <div class="lineaPlato">
-                                                <p>{{ element.nombreP }}</p>
-                                                <p>{{ element.precioP }}</p>
+                                                <p><strong>{{ element.nombreP }}</strong></p>
+                                                <div class="contenedor_horizontal linea_campo">
+                                                    <p>Uds: {{ element.cantidad }}</p>
+                                                    <p><strong>{{ element.precioP }} €</strong></p>
+                                                </div>
+                                                
                                             </div>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="importeRecibo">
                                     <hr>
-                                    <p><strong>Importe total: {{ pedidoSel.total }}</strong></p>
+                                    <div class="contenedor_horizontal linea_campo">
+                                        <p><strong>Importe total: </strong></p>
+                                        <p><strong>{{ pedidoSelTotal }} €</strong></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -336,16 +352,17 @@
     </div>
 
     <!-- valoraciones restaurante -->
-    <div id="contenedor_valoracionesRes" class="cont_valoracion ocultos">
+    <div id="contenedor_valoracionesRes" class="cont_valoracion oculto">
         <div class="contenedor_valorar_pedidos">
             <div class="contenedor_horizontal cabecera_valorar">
                 <h1>Valoraciones</h1>
-                <button>
-                    <img id="cerrarValoraciones" class="img_icon" src="../../../assets/ui_images/close_icon.svg"/></button>
+                <button (click)="cerrarVentanaValoracionesRes()">
+                    <img id="cerrarValoraciones" class="img_icon"
+                        src="../../../assets/ui_images/close_icon.svg" /></button>
             </div>
             <div class="contenedor_valorar">
                 <h2>Restaurante</h2>
-                <p>Pizería Carlos</p>
+                <p>{{ restauranteSelect }}</p>
                 <h2>Valoraciones</h2>
                 <div class="contenedor_vals">
                     <div class="contenedor_val">
@@ -353,34 +370,36 @@
                             <div class="cont_correo">
                                 <h4 class="correo_val">juan@gmail.com</h4>
                             </div>
-                            
+
                             <div class="contenedor_pts contenedor_horizontal">
                                 <button>
-                                    <img class="img_estrella2" src="../../../assets/ui_images/estrella-rellena.png"/></button>
+                                    <img class="img_estrella2"
+                                        src="../../../assets/ui_images/estrella-rellena.png" /></button>
                                 <h4 class="correo_val"> 3</h4>
                             </div>
                         </div>
-                        <textarea class="campo_entrada_img">Me ha encantado el kebab, xd</textarea>
+                        <textarea class="campo_entrada_img" disabled>Me ha encantado el kebab, xd</textarea>
                     </div>
                     <div class="contenedor_val">
                         <div class="contenedor_horizontal">
                             <div class="cont_correo">
                                 <h4 class="correo_val">paco@gmail.com</h4>
                             </div>
-                            
+
                             <div class="contenedor_pts contenedor_horizontal">
                                 <button>
-                                    <img class="img_estrella2" src="../../../assets/ui_images/estrella-rellena.png"/></button>
+                                    <img class="img_estrella2"
+                                        src="../../../assets/ui_images/estrella-rellena.png" /></button>
                                 <h4 class="correo_val"> 1</h4>
                             </div>
                         </div>
-                        <textarea class="campo_entrada_img">Mu caro</textarea>
+                        <textarea class="campo_entrada_img" disabled>Mu caro</textarea>
                     </div>
                 </div>
-                
-                
+
+
             </div>
-            
+
         </div>
     </div>
 </div>
