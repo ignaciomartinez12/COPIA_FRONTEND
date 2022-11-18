@@ -1,4 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, LOCALE_ID } from "@angular/core";
+import { LineaPlato } from "../Entities/lineaPlato";
+import { Pedido } from "../Entities/pedido";
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +8,8 @@ import { Injectable } from "@angular/core";
 
 export class FuncionesService {
 
-  constructor() { }
+  constructor(){}
+  
 
   validarEmail(valor: string): boolean {
     if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)) {
@@ -112,5 +115,94 @@ export class FuncionesService {
       console.log("lista nula: "+idLista);
     }
     console.log("resaltado quitado: "+idLista);
+  }
+
+  genPlatosPedido(pedido: Pedido, restaurante: string): LineaPlato[] {
+    var listaPlatos: LineaPlato[] = [];
+    var listaPlatosJSON = pedido.listaPlatos.split(";");
+    for (let i = 0; i < listaPlatosJSON.length; i++) {
+      var partesPlato = listaPlatosJSON[i].split(",");
+      var plato = new LineaPlato(partesPlato[0], Number(partesPlato[1]).toFixed(2), partesPlato[2], restaurante);
+      listaPlatos.push(plato);
+    }
+    return listaPlatos;
+  }
+
+  calcularTotalPedido(listaPlatos: LineaPlato[]): number {
+    var total = 0;
+    for (let i = 0; i < listaPlatos.length; i++) {
+      total += (Number(listaPlatos[i].precioP) * Number(listaPlatos[i].cantidad));
+    }
+    return total;
+  }
+
+  esFechaValida(fecha: string): boolean {
+    var partesFecha = fecha.split("-");
+
+    if (partesFecha.length != 3) {
+      return false;
+    }
+
+    if(this.comprobarAnio(partesFecha[0])){
+      return false;
+    }
+
+    if(this.comprobarMes(partesFecha[1])){
+      return false;
+    }
+
+    if(this.comprobarDia(partesFecha[2])){
+      return false;
+    }
+
+    return true;
+  }
+
+  comprobarAnio(anio: string): boolean {
+    if (anio.length != 4) {
+      return false;
+    }
+
+    if (!this.esInt(anio)) {
+      return false;
+    }
+
+    if (Number(anio) < 1900) {
+      return false;
+    }
+
+    return true;
+  }
+
+  comprobarMes(mes: string): boolean {
+    if (mes.length != 2) {
+      return false;
+    }
+
+    if (!this.esInt(mes)) {
+      return false;
+    }
+
+    if (Number(mes) < 1 || Number(mes) > 12) {
+      return false;
+    }
+
+    return true;
+  }
+
+  comprobarDia(dia: string): boolean {
+    if (dia.length != 2) {
+      return false;
+    }
+
+    if (!this.esInt(dia)) {
+      return false;
+    }
+
+    if (Number(dia) < 1 || Number(dia) > 31) {
+      return false;
+    }
+
+    return true;
   }
 }

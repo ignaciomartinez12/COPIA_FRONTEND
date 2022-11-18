@@ -380,6 +380,11 @@ input[type="checkbox"]:disabled {
     margin: 0 8px;
 }
 
+.img_icon2{
+    height: 20px;
+    margin: 0 8px;
+}
+
 .contenedor_campos{
     /*background: red;*/
     background: white;

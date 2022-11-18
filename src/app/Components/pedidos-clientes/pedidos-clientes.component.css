@@ -50,7 +50,7 @@ button {
     height: 450px;
     /*background: red;*/
     padding: 24px 8px 8px 8px;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 .contenedor_listaCarta ul li {
@@ -134,7 +134,7 @@ button {
 .contenedor_lista_pedidos {
     /*background: green;*/
     width: 33%;
-    height: 350px;
+    height: 340px;
     border: 3px solid #757575;
     padding: 24px 8px 8px 8px;
     margin: 0 2px;
@@ -157,7 +157,7 @@ button {
 .contenedor_recibo {
     background: #fae8d1;
     width: 100%;
-    height: 300px;
+    height: 345px;
     border: 3px solid #fff;
 }
 
@@ -179,7 +179,7 @@ button {
 .platosRecibo {
     /*background: yellow;*/
     padding: 0 16px 8px 16px;
-    height: 130px;
+    height: 175px;
 }
 
 .importeRecibo {
@@ -223,9 +223,11 @@ hr {
 }
 
 #btn_cancelarPed{
+    position: absolute;
+    top: 60px;
+    right: 110px;
     width: 150px;
     height: 40px;
-    margin: 4px auto 0 auto;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -305,6 +307,44 @@ hr {
     height: 40px;
 }
 
+.img_estrella2{
+    width: 20px;
+    height: 20px;
+}
+
+.correo_val{
+    color: #757575;
+    font-size: 1rem;
+}
+
+.cont_correo{
+    /*background: red;*/
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.contenedor_pts{
+    /*background: yellow;*/
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.contenedor_val{
+    /*background: green;*/
+    width: 100%;
+}
+
+.contenedor_vals{
+    height: 395px;
+}
+
+.rank{
+    font-size: 5rem;
+}
+
 .contenedor_valorar_pedidos{
     /*height: 500px;*/
     width: 350px;
@@ -359,7 +399,6 @@ hr {
 #btn_enviarValRes, #btn_enviarValRid{
     width: 150px;
     height: 40px;
-    margin: 4px auto 0 auto;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -378,4 +417,21 @@ hr {
 
 .cont_valoracion{
     position: absolute;
+}
+
+#cont_platosRes::-webkit-scrollbar {
+    border-radius: 2px;
+	width: 6px;
+	background-color: #42424270;
+}
+
+#cont_platosRes::-webkit-scrollbar-thumb {
+	background-color: #f5f5f5;
+}
+
+.fechaRecibo{
+    color: #757575;
+    font-size: 0.7rem;
+    margin-top: 4px;
+    margin-right: 16px;
 }

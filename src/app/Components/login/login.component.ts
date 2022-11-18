@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit {
         } else {
           window.sessionStorage.removeItem('rol');
           window.sessionStorage.setItem('rol', data);
+          //alert(data);
           window.sessionStorage.removeItem('correo');
           window.sessionStorage.setItem('correo', correo);
           window.sessionStorage.removeItem('password');
@@ -68,10 +69,13 @@ export class LoginComponent implements OnInit {
           this.avisoEmail = "Iniciando sesión";
 
           if(data === "client"){
-            alert("Acceso a la aplicación exitoso como cliente");
-            this.router.navigate(['/inicio']);
-          }else{
+            this.router.navigate(['/pedir']);
+          }else if(data === "rider"){
+            this.router.navigate(['/gestion-rider']);
+          }else if(data === "admin"){
             this.router.navigate(['/gestion']);
+          }else{
+            this.router.navigate(['/inicio']);
           }
         }
       },

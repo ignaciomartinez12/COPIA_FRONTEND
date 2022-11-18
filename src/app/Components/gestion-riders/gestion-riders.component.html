@@ -75,7 +75,11 @@
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="valoracionR">Valoración</label>
-                                <input class="campo_entrada" type="number" id="valoracionR" disabled>
+                                <div class="contenedor_horizontal">
+                                    <input class="campo_entrada" type="text" id="valoracionR" disabled>
+                                    <button id="btn_vals">
+                                        Consultar valoraciones</button>
+                                </div>
                             </div>
                         </div>
 
@@ -93,7 +97,7 @@
                                     <label class="texto_gris" for="passwordR">Contraseña</label>
                                     <label class="aviso" for="passwordR">{{ avisoPwd }}</label>
                                 </div>
-                                <input class="campo_entrada" type="password" id="passwordR" disabled>
+                                <input class="campo_entrada" type="text" id="passwordR" disabled>
                             </div>
                             <div class="campo_dato6">
                                 <div class="contenedor_label contenedor_horizontal">

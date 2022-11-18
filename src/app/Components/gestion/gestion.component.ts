@@ -14,10 +14,6 @@ export class GestionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (window.sessionStorage.getItem('rol') === 'rider') {
-      this.funciones.ocultarBtn('g_pedidos', false);
-      this.funciones.ocultarBtn('g_pedidos_btn', false);
-    } else if (window.sessionStorage.getItem('rol') === 'admin') {
       this.funciones.ocultarBtn('g_admins', false);
       this.funciones.ocultarBtn('g_admins_btn', false);
       this.funciones.ocultarBtn('g_clientes', true);
@@ -26,9 +22,6 @@ export class GestionComponent implements OnInit {
       this.funciones.ocultarBtn('g_riders_btn', false);
       this.funciones.ocultarBtn('g_restaurantes', true);
       this.funciones.ocultarBtn('g_restaurantes_btn', false);
-      this.funciones.ocultarBtn('g_pedidos', true);
-      this.funciones.ocultarBtn('g_pedidos_btn', false);
-    }
   }
 
   mostrarAdmins() {
@@ -51,16 +44,10 @@ export class GestionComponent implements OnInit {
     this.funciones.ocultarBtn('g_restaurantes', false);
   }
 
-  mostrarPedidos() {
-    this.ocultarTodos();
-    this.funciones.ocultarBtn('g_pedidos', false);
-  }
-
   ocultarTodos() {
     this.funciones.ocultarBtn('g_admins', true);
     this.funciones.ocultarBtn('g_clientes', true);
     this.funciones.ocultarBtn('g_riders', true);
     this.funciones.ocultarBtn('g_restaurantes', true);
-    this.funciones.ocultarBtn('g_pedidos', true);
   }
 }

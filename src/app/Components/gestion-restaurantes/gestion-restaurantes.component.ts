@@ -8,6 +8,7 @@ import { Url } from 'src/app/Entities/url';
 import { FuncionesService } from 'src/app/services/funcionesServices';
 import { Plato } from 'src/app/Entities/plato';
 import * as fs from 'fs';
+import { Pedido } from 'src/app/Entities/pedido';
 
 
 @Component({
@@ -26,6 +27,10 @@ export class GestionRestaurantesComponent implements OnInit {
   private platoSelect: string;
   public platoFoto: string;
 
+  //pedidos restaurantes
+  pedidoSel : Pedido;;
+  listaPlatosPedidoSel: Plato[] = [];
+
   //restaurantes
   avisoNombre: string = "";
   avisoRazon: string = "";
@@ -37,6 +42,7 @@ export class GestionRestaurantesComponent implements OnInit {
   URL: string = new Url().url;
   funciones: FuncionesService;
   listaRestaurantes: Restaurante[] = [];
+  listaPedidosRes: Pedido[] = [];
   //platos
   avisoNombreP: string = "";
   avisoPrecioP: string = "";
@@ -49,6 +55,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.restauranteSelect = '';
     this.platoSelect = '';
     this.platoFoto = '';
+    this.pedidoSel = new Pedido(1, "", 0);
   }
 
   ngOnInit(): void {
@@ -349,6 +356,15 @@ export class GestionRestaurantesComponent implements OnInit {
     });
   }
 
+  mostrar_pedidos(){
+    this.ocultarTodo()
+    this.funciones.ocultarBtn("pedidos_v", false);
+
+    this.funciones.disabledID('add_res', false);
+    this.funciones.disabledID('update_res', false);
+    this.funciones.disabledID('delete_res', false);
+  }
+
   mostrar_datos() {
     this.ocultarTodo()
     this.funciones.ocultarBtn("datos_v", false);
@@ -382,6 +398,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn("datos_v", true);
     this.funciones.ocultarBtn("carta_v", true);
     this.funciones.ocultarBtn("facturas_v", true);
+    this.funciones.ocultarBtn("pedidos_v", true);
   }
 
   onSelect(element: Restaurante) {

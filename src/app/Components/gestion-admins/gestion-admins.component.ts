@@ -235,7 +235,7 @@ export class GestionAdminsComponent implements OnInit {
         if (data.includes("Ya existe un usuario con ese correo")) {
           alert(data);
         } else if (data.includes("No tienes acceso a este servicio")) {
-          alert(data);
+          alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
         } else if (data.includes("contraseña")) {
           alert(data);
@@ -277,7 +277,7 @@ export class GestionAdminsComponent implements OnInit {
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         if (data.includes("No tienes acceso a este servicio")) {
-          alert(data);
+          alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
         }else if (data.includes("No existe ningun usuario en la base de datos")) {
           alert("No existe ese usuario en la base de datos");
