@@ -106,6 +106,7 @@ button {
     background: #e5e5e5;
 }
 
+/*recibo*/
 .contenedor_recibo{
     background: #fae8d1;
     width: 33%;
@@ -113,49 +114,9 @@ button {
     border: 3px solid #fff;
 }
 
-.contenedor_recibo h2{
-    /*background: red;*/
-    text-align: center;
-    margin: 8px;
-}
-
-#bordeRecibo{
-    height: 25px;
-    width: 25px;
-}
-
-.datosRecibo{
-    padding: 0 16px 8px 16px;
-}
-
 .platosRecibo{
     /*background: yellow;*/
     padding: 0 16px 8px 16px;
     height: 230px;
     overflow-y: scroll;
-}
-
-.platosRecibo::-webkit-scrollbar {
-    border-radius: 2px;
-	width: 6px;
-	background-color: #42424270;
-}
-
-.platosRecibo::-webkit-scrollbar-thumb{
-    background-color: #f5f5f5;
-}
-
-.importeRecibo{
-    /*background: green;*/
-    padding: 0 16px 8px 16px;
-}
-hr{
-    margin: 4px 0;
-}
-
-.fechaRecibo{
-    color: #757575;
-    font-size: 0.7rem;
-    margin-top: 4px;
-    margin-right: 16px;
 }

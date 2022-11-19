@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Rider } from 'src/app/Entities/rider';
 import { Url } from 'src/app/Entities/url';
+import { Valoracion } from 'src/app/Entities/valoracion';
 import { FuncionesService } from 'src/app/services/funcionesServices';
 
 @Component({
@@ -25,7 +26,10 @@ export class GestionRidersComponent implements OnInit {
   URL: string = new Url().url;
   funciones: FuncionesService;
 
+  riderSelected: string = "";
+  riderSelectCorreo: string = "";
   listaRiders: Rider[] = [];
+  listaValoracionesRid: Valoracion[] = [];
 
   constructor(private router: Router, private http: HttpClient) {
     this.funciones = new FuncionesService();
@@ -189,7 +193,7 @@ export class GestionRidersComponent implements OnInit {
   dejarVacio() {
     this.vaciarAvisos();
     this.vaciarCampos();
-    
+
   }
 
   vaciarCampos() {
@@ -232,7 +236,7 @@ export class GestionRidersComponent implements OnInit {
     var matriculaCampo = document.getElementById("matriculaR") as HTMLInputElement;
     var carnetCampo = document.getElementById("carnetR") as HTMLInputElement;
     var activoCampo = document.getElementById("activoR") as HTMLInputElement;
-    
+
     this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
     if (this.avisoNombre !== "") { errorCampo = true; }
     this.avisoApellidos = this.funciones.comprobarVacio(apellidosCampo?.value);
@@ -284,7 +288,7 @@ export class GestionRidersComponent implements OnInit {
   }
 
   peticionHttpActualizar(nombre: string, apellidos: string, nif: string, correo: string,
-    pwd: string, tipoVeh: number, matricula: string, carnet: boolean, cuenta:boolean): void {
+    pwd: string, tipoVeh: number, matricula: string, carnet: boolean, cuenta: boolean): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombre,
@@ -354,7 +358,7 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.ocultarBtn('update_rider', true); //ocultar btn_add
     this.funciones.ocultarBtn('delete_rider', true); //ocultar btn_add
     this.funciones.ocultarBtn('cont_confirm_add_r', false); //mostrar btns_aceptar_cancelar 
-    this.funciones.disabledID('activoR',true);   
+    this.funciones.disabledID('activoR', true);
   }
 
   activarCamposActualizar() {
@@ -439,6 +443,9 @@ export class GestionRidersComponent implements OnInit {
   onSelect(element: Rider) {
     this.disabledTodos(true);
     console.log(element);
+    this.riderSelected = element.nombre;
+    this.riderSelectCorreo = element.correo;
+    this.cerrarVentanaValoracionesRid();
 
     this.funciones.apagarElementosLista('listaRiders');
     this.funciones.resaltarElementoLista('listaRiders', element.pos);
@@ -448,7 +455,8 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.asignarValorID('nifR', element.nif);
     this.funciones.asignarValorID('emailR', element.correo);
     this.funciones.asignarValorID('passwordR', element.pwd);
-    this.funciones.asignarValorID('valoracionR', String(element.valoracion));
+    //this.funciones.asignarValorID('valoracionR', String(element.valoracion));
+    this.peticionGetHttpValoracionRiderMedia();
 
     this.funciones.seleccionarRadio('cocheR', false);
     this.funciones.seleccionarRadio('motoR', false);
@@ -469,11 +477,100 @@ export class GestionRidersComponent implements OnInit {
 
     this.funciones.seleccionarRadio('carnetR', element.carnet);
     this.funciones.seleccionarRadio('activoR', element.cuenta);
-  
+
     this.funciones.ocultarBtn("cont_confirm_add_r", true);
     this.funciones.ocultarBtn("cont_confirm_udt_r", true);
     this.funciones.ocultarBtn("add_rider", false);
     this.funciones.ocultarBtn("update_rider", false);
     this.funciones.ocultarBtn("delete_rider", false);
+  }
+
+  cerrarVentanaValoracionesRid() {
+    this.funciones.ocultarBtn('contenedor_valoracionesRid', true);
+  }
+
+  mostrarValoracionesRid() {
+    if (this.riderSelected != "") {
+      this.funciones.ocultarBtn('contenedor_valoracionesRid', false);
+      this.peticionHttpGetValoracionesRiderDetalladas();
+    } else {
+      alert("Selecciona un rider");
+    }
+  }
+
+  peticionGetHttpValoracionRiderMedia(): void {
+    if (this.riderSelected !== "") {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const body = {
+        "rider": this.riderSelectCorreo,
+        "correoAcceso": window.sessionStorage.getItem('correo'),
+        "passwordAcceso": window.sessionStorage.getItem('password')
+      };
+
+      console.log(body);
+      
+
+      const url = this.URL + 'pedido/consultarValoracionRiderMedia';
+      this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+        next: data => {
+          console.log("DATOS:")
+          console.log(data);
+
+          if (data.includes("El rider no tiene valoraciones")) {
+            this.funciones.asignarValorID('valoracionR', "0.0");
+            //alert(data);
+          } else {
+            this.funciones.asignarValorID('valoracionR', String(Number(data).toFixed(1)));
+          }
+        }, error: error => {
+          alert("Ha ocurrido un error al cargar la valoración del rider");
+          console.log(error.message);
+        }
+      });
+    } else {
+      alert("Selecciona un rider");
+    }
+  }
+
+  peticionHttpGetValoracionesRiderDetalladas() {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "rider": this.riderSelectCorreo,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'pedido/consultarValoracionRider';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaValoracionesRid = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if (data.includes(this.riderSelectCorreo + " no tiene valoraciones")) {
+          this.funciones.ocultarBtn('contenedor_valoracionesRid', true);
+          alert(data + " detalladas");
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("No existe ese rider")) {
+          alert(data);
+        } else {
+          var listaValJSON = data.split(";;;");
+          for (let i = 0; i < listaValJSON.length; i++) {
+            let valoracion = new Valoracion(listaValJSON[i], i);
+            this.listaValoracionesRid.push(valoracion);
+            console.log(this.listaValoracionesRid[i]);
+
+          }
+        };
+
+      }, error: error => {
+        alert("Ha ocurrido un error al obtener las valoraciones");
+      }
+    });
   }
 }

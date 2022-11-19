@@ -30,7 +30,7 @@ export class GestionRestaurantesComponent implements OnInit {
   public platoFoto: string;
 
   //pedidos restaurantes
-  pedidoSel: Pedido;;
+  pedidoSel: Pedido;
   listaPlatosPedidoSel: LineaPlato[] = [];
   pedidoSelTotal: string = "";
 
@@ -96,6 +96,7 @@ export class GestionRestaurantesComponent implements OnInit {
     if (this.avisoCategoria !== "") { errorCampo = true; }
 
     if (!this.funciones.validarEmail(correoCampo?.value)) {
+      this.avisoEmail = "Formato incorrecto";
       errorCampo = true;
     }
 
@@ -363,7 +364,14 @@ export class GestionRestaurantesComponent implements OnInit {
     });
   }
 
+  vaciarPedidos(){
+    this.pedidoSel = new Pedido(1,"",0);
+    this.listaPlatosPedidoSel = [];
+    this.pedidoSelTotal = "";
+  }
+
   peticionHttpGetPedidos() {
+    this.vaciarPedidos();
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "correoAcceso": window.sessionStorage.getItem('correo'),
@@ -519,6 +527,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.disabledTodos(true);
     console.log(element);
     this.restauranteSelect = element.nombre;
+    this.cerrarVentanaValoracionesRes();
 
     this.funciones.apagarElementosLista('listaRestaurantes');
     this.funciones.resaltarElementoLista('listaRestaurantes', element.pos);
@@ -530,7 +539,8 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.asignarValorID('CIFRes', element.CIF);
     this.funciones.asignarValorID('razonRes', element.razon_social);
     this.funciones.asignarValorID('telRes', String(element.telefono));
-    this.funciones.asignarValorID('valoracionRes', String(this.peticionGetHttpValoracionRes()));
+    this.peticionGetHttpValoracionResMedia();
+    //this.funciones.asignarValorID('valoracionRes', String(this.peticionGetHttpValoracionRes()));
     //this.funciones.asignarValorID('valoracionRes', String(element.valoracion));
     this.funciones.ocultarBtn("cont_confirm_add", true);
     this.funciones.ocultarBtn("cont_confirm_udt", true);
@@ -985,6 +995,8 @@ export class GestionRestaurantesComponent implements OnInit {
 
   mostrarValoracionesRes() {
     if (this.restauranteSelect != "") {
+      this.peticionHttpGetValoracionesDetalladas();
+      this.listaValoracionesRes= [];
       this.funciones.ocultarBtn('contenedor_valoracionesRes', false);
     } else {
       alert("Selecciona un restaurante");
@@ -1034,5 +1046,72 @@ export class GestionRestaurantesComponent implements OnInit {
     return 0
   }
 
+  peticionGetHttpValoracionResMedia(): void {
+    if (this.restauranteSelect !== "") {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
 
+      const url = this.URL + 'pedido/consultarMedia/' + this.restauranteSelect;
+      this.http.get(url, { headers, responseType: 'text' }).subscribe({
+        next: data => {
+          console.log("DATOS:")
+          console.log(data);
+
+          if (data.includes("El restaurante no tiene valoraciones")) {
+            this.funciones.asignarValorID('valoracionRes', "0.0");
+            //alert(data); 
+          } else {
+            this.funciones.asignarValorID('valoracionRes', String(Number(data).toFixed(1))); 
+          }
+        }, error: error => {
+          alert("Ha ocurrido un error al cargar la valoración del restaurante");
+          console.log("ERROR:");
+          console.log(error.message);
+        }
+      });
+    } else {
+      alert("Selecciona un restaurante");
+    }
+  }
+
+  peticionHttpGetValoracionesDetalladas() {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "restaurante": this.restauranteSelect,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'pedido/consultarValoracionRestaurante';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaValoracionesRes = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if (data.includes(this.restauranteSelect+" no tiene valoraciones")) {
+          this.funciones.ocultarBtn('contenedor_valoracionesRes', true);
+          alert(data+" detalladas");
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("No existe ese restaurante")) {
+          alert(data);
+        } else {
+          var listaValJSON = data.split(";;;");
+          for (let i = 0; i < listaValJSON.length; i++) {
+            let valoracion = new Valoracion(listaValJSON[i], i);
+            this.listaValoracionesRes.push(valoracion);
+            console.log(this.listaValoracionesRes[i]);
+
+          }
+        };
+
+      }, error: error => {
+        alert("Ha ocurrido un error al obtener las valoraciones");
+      }
+    });
+  }
 }

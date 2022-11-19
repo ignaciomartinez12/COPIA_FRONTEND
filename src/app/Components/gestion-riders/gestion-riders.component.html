@@ -77,7 +77,7 @@
                                 <label class="texto_gris" for="valoracionR">Valoración</label>
                                 <div class="contenedor_horizontal">
                                     <input class="campo_entrada" type="text" id="valoracionR" disabled>
-                                    <button id="btn_vals">
+                                    <button id="btn_vals" (click)="mostrarValoracionesRid()">
                                         Consultar valoraciones</button>
                                 </div>
                             </div>
@@ -139,6 +139,42 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- valoraciones restaurante -->
+    <div id="contenedor_valoracionesRid" class="cont_valoracion oculto">
+        <div class="contenedor_valorar_pedidos">
+            <div class="contenedor_horizontal cabecera_valorar">
+                <h1>Valoraciones</h1>
+                <button (click)="cerrarVentanaValoracionesRid()">
+                    <img id="cerrarValoraciones" class="img_icon"
+                        src="../../../assets/ui_images/close_icon.svg" /></button>
+            </div>
+            <div class="contenedor_valorar">
+                <h2>Rider</h2>
+                <p>{{ riderSelected }}</p>
+                <h2>Valoraciones</h2>
+                <div id="contenedor_valsRid" class="contenedor_vals">
+                    <ul>
+                        <li *ngFor="let element of listaValoracionesRid">
+                            <div class="contenedor_val">
+                                <div class="contenedor_horizontal">
+                                    <div class="cont_correo">
+                                        <h4 class="correo_val">{{element.autor}}</h4>
+                                    </div>
+                                    <div class="contenedor_pts contenedor_horizontal">
+                                        <button>
+                                            <img class="img_estrella2"
+                                                src="../../../assets/ui_images/estrella-rellena.png" /></button>
+                                        <h4 class="correo_val"> {{element.valor}}</h4>
+                                    </div>
+                                </div>
+                                <textarea class="campo_entrada_img" disabled>{{element.comentario}}</textarea>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
