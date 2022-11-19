@@ -209,4 +209,48 @@ export class FuncionesService {
     }
     return total;
   }
+
+  getPedidoDelRestaurante(listaPedidos: Pedido[], restaurante: string): Pedido | null {
+    for (let i = 0; i < listaPedidos.length; i++) {
+      if (listaPedidos[i].restaurante == restaurante) {
+        return listaPedidos[i];
+      }
+    }
+    return null;
+  }
+
+  addLineaPlatoPedido(pedido: Pedido, lineaPlato: LineaPlato) {
+    var listaPlatos = pedido.listaPlatos;
+    if (listaPlatos == "") { //pedido vacio
+      listaPlatos = lineaPlato.nombreP + "," + lineaPlato.precioP + "," + lineaPlato.cantidad;
+      pedido.listaPlatos = listaPlatos;
+    }else{ //pedido con platos
+      var listaPlatosAux = listaPlatos.split(";");
+      var encontrado = false;
+      for (let i = 0; i < listaPlatosAux.length; i++) {
+        var partesPlato = listaPlatosAux[i].split(",");
+        if (partesPlato[0] == lineaPlato.nombreP) {
+          encontrado = true;
+        }
+      }
+
+      if (!encontrado) {
+        listaPlatos += ";" + lineaPlato.nombreP + "," + lineaPlato.precioP 
+        + "," + lineaPlato.cantidad;
+        pedido.listaPlatos = listaPlatos;
+      }
+    }
+    alert("Plato añadido al carrito");
+  }
+
+  lineasPlatosList(listaPlatos: LineaPlato[]): string {
+    var lista = "";
+    for (let i = 0; i < listaPlatos.length; i++) {
+      lista += listaPlatos[i].nombreP + "," + listaPlatos[i].precioP + "," + listaPlatos[i].cantidad;
+      if(i<listaPlatos.length-1){
+        lista += ";";
+      }
+    }
+    return lista;
+  }
 }

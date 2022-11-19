@@ -27,7 +27,7 @@ export class PedidosClientesComponent implements OnInit {
   pedidoSel: Pedido;
   restauranteSel: string = '';
   rankSel: string = '';
-  pedidoSelTotal : string = "";
+  pedidoSelTotal: string = "";
 
   constructor(private router: Router, private http: HttpClient) {
     this.pedidoSel = new Pedido(1, "", 0);
@@ -107,7 +107,7 @@ export class PedidosClientesComponent implements OnInit {
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
 
-    const url = this.URL + 'pedido/consultarPedidosCliente/' + this.restauranteSel;
+    const url = this.URL + 'pedido/consultarPedidosCliente';
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         console.log(data);
@@ -128,13 +128,14 @@ export class PedidosClientesComponent implements OnInit {
             let pedido = new Pedido(0, listaPedJSON[i], i);
             if (pedido.estado == 2) {
               this.listaPedidosEntregados.push(pedido);
-            }else{
+            } else {
               this.listaPedidosEnProgreso.push(pedido);
             }
           }
         }
       }, error: error => {
         alert("Ha ocurrido un error al cargar los pedidos del cliente");
+        //alert(error.message);
       }
     });
   }
@@ -148,6 +149,9 @@ export class PedidosClientesComponent implements OnInit {
 
   onSelectRes(element: Restaurante) {
     this.restauranteSel = element.nombre;
+    this.funciones.apagarElementosLista('listaRestaurantesPedCli');
+    this.funciones.resaltarElementoLista('listaRestaurantesPedCli', element.pos);
+
     this.peticionGetHttpCarta();
   }
 
@@ -158,7 +162,7 @@ export class PedidosClientesComponent implements OnInit {
   onSelectPedEnt(element: Pedido) {
     console.log(element);
     this.pedidoSel = element;
-    this.funciones.ocultarBtn('btn_cancelarPed',true);
+    this.funciones.ocultarBtn('btn_cancelarPed', true);
 
     this.funciones.apagarElementosLista('listaPedidosEntregados');
     this.funciones.apagarElementosLista('listaPedidosEnProgreso');
@@ -171,7 +175,7 @@ export class PedidosClientesComponent implements OnInit {
   onSelectPedProg(element: Pedido) {
     console.log(element);
     this.pedidoSel = element;
-    this.funciones.ocultarBtn('btn_cancelarPed',false);
+    this.funciones.ocultarBtn('btn_cancelarPed', false);
 
     this.funciones.apagarElementosLista('listaPedidosEnProgreso');
     this.funciones.apagarElementosLista('listaPedidosEntregados');
@@ -182,7 +186,14 @@ export class PedidosClientesComponent implements OnInit {
   }
 
   onSelectPedPend(element: Pedido) {
+    this.listaPlatosPedidoSel = [];
+    this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, element.restaurante);
+    this.pedidoSel = element;
+    console.log(element);
+    console.log(this.listaPlatosPedidoSel);
 
+    this.funciones.apagarElementosLista('listaPedidosPendientes');
+    this.funciones.resaltarElementoLista('listaPedidosPendientes', element.pos);
   }
 
   ocultarTodo() {
@@ -207,7 +218,17 @@ export class PedidosClientesComponent implements OnInit {
 
   mostrar_carrito() {
     this.ocultarTodo()
+    this.posicionesPedidos();
+    this.listaPlatosPedidoSel = [];
+    this.pedidoSel = new Pedido(1, "", 0);
+    this.funciones.apagarElementosLista('listaPedidosPendientes');
     this.funciones.ocultarBtn("contenedor_carrito", false);
+  }
+
+  posicionesPedidos() {
+    this.listaPedidosPendientes.forEach((element, index) => {
+      element.pos = index;
+    });
   }
 
   mostrar_valorar() {
@@ -222,5 +243,150 @@ export class PedidosClientesComponent implements OnInit {
 
   mostrar_datosUsuario() {
     this.ocultarTodo()
+  }
+
+  enviarCarrito(element: Plato) {
+    var pedidoAux = this.funciones.getPedidoDelRestaurante(this.listaPedidosPendientes, this.restauranteSel)
+    //Si no existe el pedido lo creamos
+    if (pedidoAux == null) {
+      pedidoAux = new Pedido(1, "", 0);
+      if (this.restauranteSel == "") {
+        alert("Error al obtener el restaurante seleccionado");
+        return
+      } else {
+        pedidoAux.restaurante = this.restauranteSel;
+      }
+
+      this.funciones.addLineaPlatoPedido(pedidoAux, new LineaPlato(element.nombreP,
+        String(element.precioP), String(1), this.restauranteSel));
+
+      this.listaPedidosPendientes.push(pedidoAux);
+    } else {
+      if (this.restauranteSel == "") {
+        alert("Error al obtener el restaurante seleccionado");
+        return
+      } else {
+        this.funciones.addLineaPlatoPedido(pedidoAux, new LineaPlato(element.nombreP,
+          String(element.precioP), String(1), this.restauranteSel));
+      }
+    }
+  }
+
+  disminuirCantidadPlatoPed(element: LineaPlato) {
+    console.log(this.listaPlatosPedidoSel);
+    if (Number(element.cantidad) > 0) {
+      element.cantidad = String(Number(element.cantidad) - 1);
+    }
+    this.pedidoSel.listaPlatos = this.funciones.lineasPlatosList(this.listaPlatosPedidoSel);
+  }
+
+  aumentarCantidadPlatoPed(element: LineaPlato) {
+    if (Number(element.cantidad) < 100) {
+      element.cantidad = String(Number(element.cantidad) + 1);
+    }
+    this.pedidoSel.listaPlatos = this.funciones.lineasPlatosList(this.listaPlatosPedidoSel);
+  }
+
+  peticionHttpCancelarPedidoEnCarrito(): void {
+    if (!(this.pedidoSel.restaurante == "")) {
+      alert("Pedido cancelado");
+      this.listaPedidosPendientes.splice(this.listaPedidosPendientes.indexOf(this.pedidoSel), 1);
+      this.listaPlatosPedidoSel = [];
+      this.pedidoSel = new Pedido(1, "", 0);
+      //lo quito de la lista
+      this.mostrar_carrito();
+    } else {
+      alert("Selecciona un pedido");
+    }
+  }
+
+  peticionHttpOrdenarPedidoEnCarrito(): void {
+    if (!(this.pedidoSel.restaurante == "")) {
+      this.peticionHttpCrearPedido(this.pedidoSel);
+      this.mostrar_carrito();
+    } else {
+      alert("Selecciona un pedido");
+    }
+  }
+
+  peticionHttpCrearPedido(pedido: Pedido): void {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    const body = {
+      "platos": pedido.listaPlatos,
+      "restaurante": pedido.restaurante,
+      "rider": "",
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'pedido/crearPedido/';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        console.log(data);
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else if (data.includes("No hay pedidos")) {
+          alert(data);
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+        } else {
+          alert("Pedido creado correctamente");
+          this.listaPedidosPendientes.splice(this.listaPedidosPendientes.indexOf(this.pedidoSel), 1);
+          this.listaPlatosPedidoSel = [];
+          this.pedidoSel = new Pedido(1, "", 0);
+          this.mostrar_carrito();
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al cargar el pedido del cliente");
+      }
+    });
+  }
+
+  peticionHttpCancelarPedidoEnPedidos(): void {
+    if (!(this.pedidoSel.restaurante == "")) {
+      alert("Pedido cancelado");
+      this.peticionHttpCancelarPedido(this.pedidoSel)
+    } else {
+      alert("Selecciona un pedido");
+    }
+  }
+
+  peticionHttpCancelarPedido(pedido: Pedido): void {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    const body = {
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password'),
+      "idPedido": pedido.id
+    };
+
+    const url = this.URL + 'pedido/cancelarPedido/' + pedido.id;
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        console.log(data);
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+        } else if (data.includes("Ya no puedes cancelar el pedido")) {
+          alert(data);
+        } else if (data.includes("No puedes cancelar el pedido, no es tuyo")) {
+          alert(data);
+        } else if (data.includes("No existe ese pedido")) {
+          alert(data);
+        } else {
+          this.peticionGetHttpPedidosCli();
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al cancelar el pedido del cliente");
+      }
+    });
   }
 }

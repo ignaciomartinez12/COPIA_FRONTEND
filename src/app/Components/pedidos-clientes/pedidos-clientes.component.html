@@ -60,7 +60,7 @@
                                         <button>
                                             <img class="img_iconCarta" src="../../../assets/ui_images/lupa2.png" /></button>
                                         <button>
-                                            <img class="img_iconCarta" src="../../../assets/ui_images/shopping-cart3.png" /></button>
+                                            <img class="img_iconCarta" src="../../../assets/ui_images/shopping-cart3.png" (click)="enviarCarrito(element)"/></button>
                                     </div>
                                     
                                 </div>
@@ -88,13 +88,13 @@
                         <div class="contenedor_lista_pedidos" id="cont_lista_pedPend">
                             <ul id="listaPedidosPendientes" class="listaElementos">
                                 <li class="elementoBase" *ngFor="let element of listaPedidosPendientes" (click)="onSelectPedPend(element)">
-                                    {{ element.id }}
+                                    {{ element.restaurante }}
                                 </li>
                             </ul>
                         </div>
                         <div class="contenedor_horizontal">
-                            <button id="btn_cancelarPedCarr" >Cancelar</button>
-                            <button id="btn_ordenarPedCarr" >Ordenar</button>
+                            <button id="btn_cancelarPedCarr" (click)="peticionHttpCancelarPedidoEnCarrito()">Cancelar</button>
+                            <button id="btn_ordenarPedCarr" (click)="peticionHttpOrdenarPedidoEnCarrito()">Ordenar</button>
                         </div>
                     </div>
     
@@ -108,11 +108,11 @@
                                     <h3>{{ element.nombreP }}</h3>
                                     <div class="contenedor_precioBotones contenedor_horizontal">
                                         <p><strong>{{ element.precioP }}€</strong></p>
-                                        <div class="par_btn contenedor_horizontal">
-                                            <button id="btn_subCant">
-                                                <img class="img_iconCarta" src="../../../assets/ui_images/sub_icon.svg" /></button>
-                                            <p class="cant"><strong>1</strong></p>
-                                            <button id="btn_addCant">
+                                        <div class="par_btn2 contenedor_horizontal">
+                                            <button id="btn_subCant" (click)="disminuirCantidadPlatoPed(element)">
+                                                <img class="img_iconCarta" src="../../../assets/ui_images/sub_icon.svg"/></button>
+                                            <p class="cant"><strong>{{element.cantidad}}</strong></p>
+                                            <button id="btn_addCant" (click)="aumentarCantidadPlatoPed(element)">
                                                 <img class="img_iconCarta" src="../../../assets/ui_images/add_icon.svg" /></button>
                                         </div>
                                         
@@ -131,7 +131,7 @@
             <div class="contenedor_datos2">
                 <div class="contenedor_horizontal linea_campo">
                     <h1 class="texto_naranja">Pedidos</h1>
-                    <button id="btn_cancelarPed" >Cancelar Pedido</button>
+                    <button id="btn_cancelarPed" (click)="peticionHttpCancelarPedidoEnPedidos()">Cancelar Pedido</button>
                 </div>
                 <div class="labels2 contenedor_horizontal">
                     <div class="label_lista3">

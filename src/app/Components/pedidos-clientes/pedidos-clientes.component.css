@@ -22,6 +22,7 @@ button {
     height: 450px;
     padding: 24px 8px 8px 8px;
     border-right: #757575;
+    overflow-y: scroll;
 }
 
 .contenedor_listaRest ul li {
@@ -61,7 +62,7 @@ button {
     width: 70%;
     height: 350px;
     padding: 24px 8px 8px 8px;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 .contenedor_listaCarta2 ul li {
@@ -125,11 +126,34 @@ button {
     width: 60px;
 }
 
-#listaCartaPedCli {
-    flex-wrap: wrap;
-    display: flex;
+.par_btn2 {
+    width: 90px;
     justify-content: space-between;
 }
+
+#listaCartaPedCli, #listaPlatosPedCli {
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-around;
+}
+
+.contenedor_listaCarta::-webkit-scrollbar,
+.contenedor_listaCarta2::-webkit-scrollbar,
+#cont_lista_pedPend::-webkit-scrollbar,
+.contenedor_listaRest::-webkit-scrollbar {
+    border-radius: 2px;
+	width: 6px;
+	background-color: #42424270;
+}
+
+.contenedor_listaCarta::-webkit-scrollbar-thumb, 
+.contenedor_listaCarta2::-webkit-scrollbar-thumb,
+#cont_lista_pedPend::-webkit-scrollbar-thumb,
+.contenedor_listaRest::-webkit-scrollbar-thumb {
+    background-color: #f5f5f5;
+}
+
+
 
 .contenedor_lista_pedidos {
     /*background: green;*/
