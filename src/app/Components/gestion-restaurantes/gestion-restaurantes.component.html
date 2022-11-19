@@ -280,7 +280,7 @@
                         </div>
                         <div class="contenido contenedor_horizontal">
                             <div class="contenedor_lista_botones">
-                                <div class="contenedor_lista_pedidos">
+                                <div id="cont_lista_pedidosRes" class="contenedor_lista_pedidos">
                                     <ul id="listaPedidos" class="listaElementos">
                                         <li class="elementoBase" *ngFor="let element of listaPedidosRes" (click)="onSelectPed(element)">
                                             {{ element.cliente }}
@@ -322,7 +322,7 @@
                                     <hr>
                                 </div>
 
-                                <div class="platosRecibo">
+                                <div id="platosReciboPedidosRes" class="platosRecibo">
                                     <ul id="listaPlatosPedido" class="listaElementos">
                                         <li class="elementoBase" *ngFor="let element of listaPlatosPedidoSel">
                                             <div class="lineaPlato">
@@ -364,42 +364,27 @@
                 <h2>Restaurante</h2>
                 <p>{{ restauranteSelect }}</p>
                 <h2>Valoraciones</h2>
-                <div class="contenedor_vals">
-                    <div class="contenedor_val">
-                        <div class="contenedor_horizontal">
-                            <div class="cont_correo">
-                                <h4 class="correo_val">juan@gmail.com</h4>
+                <div id="contenedor_valsRes" class="contenedor_vals">
+                    <ul>
+                        <li *ngFor="let element of listaValoracionesRes">
+                            <div class="contenedor_val">
+                                <div class="contenedor_horizontal">
+                                    <div class="cont_correo">
+                                        <h4 class="correo_val">{{element.autor}}</h4>
+                                    </div>
+                                    <div class="contenedor_pts contenedor_horizontal">
+                                        <button>
+                                            <img class="img_estrella2"
+                                                src="../../../assets/ui_images/estrella-rellena.png" /></button>
+                                        <h4 class="correo_val"> {{element.valor}}</h4>
+                                    </div>
+                                </div>
+                                <textarea class="campo_entrada_img" disabled>{{element.comentario}}</textarea>
                             </div>
-
-                            <div class="contenedor_pts contenedor_horizontal">
-                                <button>
-                                    <img class="img_estrella2"
-                                        src="../../../assets/ui_images/estrella-rellena.png" /></button>
-                                <h4 class="correo_val"> 3</h4>
-                            </div>
-                        </div>
-                        <textarea class="campo_entrada_img" disabled>Me ha encantado el kebab, xd</textarea>
-                    </div>
-                    <div class="contenedor_val">
-                        <div class="contenedor_horizontal">
-                            <div class="cont_correo">
-                                <h4 class="correo_val">paco@gmail.com</h4>
-                            </div>
-
-                            <div class="contenedor_pts contenedor_horizontal">
-                                <button>
-                                    <img class="img_estrella2"
-                                        src="../../../assets/ui_images/estrella-rellena.png" /></button>
-                                <h4 class="correo_val"> 1</h4>
-                            </div>
-                        </div>
-                        <textarea class="campo_entrada_img" disabled>Mu caro</textarea>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
-
-
             </div>
-
         </div>
     </div>
 </div>

@@ -10,6 +10,7 @@ import { Plato } from 'src/app/Entities/plato';
 import * as fs from 'fs';
 import { Pedido } from 'src/app/Entities/pedido';
 import { LineaPlato } from 'src/app/Entities/lineaPlato';
+import { Valoracion } from 'src/app/Entities/valoracion';
 
 
 @Component({
@@ -52,6 +53,9 @@ export class GestionRestaurantesComponent implements OnInit {
   avisoDescP: string = "";
   avisoFotoP: string = "";
   listaPlatos: Plato[] = [];
+
+  //valoraciones
+  listaValoracionesRes: Valoracion[] = [];
 
   constructor(private router: Router, private http: HttpClient, private sanitizer: DomSanitizer) {
     this.funciones = new FuncionesService();
@@ -457,9 +461,9 @@ export class GestionRestaurantesComponent implements OnInit {
       this.funciones.ocultarBtn("pedidos_v", false);
       this.peticionHttpGetPedidos();
 
-      this.funciones.disabledID('add_res', false);
-      this.funciones.disabledID('update_res', false);
-      this.funciones.disabledID('delete_res', false);
+      this.funciones.disabledID('add_res', true);
+      this.funciones.disabledID('update_res', true);
+      this.funciones.disabledID('delete_res', true);
     } else {
       alert("Selecciona un restaurante");
     }
@@ -526,7 +530,8 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.asignarValorID('CIFRes', element.CIF);
     this.funciones.asignarValorID('razonRes', element.razon_social);
     this.funciones.asignarValorID('telRes', String(element.telefono));
-    this.funciones.asignarValorID('valoracionRes', String(element.valoracion));
+    this.funciones.asignarValorID('valoracionRes', String(this.peticionGetHttpValoracionRes()));
+    //this.funciones.asignarValorID('valoracionRes', String(element.valoracion));
     this.funciones.ocultarBtn("cont_confirm_add", true);
     this.funciones.ocultarBtn("cont_confirm_udt", true);
     this.funciones.ocultarBtn("add_res", false);
@@ -908,13 +913,13 @@ export class GestionRestaurantesComponent implements OnInit {
     this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
 
     if (element.estado == 0) {
-      this.funciones.asignarValorID('estadoPed',"En preparación");
+      this.funciones.asignarValorID('estadoPed', "En preparación");
     } else if (element.estado == 1) {
-      this.funciones.asignarValorID('estadoPed',"En reparto");
+      this.funciones.asignarValorID('estadoPed', "En reparto");
     } else if (element.estado == 2) {
-      this.funciones.asignarValorID('estadoPed',"Entregado");
+      this.funciones.asignarValorID('estadoPed', "Entregado");
     } else {
-      this.funciones.asignarValorID('estadoPed',"Desconocido");
+      this.funciones.asignarValorID('estadoPed', "Desconocido");
     }
 
     this.funciones.asignarValorID('riderPed', element.rider);
@@ -989,4 +994,45 @@ export class GestionRestaurantesComponent implements OnInit {
   cerrarVentanaValoracionesRes() {
     this.funciones.ocultarBtn('contenedor_valoracionesRes', true);
   }
+
+  peticionGetHttpValoracionRes(): Number {
+    if (this.restauranteSelect !== "") {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const body = {
+        "restaurante": this.restauranteSelect,
+        "correoAcceso": window.sessionStorage.getItem('correo'),
+        "passwordAcceso": window.sessionStorage.getItem('password')
+      };
+
+      const url = this.URL + 'pedido/consultarValoracionRestauranteMedia';
+      this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+        next: data => {
+          console.log("DATOS:")
+          console.log(data);
+
+          if (data.includes("El restaurante no tiene valoraciones")) {
+            //alert(window.sessionStorage.getItem('rol'));
+            return 0;
+          } else {
+            return Number(data).toFixed(1);
+          }
+        }, error: error => {
+          //alert("Ha ocurrido un error al cargar la valoración del restaurante");
+          console.log("ERROR:");
+          console.log(error.message);
+          return 0
+        }
+      });
+
+
+    } else {
+      alert("Selecciona un restaurante");
+
+    }
+    return 0
+  }
+
+
 }

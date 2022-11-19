@@ -208,6 +208,18 @@ label{
     height: 450px;
     border: 3px solid #757575;
     padding: 24px 8px 8px 8px;
+    
+    overflow-y: scroll;
+}
+
+.contenedor_lista::-webkit-scrollbar {
+    border-radius: 2px;
+	width: 6px;
+	background-color: #42424270;
+}
+
+.contenedor_lista::-webkit-scrollbar-thumb{
+    background-color: #f5f5f5;
 }
 
 
@@ -218,6 +230,8 @@ label{
     margin-bottom: 4px;
     padding: 6px;
     font-size: 1rem;
+    overflow: hidden;
+    line-height: 22px;
 }
 
 .contenedor_lista ul li:hover{
