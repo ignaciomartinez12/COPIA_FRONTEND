@@ -4,7 +4,7 @@ export class Url {
     url2 : string;
 
     constructor(){
-        this.url2 = "http://localhost:8082/";
-        this.url = "https://ticomobackendgit.herokuapp.com/";
+        this.url = "http://localhost:8082/";
+        this.url2 = "https://ticomobackendgit.herokuapp.com/";
     }
 }

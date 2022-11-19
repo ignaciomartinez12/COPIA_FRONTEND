@@ -9,6 +9,8 @@ import { FuncionesService } from 'src/app/services/funcionesServices';
 import { Plato } from 'src/app/Entities/plato';
 import * as fs from 'fs';
 import { Pedido } from 'src/app/Entities/pedido';
+import { LineaPlato } from 'src/app/Entities/lineaPlato';
+import { Valoracion } from 'src/app/Entities/valoracion';
 
 
 @Component({
@@ -28,8 +30,9 @@ export class GestionRestaurantesComponent implements OnInit {
   public platoFoto: string;
 
   //pedidos restaurantes
-  pedidoSel : Pedido;;
-  listaPlatosPedidoSel: Plato[] = [];
+  pedidoSel: Pedido;;
+  listaPlatosPedidoSel: LineaPlato[] = [];
+  pedidoSelTotal: string = "";
 
   //restaurantes
   avisoNombre: string = "";
@@ -43,12 +46,16 @@ export class GestionRestaurantesComponent implements OnInit {
   funciones: FuncionesService;
   listaRestaurantes: Restaurante[] = [];
   listaPedidosRes: Pedido[] = [];
+  facturacion: string = "";
   //platos
   avisoNombreP: string = "";
   avisoPrecioP: string = "";
   avisoDescP: string = "";
   avisoFotoP: string = "";
   listaPlatos: Plato[] = [];
+
+  //valoraciones
+  listaValoracionesRes: Valoracion[] = [];
 
   constructor(private router: Router, private http: HttpClient, private sanitizer: DomSanitizer) {
     this.funciones = new FuncionesService();
@@ -88,9 +95,12 @@ export class GestionRestaurantesComponent implements OnInit {
     this.avisoCategoria = this.funciones.comprobarVacio(categoriaCampo?.value);
     if (this.avisoCategoria !== "") { errorCampo = true; }
 
+
     if (!this.funciones.validarEmail(correoCampo?.value)) {
+      this.avisoEmail = "Formato incorrecto"
       errorCampo = true;
     }
+
 
     if (this.funciones.esNumero(telefonoCampo?.value)) {
       this.avisoTelefono = "";
@@ -98,7 +108,7 @@ export class GestionRestaurantesComponent implements OnInit {
       this.avisoTelefono = "Formato incorrecto";
       errorCampo = true;
     }
-
+    
     if (!errorCampo) {
       this.peticionHttpCrear(nombreCampo?.value, categoriaCampo?.value,
         razon_socialCampo?.value, 0, direccionCampo?.value, correoCampo?.value,
@@ -247,7 +257,7 @@ export class GestionRestaurantesComponent implements OnInit {
           var listaResJSON = data.split(";");
           for (let i = 0; i < listaResJSON.length; i++) {
             //console.log(listaResJSON[i]);
-            this.listaRestaurantes.push(new Restaurante(listaResJSON[i],i))
+            this.listaRestaurantes.push(new Restaurante(listaResJSON[i], i))
             console.log(this.listaRestaurantes[i]);
           }
         }
@@ -356,13 +366,111 @@ export class GestionRestaurantesComponent implements OnInit {
     });
   }
 
-  mostrar_pedidos(){
-    this.ocultarTodo()
-    this.funciones.ocultarBtn("pedidos_v", false);
+  peticionHttpGetPedidos() {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password'),
+      "restaurante": this.restauranteSelect
+    };
 
-    this.funciones.disabledID('add_res', false);
-    this.funciones.disabledID('update_res', false);
-    this.funciones.disabledID('delete_res', false);
+    const url = this.URL + 'pedido/consultarPedidosRes/' + this.restauranteSelect;
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaPedidosRes = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if (data.includes("No hay pedidos")) {
+          alert(data);
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("No existe ese restaurante")) {
+          alert(data);
+        } else {
+          var listaPedJSON = data.split(";;;");
+          for (let i = 0; i < listaPedJSON.length; i++) {
+            //console.log(listaResJSON[i]);
+            let pedido = new Pedido(0, listaPedJSON[i], i);
+            this.listaPedidosRes.push(pedido);
+            console.log(this.listaPedidosRes[i]);
+
+          }
+        };
+
+      }, error: error => {
+        alert("Ha ocurrido un error al obtener los pedidos");
+      }
+    });
+  }
+
+  peticionHttpGetFacturacion(fechaInicio: string, fechaFin: string) {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password'),
+      "restaurante": this.restauranteSelect,
+      "fechaInicio": fechaInicio,
+      "fechaFinal": fechaFin
+    };
+
+    const url = this.URL + 'pedido/consultarFacturacion';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaPedidosRes = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if (data.includes("El restaurante no tiene pedidos")) {
+          alert(data);
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("No hay pedidos entre esas fechas")) {
+          alert(data);
+        } else {
+
+          this.facturacion = Number(data).toFixed(2);
+          console.log(this.facturacion);
+
+        };
+
+      }, error: error => {
+        //alert("Ha ocurrido un error al obtener la facturacion");
+        alert(error.message);
+      }
+    });
+  }
+
+  // consultarFact() {
+  //   var fechaInicio = document.getElementById("fechaIni") as HTMLInputElement;
+  //   var fechaFin = document.getElementById("fechaFin") as HTMLInputElement;
+
+  //   if (this.funciones.esFechaValida(fechaInicio?.value) && this.funciones.esFechaValida(fechaFin?.value)) {
+
+  //     this.peticionHttpGetFacturacion(fechaInicio?.value, fechaFin?.value);
+
+  //   } else {
+  //     alert("Ingrese una fecha valida con el formato aaaa-mm-dd");
+  //   }
+  // }
+
+  mostrar_pedidos() {
+    if (this.restauranteSelect !== "") {
+      this.ocultarTodo()
+      this.funciones.ocultarBtn("pedidos_v", false);
+      this.peticionHttpGetPedidos();
+
+      this.funciones.disabledID('add_res', true);
+      this.funciones.disabledID('update_res', true);
+      this.funciones.disabledID('delete_res', true);
+    } else {
+      alert("Selecciona un restaurante");
+    }
+
   }
 
   mostrar_datos() {
@@ -390,8 +498,17 @@ export class GestionRestaurantesComponent implements OnInit {
   }
 
   mostrar_facturas() {
-    this.ocultarTodo()
-    this.funciones.ocultarBtn("facturas_v", false);
+    if (this.restauranteSelect !== "") {
+      this.ocultarTodo()
+      this.funciones.ocultarBtn("facturas_v", false);
+
+      this.funciones.disabledID('add_res', true);
+      this.funciones.disabledID('update_res', true);
+      this.funciones.disabledID('delete_res', true);
+    } else {
+      alert("Selecciona un restaurante");
+    }
+
   }
 
   ocultarTodo() {
@@ -416,7 +533,8 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.asignarValorID('CIFRes', element.CIF);
     this.funciones.asignarValorID('razonRes', element.razon_social);
     this.funciones.asignarValorID('telRes', String(element.telefono));
-    this.funciones.asignarValorID('valoracionRes', String(element.valoracion));
+    this.peticionGetHttpValoracionResMedia();
+
     this.funciones.ocultarBtn("cont_confirm_add", true);
     this.funciones.ocultarBtn("cont_confirm_udt", true);
     this.funciones.ocultarBtn("add_res", false);
@@ -753,7 +871,7 @@ export class GestionRestaurantesComponent implements OnInit {
             var listaCartaJSON = data.split(";;");
             for (let i = 0; i < listaCartaJSON.length; i++) {
               //console.log(listaResJSON[i]);
-              this.listaPlatos.push(new Plato(listaCartaJSON[i],i))
+              this.listaPlatos.push(new Plato(listaCartaJSON[i], i))
               console.log(this.listaPlatos[i]);
             }
           }
@@ -787,6 +905,27 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn("update_plato", false);
     this.funciones.ocultarBtn("delete_plato", false);
     this.platoSelect = element.nombreP;
+  }
+
+  onSelectPed(element: Pedido) {
+    this.pedidoSel = element;
+    this.funciones.apagarElementosLista('listaPedidos');
+    this.funciones.resaltarElementoLista('listaPedidos', element.pos);
+
+    //this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, this.restauranteSelect);
+    //this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
+
+    if (element.estado == 0) {
+      this.funciones.asignarValorID('estadoPed', "En preparación");
+    } else if (element.estado == 1) {
+      this.funciones.asignarValorID('estadoPed', "En reparto");
+    } else if (element.estado == 2) {
+      this.funciones.asignarValorID('estadoPed', "Entregado");
+    } else {
+      this.funciones.asignarValorID('estadoPed', "Desconocido");
+    }
+
+    this.funciones.asignarValorID('riderPed', element.rider);
   }
 
   disabledTodosP(valor: boolean) {
@@ -847,8 +986,20 @@ export class GestionRestaurantesComponent implements OnInit {
     reader.readAsBinaryString(file);
   }
 
-  //TENGO QUE REVISAR ESTO MAÑANA
-  peticionGetHttpValoracionRes(): void {
+  mostrarValoracionesRes() {
+    if (this.restauranteSelect != "") {
+      this.funciones.ocultarBtn('contenedor_valoracionesRes', false);
+      this.peticionHttpGetValoracionesDetalladas();
+    } else {
+      alert("Selecciona un restaurante");
+    }
+  }
+
+  cerrarVentanaValoracionesRes() {
+    this.funciones.ocultarBtn('contenedor_valoracionesRes', true);
+  }
+
+  peticionGetHttpValoracionResMedia(): void {
     if (this.restauranteSelect !== "") {
       const headers = {
         'Content-Type': 'application/json'
@@ -859,23 +1010,66 @@ export class GestionRestaurantesComponent implements OnInit {
         "passwordAcceso": window.sessionStorage.getItem('password')
       };
 
-      const url = this.URL + 'pedido/consultarValoracionRestaurante';
-      this.http.get(url, { headers, responseType: 'text' }).subscribe({
+      const url = this.URL + 'pedido/consultarValoracionRestauranteMedia';
+      this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
         next: data => {
+          console.log("DATOS:")
           console.log(data);
 
-          if (data.length == 0) {
-            //alert(window.sessionStorage.getItem('rol'));
-            alert("No hay valoracion para este restaurante");
+          if (data.includes("El restaurante no tiene valoraciones")) {
+            this.funciones.asignarValorID('valoracionRes', "");
+            alert(data); 
           } else {
-            //valoracionRes = 
+            this.funciones.asignarValorID('valoracionRes', String(Number(data).toFixed(1))); 
           }
         }, error: error => {
           alert("Ha ocurrido un error al cargar la valoración del restaurante");
+          console.log("ERROR:");
+          console.log(error.message);
         }
       });
     } else {
       alert("Selecciona un restaurante");
     }
+  }
+
+  peticionHttpGetValoracionesDetalladas() {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "restaurante": this.restauranteSelect,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'pedido/consultarValoracionRestaurante';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaValoracionesRes = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if (data.includes(this.restauranteSelect+" no tiene valoraciones")) {
+          this.funciones.ocultarBtn('contenedor_valoracionesRes', true);
+          alert(data+" detalladas");
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("No existe ese restaurante")) {
+          alert(data);
+        } else {
+          var listaValJSON = data.split(";;;");
+          for (let i = 0; i < listaValJSON.length; i++) {
+            let valoracion = new Valoracion(listaValJSON[i], i);
+            this.listaValoracionesRes.push(valoracion);
+            console.log(this.listaValoracionesRes[i]);
+
+          }
+        };
+
+      }, error: error => {
+        alert("Ha ocurrido un error al obtener las valoraciones");
+      }
+    });
   }
 }

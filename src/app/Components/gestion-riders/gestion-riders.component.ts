@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Rider } from 'src/app/Entities/rider';
 import { Url } from 'src/app/Entities/url';
+import { Valoracion } from 'src/app/Entities/valoracion';
 import { FuncionesService } from 'src/app/services/funcionesServices';
 
 @Component({
@@ -24,10 +25,18 @@ export class GestionRidersComponent implements OnInit {
   URL: string = new Url().url;
   funciones: FuncionesService;
 
+  public ryderSelect: string;
+  public ryderSelectCorreo: string;
+
   listaRiders: Rider[] = [];
+  listaValoracionesRid: Valoracion[] = [];
 
   constructor(private router: Router, private http: HttpClient) {
     this.funciones = new FuncionesService();
+    this.ryderSelect = '';
+    this.ryderSelectCorreo = '';
+
+
   }
 
   ngOnInit(): void {
@@ -428,6 +437,9 @@ export class GestionRidersComponent implements OnInit {
     this.disabledTodos(true);
     console.log(element);
 
+    this.ryderSelect = element.nombre
+    this.ryderSelectCorreo = element.correo;
+
     this.funciones.apagarElementosLista('listaRiders');
     this.funciones.resaltarElementoLista('listaRiders', element.pos);
 
@@ -436,7 +448,8 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.asignarValorID('nifR', element.nif);
     this.funciones.asignarValorID('emailR', element.correo);
     this.funciones.asignarValorID('passwordR', element.pwd);
-    this.funciones.asignarValorID('valoracionR', String(element.valoracion));
+    this.peticionGetHttpValoracionRiderMedia()
+    //this.funciones.asignarValorID('valoracionR', String(element.valoracion));
 
     this.funciones.seleccionarRadio('cocheR', false);
     this.funciones.seleccionarRadio('motoR', false);
@@ -462,4 +475,78 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.ocultarBtn("update_rider", false);
     this.funciones.ocultarBtn("delete_rider", false);
   }
+
+  peticionGetHttpValoracionRiderMedia(): void {
+    if (this.ryderSelect !== "") {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const body = {
+        "rider": this.ryderSelectCorreo,
+        "correoAcceso": window.sessionStorage.getItem('correo'),
+        "passwordAcceso": window.sessionStorage.getItem('password')
+      };
+
+      const url = this.URL + 'pedido/consultarValoracionRiderMedia';
+      this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+        next: data => {
+          console.log("DATOS:")
+          console.log(data);
+
+          if (data.includes("El rider no tiene valoraciones")) {
+            this.funciones.asignarValorID('valoracionR', "");
+            alert(data);
+          } else {
+            this.funciones.asignarValorID('valoracionR', String(Number(data).toFixed(1))); 
+          }
+        }, error: error => {
+          alert("Ha ocurrido un error al cargar la valoración del rider");
+          console.log(error.message);
+        }
+      });
+    } else {
+      alert("Selecciona un rider"); 
+    }
+  }
+
+  peticionHttpGetValoracionesRiderDetalladas() {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      "restaurante": this.ryderSelectCorreo,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'pedido/consultarValoracionRider';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        this.listaValoracionesRid = [];
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert(data);
+          this.router.navigate(['/login']);
+
+        } else if (data.includes(this.ryderSelect+" no tiene valoraciones")) {
+          //this.funciones.ocultarBtn('contenedor_valoracionesRes', true);
+          alert(data+" detalladas");
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+          this.router.navigate(['/login']);
+        } else if (data.includes("No existe ese rider")) {
+          alert(data);
+        } else {
+          var listaValJSON = data.split(";;;");
+          for (let i = 0; i < listaValJSON.length; i++) {
+            let valoracion = new Valoracion(listaValJSON[i], i);
+            this.listaValoracionesRid.push(valoracion);
+            console.log(this.listaValoracionesRid[i]);
+
+          }
+        };
+
+      }, error: error => {
+        alert("Ha ocurrido un error al obtener las valoraciones");
+      }
+    });
+  }
+
 }
