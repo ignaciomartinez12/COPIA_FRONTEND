@@ -18,6 +18,7 @@ export class GestionAdminsComponent implements OnInit {
   avisoNIF: string = "";
   avisoCorreo: string = "";
   avisoPwd: string = "";
+  avisoPwd2: string = "";
   URL: string = new Url().url;
   funciones: FuncionesService;
 
@@ -74,6 +75,7 @@ export class GestionAdminsComponent implements OnInit {
     var nifCampo = document.getElementById("nifA") as HTMLInputElement;
     var emailCampo = document.getElementById("emailA") as HTMLInputElement;
     var pwdCampo = document.getElementById("passwordA") as HTMLInputElement;
+    var pwdCampo2 = document.getElementById("passwordA2") as HTMLInputElement;
 
     var errorCampo = false;
 
@@ -89,6 +91,8 @@ export class GestionAdminsComponent implements OnInit {
     if (this.avisoCorreo !== "") { errorCampo = true; }
     this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
     if (this.avisoPwd !== "") { errorCampo = true; }
+    this.avisoPwd2 = this.funciones.comprobarVacio(pwdCampo2?.value);
+    if (this.avisoPwd2 !== "") { errorCampo = true; }
 
     if (!this.funciones.validarEmail(emailCampo?.value)) {
       alert("Error formato correo");
@@ -97,7 +101,7 @@ export class GestionAdminsComponent implements OnInit {
 
     if (!errorCampo) {
       this.peticionHttpCrear(nombreCampo?.value, apellidosCampo?.value,
-        zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value);
+        zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value, pwdCampo2?.value);
     }
   }
 
@@ -108,6 +112,7 @@ export class GestionAdminsComponent implements OnInit {
     var nifCampo = document.getElementById("nifA") as HTMLInputElement;
     var emailCampo = document.getElementById("emailA") as HTMLInputElement;
     var pwdCampo = document.getElementById("passwordA") as HTMLInputElement;
+    var pwdCampo2 = document.getElementById("passwordA2") as HTMLInputElement;
 
     var errorCampo = false;
 
@@ -123,6 +128,8 @@ export class GestionAdminsComponent implements OnInit {
     if (this.avisoCorreo !== "") { errorCampo = true; }
     this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
     if (this.avisoPwd !== "") { errorCampo = true; }
+    this.avisoPwd2 = this.funciones.comprobarVacio(pwdCampo2?.value);
+    if (this.avisoPwd2 !== "") { errorCampo = true; }
 
     if (!this.funciones.validarEmail(emailCampo?.value)) {
       errorCampo = true;
@@ -130,7 +137,7 @@ export class GestionAdminsComponent implements OnInit {
 
     if (!errorCampo) {
       this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value,
-        zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value);
+        zonaCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value, pwdCampo2?.value);
     }
   }
 
@@ -214,12 +221,12 @@ export class GestionAdminsComponent implements OnInit {
   }
 
   peticionHttpCrear(nombre: string, apellidos: string, zona: string,
-    nif: string, correo: string, pwd: string): void {
+    nif: string, correo: string, pwd: string, pwd2: string): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "correo": correo,
       "pwd1": pwd,
-      "pwd2": pwd,
+      "pwd2": pwd2,
       "apellidos": apellidos,
       "nif": nif,
       "nombre": nombre,
@@ -256,12 +263,12 @@ export class GestionAdminsComponent implements OnInit {
   }
 
   peticionHttpActualizar(nombre: string, apellidos: string, zona: string,
-    nif: string, correo: string, pwd: string): void {
+    nif: string, correo: string, pwd: string, pwd2: string): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "correo": correo,
       "pwd1": pwd,
-      "pwd2": pwd,
+      "pwd2": pwd2,
       "apellidos": apellidos,
       "nif": nif,
       "nombre": nombre,
@@ -270,6 +277,8 @@ export class GestionAdminsComponent implements OnInit {
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
+    console.log(body);
+    
 
     let url = this.URL + 'user/actualizarUsuario/';
     url += correo;
@@ -279,8 +288,10 @@ export class GestionAdminsComponent implements OnInit {
         if (data.includes("No tienes acceso a este servicio")) {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
-        }else if (data.includes("No existe ningun usuario en la base de datos")) {
+        } else if (data.includes("No existe ningun usuario en la base de datos")) {
           alert("No existe ese usuario en la base de datos");
+        } else if (data.includes("contraseña")) {
+          alert(data);
         } else {
           alert("Administrador actualizado exitosamente");
           this.dejarVacio();
@@ -308,6 +319,7 @@ export class GestionAdminsComponent implements OnInit {
     this.funciones.asignarValorID("nifA", "");
     this.funciones.asignarValorID("emailA", "");
     this.funciones.asignarValorID("passwordA", "");
+    this.funciones.asignarValorID("passwordA2", "");
   }
 
   vaciarAvisos() {
@@ -317,6 +329,7 @@ export class GestionAdminsComponent implements OnInit {
     this.avisoZona = "";
     this.avisoCorreo = "";
     this.avisoPwd = "";
+    this.avisoPwd2 = "";
   }
 
   logout() {
@@ -333,6 +346,7 @@ export class GestionAdminsComponent implements OnInit {
     this.funciones.disabledID('nifA', valor);
     this.funciones.disabledID('emailA', valor);
     this.funciones.disabledID('passwordA', valor);
+    this.funciones.disabledID('passwordA2', valor);
   }
 
   onSelect(element: Admin) {
@@ -348,6 +362,7 @@ export class GestionAdminsComponent implements OnInit {
     this.funciones.asignarValorID('zonaA', element.zona);
     this.funciones.asignarValorID('emailA', element.correo);
     this.funciones.asignarValorID('passwordA', element.pwd);
+    this.funciones.asignarValorID('passwordA2', element.pwd);
 
     this.funciones.ocultarBtn("cont_confirm_add_a", true);
     this.funciones.ocultarBtn("cont_confirm_udt_a", true);

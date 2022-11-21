@@ -278,6 +278,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('btn_datos', false); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_carta', false); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_pedidos', false); //ocultar btns_carta_datos
 
     this.funciones.ocultarBtn('cont_confirm_add', true); //ocultar btns_aceptar_cancelar
     this.funciones.apagarElementosLista('listaRestaurantes');
@@ -291,6 +292,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('btn_datos', false); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_carta', false); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_pedidos', false); //ocultar btns_carta_datos
 
     this.funciones.ocultarBtn('cont_confirm_udt', true); //ocultar btns_aceptar_cancelar
     this.funciones.apagarElementosLista('listaRestaurantes');
@@ -306,6 +308,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('btn_datos', true); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_carta', true); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_facturas', true); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_pedidos', true); //ocultar btns_carta_datos
 
     this.funciones.ocultarBtn('cont_confirm_add', false); //mostrar btns_aceptar_cancelar    
   }
@@ -321,6 +324,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('btn_datos', true); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_carta', true); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_facturas', true); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_pedidos', true); //ocultar btns_carta_datos
 
     this.funciones.ocultarBtn('cont_confirm_udt', false); //mostrar btns_aceptar_cancelar
   }
@@ -559,6 +563,7 @@ export class GestionRestaurantesComponent implements OnInit {
     this.funciones.ocultarBtn('btn_datos', false); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_carta', false); //ocultar btns_carta_datos
     this.funciones.ocultarBtn('btn_facturas', false); //ocultar btns_carta_datos
+    this.funciones.ocultarBtn('btn_pedidos', false); //ocultar btns_carta_datos
     this.mostrar_datos();
   }
 
