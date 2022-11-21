@@ -59,8 +59,8 @@ export class GestionPedidosComponent implements OnInit {
     this.funciones.apagarElementosLista('listaPedidosPreparacion');
     this.funciones.resaltarElementoLista('listaPedidosRepartir', element.pos);
 
-    this.listaPlatosPedidoSel = this.genPlatosPedido(element);
-    this.pedidoSelTotal = this.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
+    this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, this.restauranteSel);
+    this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
   }
 
   onSelectPedPrep(element: Pedido) {
@@ -72,28 +72,10 @@ export class GestionPedidosComponent implements OnInit {
     this.funciones.apagarElementosLista('listaPedidosPreparacion');
     this.funciones.resaltarElementoLista('listaPedidosPreparacion', element.pos);
 
-    this.listaPlatosPedidoSel = this.genPlatosPedido(element);
-    this.pedidoSelTotal = this.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
+    this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, this.restauranteSel);
+    this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
   }
 
-  calcularTotalPedido(listaPlatos: LineaPlato[]): number {
-    var total = 0;
-    for (let i = 0; i < listaPlatos.length; i++) {
-      total += (Number(listaPlatos[i].precioP) * Number(listaPlatos[i].cantidad));
-    }
-    return total;
-  }
-
-  genPlatosPedido(pedido: Pedido): LineaPlato[] {
-    var listaPlatos: LineaPlato[] = [];
-    var listaPlatosJSON = pedido.listaPlatos.split(";");
-    for (let i = 0; i < listaPlatosJSON.length; i++) {
-      var partesPlato = listaPlatosJSON[i].split(",");
-      var plato = new LineaPlato(partesPlato[0], Number(partesPlato[1]).toFixed(2), partesPlato[2], this.restauranteSel);
-      listaPlatos.push(plato);
-    }
-    return listaPlatos;
-  }
 
   ocultarTodo() {
     this.funciones.ocultarBtn('asignar_ped',true);
@@ -149,7 +131,7 @@ export class GestionPedidosComponent implements OnInit {
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         if (data.includes("No tienes acceso a este servicio")) {
-          alert("No tienes acceso a este servicio - ap");
+          alert("No tienes acceso a este servicio");
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
           this.router.navigate(['/login']);
@@ -157,6 +139,8 @@ export class GestionPedidosComponent implements OnInit {
           alert(data);
         } else if (data.includes("El pedido ya ha sido asignado")) {
           alert(data);
+        } else if (data.includes("No te puedes asignar a mas pedidos")) {
+          alert("No te puedes asignar a más pedidos");
         } else if (data.includes("El pedido ya ha sido entregado")) {
           alert(data);
         } else {
@@ -184,7 +168,7 @@ export class GestionPedidosComponent implements OnInit {
     this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
       next: data => {
         if (data.includes("No tienes acceso a este servicio")) {
-          alert("No tienes acceso a este servicio - ep");
+          alert("No tienes acceso a este servicio");
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
           this.router.navigate(['/login']);
@@ -225,7 +209,7 @@ export class GestionPedidosComponent implements OnInit {
           alert("Este restaurante no tiene pedidos en preparación");
         } else {
           if (data.includes("No tienes acceso a este servicio")) {
-            alert("No tienes acceso a este servicio - cpp");
+            alert("No tienes acceso a este servicio");
             this.router.navigate(['/login']);
           } else if (data.includes("No hay pedidos")) {
             alert("Este restaurant no tiene pedidos");
@@ -268,7 +252,7 @@ export class GestionPedidosComponent implements OnInit {
         this.listaPedidosRepartir = [];
 
         if (data.includes("No tienes acceso a este servicio")) {
-          alert("No tienes acceso a este servicio - cpe");
+          alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
         } else if (data.includes("No hay pedidos")) {
           alert(data);
@@ -304,6 +288,6 @@ export class GestionPedidosComponent implements OnInit {
     this.ocultarTodo();
     this.peticionGetHttp();
     this.peticionGetPedidosEnHttp();
-    this.pedidoSel= new Pedido(0,"",0);
+    this.pedidoSel= new Pedido(1,"",0);
   }
 }

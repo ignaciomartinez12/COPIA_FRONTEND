@@ -15,8 +15,8 @@ export class Restaurante {
         this.nombre = jsonObject.nombre;
         this.categoria = jsonObject.categoria;
         this.razon_social = jsonObject.razonSocial;
-        this.valoracion = Number(jsonObject.valoracion).toFixed(1);
-        //this.valoracion = 0.0;
+        //this.valoracion = Number(jsonObject.valoracion).toFixed(1);
+        this.valoracion = '0.0';
         this.direccion = jsonObject.direccion;
         this.correo = jsonObject.email;
         this.telefono = parseInt(jsonObject.telefono);

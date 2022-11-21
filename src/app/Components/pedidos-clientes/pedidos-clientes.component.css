@@ -22,6 +22,7 @@ button {
     height: 450px;
     padding: 24px 8px 8px 8px;
     border-right: #757575;
+    overflow-y: scroll;
 }
 
 .contenedor_listaRest ul li {
@@ -61,7 +62,7 @@ button {
     width: 70%;
     height: 350px;
     padding: 24px 8px 8px 8px;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 .contenedor_listaCarta2 ul li {
@@ -125,19 +126,47 @@ button {
     width: 60px;
 }
 
-#listaCartaPedCli {
-    flex-wrap: wrap;
-    display: flex;
+.par_btn2 {
+    width: 90px;
     justify-content: space-between;
 }
+
+#listaCartaPedCli, #listaPlatosPedCli {
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-around;
+}
+
+.contenedor_listaCarta::-webkit-scrollbar,
+.contenedor_listaCarta2::-webkit-scrollbar,
+#cont_lista_pedPend::-webkit-scrollbar,
+.contenedor_listaRest::-webkit-scrollbar,
+.contenedor_lista_pedidos::-webkit-scrollbar,
+.contenedor_valorar::-webkit-scrollbar {
+    border-radius: 2px;
+	width: 6px;
+	background-color: #42424270;
+}
+
+.contenedor_listaCarta::-webkit-scrollbar-thumb, 
+.contenedor_listaCarta2::-webkit-scrollbar-thumb,
+#cont_lista_pedPend::-webkit-scrollbar-thumb,
+.contenedor_listaRest::-webkit-scrollbar-thumb,
+.contenedor_lista_pedidos::-webkit-scrollbar-thumb,
+.contenedor_valorar::-webkit-scrollbar-thumb {
+    background-color: #f5f5f5;
+}
+
+
 
 .contenedor_lista_pedidos {
     /*background: green;*/
     width: 33%;
-    height: 350px;
+    height: 340px;
     border: 3px solid #757575;
     padding: 24px 8px 8px 8px;
     margin: 0 2px;
+    overflow-y: scroll;
 }
 
 
@@ -157,7 +186,7 @@ button {
 .contenedor_recibo {
     background: #fae8d1;
     width: 100%;
-    height: 300px;
+    height: 345px;
     border: 3px solid #fff;
 }
 
@@ -179,7 +208,7 @@ button {
 .platosRecibo {
     /*background: yellow;*/
     padding: 0 16px 8px 16px;
-    height: 130px;
+    height: 175px;
 }
 
 .importeRecibo {
@@ -191,15 +220,8 @@ hr {
     margin: 4px 0;
 }
 
-.contenedor_pedir {
-    width: 100%;
-}
-
-#contenedor_carrito{
-    width: 100%;
-}
-
-#contenedor_pedidos{
+.contenedor_pedir, #contenedor_carrito, 
+#contenedor_pedidos, #contenedor_usuario{
     width: 100%;
 }
 
@@ -223,9 +245,11 @@ hr {
 }
 
 #btn_cancelarPed{
+    position: absolute;
+    top: 60px;
+    right: 110px;
     width: 150px;
     height: 40px;
-    margin: 4px auto 0 auto;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -343,61 +367,15 @@ hr {
     font-size: 5rem;
 }
 
-.contenedor_valorar_pedidos{
-    /*height: 500px;*/
-    width: 350px;
-    background: white;
-    
-    border: 3px solid #757575;
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-}
-
 .contenedor_estrellas{
     margin: 0 auto 8px auto;
     width: 220px;
     /*background: red;*/
 }
 
-.cabecera_valorar{
-    background: #757575;
-    justify-content: space-between;
-    padding: 4px 16px;
-    color: white;
-}
-.cabecera_valorar h1{
-    width: 280px;
-    text-align: center;
-}
-
-.contenedor_valorar_pedidos h2{
-    font-size: 1rem;
-    color: #fc8a15;
-    font-weight: bold;
-}
-
-.contenedor_valorar_pedidos p{
-    font-size: 1rem;
-    height: 30px;
-    margin-bottom: 10px;
-}
-
-.contenedor_valorar_pedidos textarea{
-    font-size: 0.9rem;
-    width: 100%;
-    resize:none;
-    height: 50px;
-}
-
-.contenedor_valorar{
-    padding: 8px 16px;
-}
-
-#btn_enviarValRes, #btn_enviarValRid{
+#btn_enviarValRes, #btn_enviarValRid, #btn_udp_datosCli{
     width: 150px;
     height: 40px;
-    margin: 4px auto 0 auto;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -414,16 +392,46 @@ hr {
     display: flex;
 }
 
-.cont_valoracion{
-    position: absolute;
-}
-
-#cont_platosRes::-webkit-scrollbar {
+.btn_valoracion_list, .btn_valorar_ped{
+    background: #fc8a15;
+    color: white;
     border-radius: 2px;
-	width: 6px;
-	background-color: #42424270;
 }
 
-#cont_platosRes::-webkit-scrollbar-thumb {
-	background-color: #f5f5f5;
+#head_datosCli{
+    margin-bottom: 16px;
+}
+
+.centrado{
+    display: flex;
+    justify-content: center;
+}
+
+#cont_confirm_udt_cli{
+    width: 120px;
+}
+
+.campo_entrada_img {
+    width: 100%;
+    object-fit: contain;
+    border: 3px solid #757575;
+    font-size: 1rem;
+    background: white;
+    overflow: hidden;
+}
+
+#btn_enviarValRes, #btn_enviarValRid{
+    margin: 0 auto;
+}
+
+.contenedor_valorar{
+    height: 241px;
+    overflow-y: scroll;
+    margin: 4px;
+    background: #f5f5f5;
+}
+
+.img_estrella:hover{
+    height: 35px;
+    width: 35px;
 }

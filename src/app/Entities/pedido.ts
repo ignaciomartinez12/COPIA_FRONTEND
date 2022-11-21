@@ -3,6 +3,7 @@ export class Pedido {
     id : string;
     restaurante : string;
     listaPlatos : string;
+    listaFotos : string; 
     total : number;
     pos : number;
     rider : string;
@@ -23,6 +24,7 @@ export class Pedido {
             this.estado =  Number(jsonObject.estado);
             this.cliente = jsonObject.cliente;
             this.fecha = jsonObject.fecha;
+            this.listaFotos = '';
         }else{
             this.id = "0";
             this.restaurante = "";
@@ -33,6 +35,7 @@ export class Pedido {
             this.estado = -1;
             this.cliente = "";
             this.fecha = "";
+            this.listaFotos = '';
         }
     }
 }

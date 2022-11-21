@@ -52,14 +52,14 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="nombreR">Nombre</label>
+                                    <label class="texto_gris" for="nombreR">Nombre *</label>
                                     <label class="aviso" for="nombreR">{{ avisoNombre }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="nombreR" disabled>
                             </div>
                             <div class="campo_dato5">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="apellidosR">Apellidos</label>
+                                    <label class="texto_gris" for="apellidosR">Apellidos *</label>
                                     <label class="aviso" for="apellidosR">{{ avisoApellidos }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="apellidosR" disabled>
@@ -68,21 +68,25 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="nifR">NIF</label>
+                                    <label class="texto_gris" for="nifR">NIF *</label>
                                     <label class="aviso" for="nifR">{{ avisoNIF }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="nifR" disabled>
                             </div>
                             <div class="campo_dato5">
                                 <label class="texto_gris" for="valoracionR">Valoración</label>
-                                <input class="campo_entrada" type="number" id="valoracionR" disabled>
+                                <div class="contenedor_horizontal">
+                                    <input class="campo_entrada" type="text" id="valoracionR" disabled>
+                                    <button id="btn_vals" (click)="mostrarValoracionesRid()">
+                                        Consultar valoraciones</button>
+                                </div>
                             </div>
                         </div>
 
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="emailR">Correo</label>
+                                    <label class="texto_gris" for="emailR">Correo *</label>
                                     <label class="aviso" for="emailR">{{ avisoCorreo }}</label>
                                 </div>
                                 <input class="campo_entrada" type="email" id="emailR" pattern=".+@globex\.com" size="30"
@@ -90,7 +94,7 @@
                             </div>
                             <div class="campo_dato5">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="passwordR">Contraseña</label>
+                                    <label class="texto_gris" for="passwordR">Contraseña *</label>
                                     <label class="aviso" for="passwordR">{{ avisoPwd }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="passwordR" disabled>
@@ -104,7 +108,7 @@
                         </div>
                         <div class="linea_campo campo_dato3">
                             <div class="contenedor_label contenedor_horizontal">
-                                <label class="texto_gris" for="cocheR">Tipo de vehículo</label>
+                                <label class="texto_gris" for="cocheR">Tipo de vehículo *</label>
                                 <label class="aviso" for="cocheR">{{ avisoTipoVeh }}</label>
                             </div>
                             <div class="campo_radio campo_entrada">
@@ -135,6 +139,42 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- valoraciones restaurante -->
+    <div id="contenedor_valoracionesRid" class="cont_valoracion oculto">
+        <div class="contenedor_valorar_pedidos">
+            <div class="contenedor_horizontal cabecera_valorar">
+                <h1>Valoraciones</h1>
+                <button (click)="cerrarVentanaValoracionesRid()">
+                    <img id="cerrarValoraciones" class="img_icon"
+                        src="../../../assets/ui_images/close_icon.svg" /></button>
+            </div>
+            <div class="contenedor_valorar">
+                <h2>Rider</h2>
+                <p>{{ riderSelected }}</p>
+                <h2>Valoraciones</h2>
+                <div id="contenedor_valsRid" class="contenedor_vals">
+                    <ul>
+                        <li *ngFor="let element of listaValoracionesRid">
+                            <div class="contenedor_val">
+                                <div class="contenedor_horizontal">
+                                    <div class="cont_correo">
+                                        <h4 class="correo_val">{{element.autor}}</h4>
+                                    </div>
+                                    <div class="contenedor_pts contenedor_horizontal">
+                                        <button>
+                                            <img class="img_estrella2"
+                                                src="../../../assets/ui_images/estrella-rellena.png" /></button>
+                                        <h4 class="correo_val"> {{element.valor}}</h4>
+                                    </div>
+                                </div>
+                                <textarea class="campo_entrada_img" disabled>{{element.comentario}}</textarea>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

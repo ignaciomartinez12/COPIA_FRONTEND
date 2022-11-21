@@ -18,6 +18,7 @@ export class GestionClientesComponent implements OnInit {
   avisoCorreo: string = "";
   avisoPwd: string = "";
   avisoDireccion: string = "";
+  avisoCuenta: string = "";
   URL: string = new Url().url;
   funciones: FuncionesService;
 
@@ -74,6 +75,7 @@ export class GestionClientesComponent implements OnInit {
     var emailCampo = document.getElementById("emailC") as HTMLInputElement;
     var pwdCampo = document.getElementById("passwordC") as HTMLInputElement;
     var direccionCampo = document.getElementById("direccionC") as HTMLInputElement;
+    var activoCampo = document.getElementById("activaC") as HTMLInputElement;
 
     var errorCampo = false;
 
@@ -92,6 +94,8 @@ export class GestionClientesComponent implements OnInit {
     this.avisoDireccion = this.funciones.comprobarVacio(direccionCampo?.value);
     if (this.avisoDireccion !== "") { errorCampo = true; }
 
+
+
     if (!this.funciones.validarEmail(emailCampo?.value)) {
       errorCampo = true;
     }
@@ -105,7 +109,7 @@ export class GestionClientesComponent implements OnInit {
 
     if (!errorCampo) {
       this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value,
-        telCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value, direccionCampo?.value);
+        telCampo?.value, nifCampo?.value, emailCampo?.value, pwdCampo?.value, direccionCampo?.value,activoCampo?.checked);
     }
   }
 
@@ -154,6 +158,8 @@ export class GestionClientesComponent implements OnInit {
           this.router.navigate(['/login']);
         } else if (data.includes("No existe ningun usuario en la base de datos")) {
           alert("No existe ese cliente en la base de datos");
+        } else if (data.includes("El cliente tiene pedidos pendientes")) {
+          alert(data);
         } else {
           alert("Cliente eliminado exitosamente");
           this.dejarVacio();
@@ -175,10 +181,12 @@ export class GestionClientesComponent implements OnInit {
     this.funciones.disabledID('emailC', valor);
     this.funciones.disabledID('passwordC', valor);
     this.funciones.disabledID('direccionC', valor);
+    this.funciones.disabledID('activaC',valor)
+    //this.funciones.disabledID('', valor);
   }
 
   peticionHttpActualizar(nombre: string, apellidos: string, telefono: string,
-    nif: string, correo: string, pwd: string, direccion: string): void {
+    nif: string, correo: string, pwd: string, direccion: string, activo:boolean): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "correo": correo,
@@ -190,6 +198,7 @@ export class GestionClientesComponent implements OnInit {
       "telefono": telefono,
       "direccion": direccion,
       "rol": "client",
+      "activo": String(activo),
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
@@ -206,6 +215,8 @@ export class GestionClientesComponent implements OnInit {
           this.router.navigate(['/login']);
         } else if (data.includes("No existe ningun usuario en la base de datos")) {
           alert("No existe ese cliente en la base de datos");
+        } else if (data.includes("contraseña")) {
+          alert(data);
         } else {
           alert("Cliente actualizado exitosamente");
           this.dejarVacio();
@@ -233,6 +244,7 @@ export class GestionClientesComponent implements OnInit {
     this.funciones.asignarValorID("emailC", "");
     this.funciones.asignarValorID("passwordC", "");
     this.funciones.asignarValorID("direccionC", "");
+    this.funciones.asignarValorID("activaC", "");
   }
 
   vaciarAvisos() {
@@ -243,6 +255,7 @@ export class GestionClientesComponent implements OnInit {
     this.avisoCorreo = "";
     this.avisoPwd = "";
     this.avisoDireccion = "";
+    this.avisoCuenta = "";
   }
 
   logout() {
@@ -266,6 +279,7 @@ export class GestionClientesComponent implements OnInit {
     this.funciones.asignarValorID('emailC', element.correo);
     this.funciones.asignarValorID('passwordC', element.pwd);
     this.funciones.asignarValorID('direccionC', element.direccion);
+    this.funciones.seleccionarRadio('activaC', element.activo);
 
     this.funciones.ocultarBtn("cont_confirm_udt_c", true);
     this.funciones.ocultarBtn("update_clientes", false);

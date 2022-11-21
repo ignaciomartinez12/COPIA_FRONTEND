@@ -22,12 +22,12 @@ export class GestionRidersComponent implements OnInit {
   avisoTipoVeh: string = "";
   avisoMatricula: string = "";
   avisoCarnet: string = "";
+  avisoActivo: string = "";
   URL: string = new Url().url;
   funciones: FuncionesService;
 
-  public ryderSelect: string;
-  public ryderSelectCorreo: string;
-
+  riderSelected: string = "";
+  riderSelectCorreo: string = "";
   listaRiders: Rider[] = [];
   listaValoracionesRid: Valoracion[] = [];
 
@@ -95,6 +95,8 @@ export class GestionRidersComponent implements OnInit {
     var matriculaCampo = document.getElementById("matriculaR") as HTMLInputElement;
     var carnetCampo = document.getElementById("carnetR") as HTMLInputElement;
 
+    var activoCampo = document.getElementById("activoR") as HTMLInputElement;
+
     this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
     if (this.avisoNombre !== "") { errorCampo = true; }
     this.avisoApellidos = this.funciones.comprobarVacio(apellidosCampo?.value);
@@ -142,12 +144,12 @@ export class GestionRidersComponent implements OnInit {
 
     if (!errorCampo) {
       this.peticionHttpCrear(nombreCampo?.value, apellidosCampo?.value, nifCampo?.value,
-        emailCampo?.value, pwdCampo?.value, tipoVeh, matriculaCampo?.value, carnetCampo?.checked);
+        emailCampo?.value, pwdCampo?.value, tipoVeh, matriculaCampo?.value, carnetCampo?.checked, activoCampo?.checked);
     }
   }
 
   peticionHttpCrear(nombre: string, apellidos: string, nif: string, correo: string,
-    pwd: string, tipoVeh: number, matricula: string, carnet: boolean): void {
+    pwd: string, tipoVeh: number, matricula: string, carnet: boolean, activo: boolean): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombre,
@@ -160,6 +162,7 @@ export class GestionRidersComponent implements OnInit {
       "tipoVehiculo": String(tipoVeh),
       "matricula": matricula,
       "carnet": String(carnet),
+      "activo": String(activo),
       "rol": "rider",
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
@@ -194,7 +197,7 @@ export class GestionRidersComponent implements OnInit {
   dejarVacio() {
     this.vaciarAvisos();
     this.vaciarCampos();
-    
+
   }
 
   vaciarCampos() {
@@ -206,6 +209,7 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.asignarValorID("passwordR", "");
     this.funciones.asignarValorID("matriculaR", "");
     this.funciones.seleccionarRadio("carnetR", false);
+    this.funciones.seleccionarRadio("activoR", true);
   }
 
   vaciarAvisos() {
@@ -217,6 +221,7 @@ export class GestionRidersComponent implements OnInit {
     this.avisoTipoVeh = "";
     this.avisoMatricula = "";
     this.avisoCarnet = "";
+    this.avisoActivo = "";
   }
 
   aceptarCambiosActualizar() {
@@ -234,6 +239,7 @@ export class GestionRidersComponent implements OnInit {
 
     var matriculaCampo = document.getElementById("matriculaR") as HTMLInputElement;
     var carnetCampo = document.getElementById("carnetR") as HTMLInputElement;
+    var activoCampo = document.getElementById("activoR") as HTMLInputElement;
 
     this.avisoNombre = this.funciones.comprobarVacio(nombreCampo?.value);
     if (this.avisoNombre !== "") { errorCampo = true; }
@@ -281,12 +287,12 @@ export class GestionRidersComponent implements OnInit {
 
     if (!errorCampo) {
       this.peticionHttpActualizar(nombreCampo?.value, apellidosCampo?.value, nifCampo?.value,
-        emailCampo?.value, pwdCampo?.value, tipoVeh, matriculaCampo?.value, carnetCampo?.checked);
+        emailCampo?.value, pwdCampo?.value, tipoVeh, matriculaCampo?.value, carnetCampo?.checked, activoCampo?.checked);
     }
   }
 
   peticionHttpActualizar(nombre: string, apellidos: string, nif: string, correo: string,
-    pwd: string, tipoVeh: number, matricula: string, carnet: boolean): void {
+    pwd: string, tipoVeh: number, matricula: string, carnet: boolean, cuenta: boolean): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
       "nombre": nombre,
@@ -299,6 +305,7 @@ export class GestionRidersComponent implements OnInit {
       "tipoVehiculo": String(tipoVeh),
       "matricula": matricula,
       "carnet": String(carnet),
+      "activo": String(cuenta),
       "rol": "rider",
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
@@ -322,6 +329,7 @@ export class GestionRidersComponent implements OnInit {
           this.funciones.ocultarBtn("add_rider", false);
           this.funciones.ocultarBtn("cont_confirm_udt_r", true);
           this.peticionGetHttp();
+          alert(data)
           this.funciones.apagarElementosLista('listaRiders');
         }
       }, error: error => {
@@ -353,7 +361,8 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.ocultarBtn('add_rider', true); //ocultar btn_add
     this.funciones.ocultarBtn('update_rider', true); //ocultar btn_add
     this.funciones.ocultarBtn('delete_rider', true); //ocultar btn_add
-    this.funciones.ocultarBtn('cont_confirm_add_r', false); //mostrar btns_aceptar_cancelar    
+    this.funciones.ocultarBtn('cont_confirm_add_r', false); //mostrar btns_aceptar_cancelar 
+    this.funciones.disabledID('activoR', true);
   }
 
   activarCamposActualizar() {
@@ -395,6 +404,8 @@ export class GestionRidersComponent implements OnInit {
         } else if (data.includes("No tienes acceso a este servicio")) {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
+        } else if (data.includes("El rider esta asignado a un pedido")) {
+          alert(data);
         } else {
           alert("Rider eliminado exitosamente");
           this.dejarVacio();
@@ -424,7 +435,9 @@ export class GestionRidersComponent implements OnInit {
 
     this.funciones.disabledID('matriculaR', valor);
     this.funciones.disabledID('carnetR', valor);
+    this.funciones.disabledID('activoR', valor);
   }
+
 
   logout() {
     window.sessionStorage.removeItem('rol');
@@ -436,9 +449,9 @@ export class GestionRidersComponent implements OnInit {
   onSelect(element: Rider) {
     this.disabledTodos(true);
     console.log(element);
-
-    this.ryderSelect = element.nombre
-    this.ryderSelectCorreo = element.correo;
+    this.riderSelected = element.nombre;
+    this.riderSelectCorreo = element.correo;
+    this.cerrarVentanaValoracionesRid();
 
     this.funciones.apagarElementosLista('listaRiders');
     this.funciones.resaltarElementoLista('listaRiders', element.pos);
@@ -448,8 +461,8 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.asignarValorID('nifR', element.nif);
     this.funciones.asignarValorID('emailR', element.correo);
     this.funciones.asignarValorID('passwordR', element.pwd);
-    this.peticionGetHttpValoracionRiderMedia()
     //this.funciones.asignarValorID('valoracionR', String(element.valoracion));
+    this.peticionGetHttpValoracionRiderMedia();
 
     this.funciones.seleccionarRadio('cocheR', false);
     this.funciones.seleccionarRadio('motoR', false);
@@ -467,7 +480,9 @@ export class GestionRidersComponent implements OnInit {
     }
 
     this.funciones.asignarValorID('matriculaR', element.matricula);
+
     this.funciones.seleccionarRadio('carnetR', element.carnet);
+    this.funciones.seleccionarRadio('activoR', element.cuenta);
 
     this.funciones.ocultarBtn("cont_confirm_add_r", true);
     this.funciones.ocultarBtn("cont_confirm_udt_r", true);
@@ -476,16 +491,32 @@ export class GestionRidersComponent implements OnInit {
     this.funciones.ocultarBtn("delete_rider", false);
   }
 
+  cerrarVentanaValoracionesRid() {
+    this.funciones.ocultarBtn('contenedor_valoracionesRid', true);
+  }
+
+  mostrarValoracionesRid() {
+    if (this.riderSelected != "") {
+      this.funciones.ocultarBtn('contenedor_valoracionesRid', false);
+      this.peticionHttpGetValoracionesRiderDetalladas();
+    } else {
+      alert("Selecciona un rider");
+    }
+  }
+
   peticionGetHttpValoracionRiderMedia(): void {
-    if (this.ryderSelect !== "") {
+    if (this.riderSelected !== "") {
       const headers = {
         'Content-Type': 'application/json'
       };
       const body = {
-        "rider": this.ryderSelectCorreo,
+        "rider": this.riderSelectCorreo,
         "correoAcceso": window.sessionStorage.getItem('correo'),
         "passwordAcceso": window.sessionStorage.getItem('password')
       };
+
+      console.log(body);
+      
 
       const url = this.URL + 'pedido/consultarValoracionRiderMedia';
       this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
@@ -494,10 +525,10 @@ export class GestionRidersComponent implements OnInit {
           console.log(data);
 
           if (data.includes("El rider no tiene valoraciones")) {
-            this.funciones.asignarValorID('valoracionR', "");
-            alert(data);
+            this.funciones.asignarValorID('valoracionR', "0.0");
+            //alert(data);
           } else {
-            this.funciones.asignarValorID('valoracionR', String(Number(data).toFixed(1))); 
+            this.funciones.asignarValorID('valoracionR', String(Number(data).toFixed(1)));
           }
         }, error: error => {
           alert("Ha ocurrido un error al cargar la valoración del rider");
@@ -505,14 +536,14 @@ export class GestionRidersComponent implements OnInit {
         }
       });
     } else {
-      alert("Selecciona un rider"); 
+      alert("Selecciona un rider");
     }
   }
 
   peticionHttpGetValoracionesRiderDetalladas() {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
-      "restaurante": this.ryderSelectCorreo,
+      "rider": this.riderSelectCorreo,
       "correoAcceso": window.sessionStorage.getItem('correo'),
       "passwordAcceso": window.sessionStorage.getItem('password')
     };
@@ -525,9 +556,9 @@ export class GestionRidersComponent implements OnInit {
           alert(data);
           this.router.navigate(['/login']);
 
-        } else if (data.includes(this.ryderSelect+" no tiene valoraciones")) {
-          //this.funciones.ocultarBtn('contenedor_valoracionesRes', true);
-          alert(data+" detalladas");
+        } else if (data.includes(this.riderSelectCorreo + " no tiene valoraciones")) {
+          this.funciones.ocultarBtn('contenedor_valoracionesRid', true);
+          alert(data + " detalladas");
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
           this.router.navigate(['/login']);
@@ -548,5 +579,4 @@ export class GestionRidersComponent implements OnInit {
       }
     });
   }
-
 }

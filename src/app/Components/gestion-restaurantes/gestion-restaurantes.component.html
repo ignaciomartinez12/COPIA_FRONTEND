@@ -50,7 +50,7 @@
                 <div class="contenedor_datos">
                     <div id="contenedor_btn_ventanas" class="contenedor_botones_rest">
 
-                        <label class="texto_gris">Restaurante seleccionado: {{ restauranteSelect }}</label>
+                        <label class="texto_gris">{{ restauranteSelect }}</label>
 
                         <ul>
                             <li>
@@ -72,7 +72,7 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato3">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="nombreRes">Nombre</label>
+                                    <label class="texto_gris" for="nombreRes">Nombre *</label>
                                     <label class="aviso" for="nombreRes">{{ avisoNombre }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="nombreRes" disabled>
@@ -81,14 +81,14 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="razonRes">Razón Social</label>
+                                    <label class="texto_gris" for="razonRes">Razón Social *</label>
                                     <label class="aviso" for="razonRes">{{ avisoRazon }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="razonRes" disabled>
                             </div>
                             <div class="campo_dato5">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="categoria">Categoría</label>
+                                    <label class="texto_gris" for="categoria">Categoría *</label>
                                     <label class="aviso" for="categoria">{{ avisoCategoria }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="categoria" disabled />
@@ -97,7 +97,7 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="CIFRes">CIF</label>
+                                    <label class="texto_gris" for="CIFRes">CIF *</label>
                                     <label class="aviso" for="CIFRes">{{ avisoCIF }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="CIFRes" disabled />
@@ -114,7 +114,7 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato3">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="direccionRes">Dirección</label>
+                                    <label class="texto_gris" for="direccionRes">Dirección *</label>
                                     <label class="aviso" for="direccionRes">{{ avisoDireccion }}</label>
                                 </div>
                                 <input class="campo_entrada" type="text" id="direccionRes" disabled>
@@ -123,7 +123,7 @@
                         <div class="linea_campo contenedor_horizontal">
                             <div class="campo_dato4">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="emailRes">Correo</label>
+                                    <label class="texto_gris" for="emailRes">Correo *</label>
                                     <label class="aviso" for="emailRes">{{ avisoEmail }}</label>
                                 </div>
                                 <input class="campo_entrada" type="email" id="emailRes" pattern=".+@globex\.com"
@@ -131,7 +131,7 @@
                             </div>
                             <div class="campo_dato5">
                                 <div class="contenedor_label contenedor_horizontal">
-                                    <label class="texto_gris" for="telRes">Teléfono</label>
+                                    <label class="texto_gris" for="telRes">Teléfono *</label>
                                     <label class="aviso" for="telRes">{{ avisoTelefono }}</label>
                                 </div>
                                 <input class="campo_entrada" type="tel" pattern="[0-9]+" id="telRes"
@@ -206,7 +206,7 @@
                                     <div class="linea_campo contenedor_horizontal">
                                         <div class="campo_dato3">
                                             <div class="contenedor_label contenedor_horizontal">
-                                                <label class="texto_gris" for="nombreP">Nombre</label>
+                                                <label class="texto_gris" for="nombreP">Nombre *</label>
                                                 <label class="aviso" for="nombreP">{{ avisoNombreP }}</label>
                                             </div>
                                             <input class="campo_entrada" type="text" id="nombreP" disabled>
@@ -215,7 +215,7 @@
                                     <div class="linea_campo contenedor_horizontal">
                                         <div class="campo_dato1">
                                             <div class="contenedor_label contenedor_horizontal">
-                                                <label class="texto_gris" for="precio">Precio</label>
+                                                <label class="texto_gris" for="precio">Precio *</label>
                                                 <label class="aviso" for="precio">{{ avisoPrecioP }}</label>
                                             </div>
                                             <input class="campo_entrada" type="text" id="precio" disabled>
@@ -237,7 +237,7 @@
                                         </div>
                                         <div class="campo_dato5">
                                             <div class="contenedor_label contenedor_horizontal">
-                                                <label class="texto_gris" for="desc">Descripción</label>
+                                                <label class="texto_gris" for="desc">Descripción *</label>
                                                 <label class="aviso" for="desc">{{ avisoDescP }}</label>
                                             </div>
                                             <textarea class="campo_entrada_img" id="desc" disabled></textarea>
@@ -263,8 +263,8 @@
                                 <input class="campo_entrada" type="text" id="fechaFin">
                             </div>
 
-                            <!-- <button id="btn_consultFact" (click)="consultarFact()" class="btn">Consultar
-                                Facturación</button> -->
+                            <button id="btn_consultFact" (click)="consultarFact()" class="btn">Consultar
+                                Facturación</button>
                         </div>
                         <h2 class="desc_fact">La facturación para el periodo especificado es: {{ facturacion }}€</h2>
                     </div>
@@ -280,7 +280,7 @@
                         </div>
                         <div class="contenido contenedor_horizontal">
                             <div class="contenedor_lista_botones">
-                                <div class="contenedor_lista_pedidos">
+                                <div id="cont_lista_pedidosRes" class="contenedor_lista_pedidos">
                                     <ul id="listaPedidos" class="listaElementos">
                                         <li class="elementoBase" *ngFor="let element of listaPedidosRes" (click)="onSelectPed(element)">
                                             {{ element.cliente }}
@@ -379,7 +379,7 @@
                                         <h4 class="correo_val"> {{element.valor}}</h4>
                                     </div>
                                 </div>
-                                <textarea class="campo_entrada_img" disabled>{{element.comentario}}</textarea>
+                                <textarea class="campo_entrada_img2" disabled>{{element.comentario}}</textarea>
                             </div>
                         </li>
                     </ul>

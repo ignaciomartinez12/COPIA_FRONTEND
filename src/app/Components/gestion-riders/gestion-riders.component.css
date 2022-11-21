@@ -106,3 +106,26 @@ button {
     background: transparent;
     cursor: pointer;
 }
+
+#btn_vals{
+    color: white;
+    margin-left: 4px;
+    margin-bottom: 16px;
+    background: #fc8a15;
+    height: 40px;
+    width: 300px;
+    border-radius: 4px;
+}
+
+#btn_vals:hover{
+    background: #757575;
+}
+
+.campo_entrada_img {
+    width: 100%;
+    object-fit: contain;
+    border: 3px solid #757575;
+    font-size: 1rem;
+    background: white;
+    overflow: hidden;
+}
