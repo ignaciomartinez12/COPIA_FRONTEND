@@ -772,9 +772,14 @@ export class PedidosClientesComponent implements OnInit {
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
         } else if (data.includes("No hay")) {
-          alert(data);
+          //alert(data);
           //poner valoracion en blanco
           this.clickEstrella(lista, 0);
+          if(lista == 0){
+            this.funciones.asignarValorID('comentario1', "");
+          }else{
+            this.funciones.asignarValorID('comentario2', "");
+          }
         } else {
           //alert(this.restauranteSel + " valorado exitosamente"); 
           this.cargarDatosValoracionExistente(data, lista);  

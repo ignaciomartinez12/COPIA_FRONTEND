@@ -258,7 +258,7 @@ export class FuncionesService {
   }
 
   cambiarFondoEstrella(idContenedor: string, valor: number) {
-    if (valor > 5 || valor < 1) {
+    if (valor > 5 || valor < 0) {
       return;
     }
     var contenedor = document.getElementById(idContenedor) as HTMLDivElement;
