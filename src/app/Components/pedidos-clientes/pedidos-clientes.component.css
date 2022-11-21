@@ -142,7 +142,8 @@ button {
 #cont_lista_pedPend::-webkit-scrollbar,
 .contenedor_listaRest::-webkit-scrollbar,
 .contenedor_lista_pedidos::-webkit-scrollbar,
-.contenedor_valorar::-webkit-scrollbar {
+.contenedor_valorar::-webkit-scrollbar,
+.contenedor_valorar2::-webkit-scrollbar {
     border-radius: 2px;
 	width: 6px;
 	background-color: #42424270;
@@ -153,7 +154,8 @@ button {
 #cont_lista_pedPend::-webkit-scrollbar-thumb,
 .contenedor_listaRest::-webkit-scrollbar-thumb,
 .contenedor_lista_pedidos::-webkit-scrollbar-thumb,
-.contenedor_valorar::-webkit-scrollbar-thumb {
+.contenedor_valorar::-webkit-scrollbar-thumb,
+.contenedor_valorar2::-webkit-scrollbar-thumb {
     background-color: #f5f5f5;
 }
 
@@ -429,6 +431,14 @@ hr {
     overflow-y: scroll;
     margin: 4px;
     background: #f5f5f5;
+}
+
+.contenedor_valorar2{
+    height: 490px;
+    overflow-y: scroll;
+    margin: 4px;
+    background: #f5f5f5;
+    padding: 4px 16px;
 }
 
 .img_estrella:hover{

@@ -131,7 +131,7 @@
             <div class="contenedor_datos2">
                 <div class="contenedor_horizontal linea_campo">
                     <h1 class="texto_naranja">Pedidos</h1>
-                    <button id="btn_cancelarPed" (click)="peticionHttpCancelarPedidoEnPedidos()">Cancelar Pedido</button>
+                    <button id="btn_cancelarPed" class="oculto" (click)="peticionHttpCancelarPedidoEnPedidos()">Cancelar Pedido</button>
                 </div>
                 <div class="labels2 contenedor_horizontal">
                     <div class="label_lista3">
@@ -342,7 +342,7 @@
                 <button (click)="cerrarVentanaValoracionesRes()">
                     <img id="cerrarValoraciones" class="img_icon" src="../../../assets/ui_images/close_icon.svg"/></button>
             </div>
-            <div class="contenedor_valorar">
+            <div class="contenedor_valorar2">
                 <h2>Restaurante</h2>
                 <p>{{restauranteSel}}</p>
                 <h2>Valoraciones</h2>

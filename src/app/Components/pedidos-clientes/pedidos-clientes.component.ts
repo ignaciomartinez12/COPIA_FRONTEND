@@ -140,12 +140,18 @@ export class PedidosClientesComponent implements OnInit {
           alert(data);
         } else {
           var listaPedJSON = data.split(";;;");
+          let posProg = 0;
+          let posEnt = 0;
           for (let i = 0; i < listaPedJSON.length; i++) {
             //console.log(listaResJSON[i]);
-            let pedido = new Pedido(0, listaPedJSON[i], i);
+            let pedido = new Pedido(0, listaPedJSON[i], 0);
             if (pedido.estado == 2) {
+              pedido.pos = posEnt;
+              posEnt++;
               this.listaPedidosEntregados.push(pedido);
             } else {
+              pedido.pos = posProg;
+              posProg++;
               this.listaPedidosEnProgreso.push(pedido);
             }
           }
@@ -185,21 +191,39 @@ export class PedidosClientesComponent implements OnInit {
     this.funciones.apagarElementosLista('listaPedidosEnProgreso');
     this.funciones.resaltarElementoLista('listaPedidosEntregados', element.pos);
 
+    this.listaPlatosPedidoSel = [];
     this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, this.restauranteSel);
     this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
   }
 
   onSelectPedProg(element: Pedido) {
-    console.log(element);
+    this.listaPlatosPedidoSel = [];
+    this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, element.restaurante);
+    this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
+    
+
     this.pedidoSel = element;
+    console.log(element);
+    console.log(this.listaPlatosPedidoSel);
+
     this.funciones.ocultarBtn('btn_cancelarPed', false);
 
+    
     this.funciones.apagarElementosLista('listaPedidosEnProgreso');
     this.funciones.apagarElementosLista('listaPedidosEntregados');
     this.funciones.resaltarElementoLista('listaPedidosEnProgreso', element.pos);
 
-    this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, this.restauranteSel);
-    this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
+    // console.log(element);
+    // this.pedidoSel = element;
+    // this.funciones.ocultarBtn('btn_cancelarPed', false);
+
+    // this.funciones.apagarElementosLista('listaPedidosEnProgreso');
+    // this.funciones.apagarElementosLista('listaPedidosEntregados');
+    // this.funciones.resaltarElementoLista('listaPedidosEnProgreso', element.pos);
+
+    // this.listaPlatosPedidoSel = [];
+    // this.listaPlatosPedidoSel = this.funciones.genPlatosPedido(element, this.restauranteSel);
+    // this.pedidoSelTotal = this.funciones.calcularTotalPedido(this.listaPlatosPedidoSel).toFixed(2);
   }
 
   onSelectPedPend(element: Pedido) {
@@ -208,7 +232,7 @@ export class PedidosClientesComponent implements OnInit {
     this.pedidoSel = element;
     console.log(element);
     console.log(this.listaPlatosPedidoSel);
-
+    
     this.funciones.apagarElementosLista('listaPedidosPendientes');
     this.funciones.resaltarElementoLista('listaPedidosPendientes', element.pos);
   }
@@ -253,6 +277,8 @@ export class PedidosClientesComponent implements OnInit {
 
   mostrar_valorar(element: Pedido) {
     this.funciones.ocultarBtn("contenedor_valorarPed", false);
+    this.peticionGetHttpValoracionHecha(element, element.restaurante, 0);
+    this.peticionGetHttpValoracionHecha(element, element.rider, 1);
     this.pedidoSel = element;
   }
 
@@ -298,6 +324,14 @@ export class PedidosClientesComponent implements OnInit {
         this.funciones.addLineaPlatoPedido(pedidoAux, linea);
       }
     }
+
+    var imagenBoton = document.getElementById("carritoCli")!;
+    if(this.listaPedidosPendientes.length > 0){
+      
+      imagenBoton.setAttribute("src", "../../../assets/ui_images/shopping-cart4.png");
+    }else{
+      imagenBoton.setAttribute("src", "../../../assets/ui_images/shopping-cart2.png");
+    }
   }
 
   disminuirCantidadPlatoPed(element: LineaPlato) {
@@ -317,12 +351,16 @@ export class PedidosClientesComponent implements OnInit {
 
   peticionHttpCancelarPedidoEnCarrito(): void {
     if (!(this.pedidoSel.restaurante == "")) {
-      alert("Pedido cancelado");
+      //alert("Pedido cancelado");
       this.listaPedidosPendientes.splice(this.listaPedidosPendientes.indexOf(this.pedidoSel), 1);
       this.listaPlatosPedidoSel = [];
       this.pedidoSel = new Pedido(1, "", 0);
       //lo quito de la lista
       this.mostrar_carrito();
+      var imagenBoton = document.getElementById("carritoCli")!;
+      if(this.listaPedidosPendientes.length == 0){
+        imagenBoton.setAttribute("src", "../../../assets/ui_images/shopping-cart2.png");
+      }
     } else {
       alert("Selecciona un pedido");
     }
@@ -376,8 +414,13 @@ export class PedidosClientesComponent implements OnInit {
 
   peticionHttpCancelarPedidoEnPedidos(): void {
     if (!(this.pedidoSel.restaurante == "")) {
-      alert("Pedido cancelado");
+      //alert("Pedido cancelado");
       this.peticionHttpCancelarPedido(this.pedidoSel)
+      this.pedidoSel = new Pedido(1, "", 0);
+      this.listaPlatosPedidoSel = [];
+      this.pedidoSelTotal = "";
+      this.funciones.apagarElementosLista('listaPedidosEntregados');
+      this.funciones.apagarElementosLista('listaPedidosEnProgreso');
     } else {
       alert("Selecciona un pedido");
     }
@@ -410,6 +453,7 @@ export class PedidosClientesComponent implements OnInit {
         } else if (data.includes("No existe ese pedido")) {
           alert(data);
         } else {
+          alert("Pedido cancelado correctamente");
           this.peticionGetHttpPedidosCli();
         }
       }, error: error => {
@@ -677,6 +721,7 @@ export class PedidosClientesComponent implements OnInit {
   peticionHttpPedidosCrearValRes(pedido: Pedido, entidad: string, comentario: string, valor : number): void {
     const headers = { 'Content-Type': 'application/json' };
     const body = {
+      "idPedido": pedido.id,
       "entidad": entidad,
 	    "comentario": comentario,
 	    "valor": String(valor),
@@ -694,6 +739,8 @@ export class PedidosClientesComponent implements OnInit {
           this.router.navigate(['/login']);
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
+        } else if (data.includes("Ya has valorado")) {
+          alert(data);
         } else {
           alert(this.restauranteSel + " valorado exitosamente");    
         }
@@ -701,5 +748,53 @@ export class PedidosClientesComponent implements OnInit {
         alert("Ha ocurrido un error al hacer la valoración");
       }
     });  
+  }
+
+  peticionGetHttpValoracionHecha(pedido: Pedido, entidad: string, lista:number): void {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    const body = {
+      "idPedido": pedido.id,
+      "entidad": entidad,
+      "correoAcceso": window.sessionStorage.getItem('correo'),
+      "passwordAcceso": window.sessionStorage.getItem('password')
+    };
+
+    const url = this.URL + 'pedido/consultarExisteValoracion';
+    this.http.post(url, body, { headers, responseType: 'text' }).subscribe({
+      next: data => {
+        console.log(data)
+        if (data.includes("No tienes acceso a este servicio")) {
+          alert("No tienes acceso a este servicio");
+          this.router.navigate(['/login']);
+        } else if (data.includes("Tu cuenta no se encuentra activa")) {
+          alert(data);
+        } else if (data.includes("No hay")) {
+          alert(data);
+          //poner valoracion en blanco
+          this.clickEstrella(lista, 0);
+        } else {
+          //alert(this.restauranteSel + " valorado exitosamente"); 
+          this.cargarDatosValoracionExistente(data, lista);  
+        }
+      }, error: error => {
+        alert("Ha ocurrido un error al hacer la valoración");
+      }
+    }); 
+
+  }
+
+  cargarDatosValoracionExistente(data: string, lista:number){
+    var val = new Valoracion(data, 0);
+    var comentarioCampo;
+    this.clickEstrella(lista, Number(val.valor));
+    if(lista == 0){
+      comentarioCampo = document.getElementById("comentario1") as HTMLInputElement;
+    }else{
+      comentarioCampo = document.getElementById("comentario2") as HTMLInputElement;
+    }
+    comentarioCampo.value = val.comentario;
   }
 }

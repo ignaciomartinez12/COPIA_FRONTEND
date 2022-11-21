@@ -6,6 +6,7 @@ export class Valoracion {
 	autor: string ;
 	fecha: string ;
     pos : number;
+    idPedido : string;
     
     constructor(json:string, pos:number){
         var jsonObject = JSON.parse(json);
@@ -15,5 +16,6 @@ export class Valoracion {
         this.autor = jsonObject.autor;
         this.fecha = jsonObject.fecha;
         this.pos = pos;
+        this.idPedido = jsonObject.idPedido;
     }
 }
