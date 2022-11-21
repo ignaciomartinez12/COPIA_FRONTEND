@@ -158,6 +158,8 @@ export class GestionClientesComponent implements OnInit {
           this.router.navigate(['/login']);
         } else if (data.includes("No existe ningun usuario en la base de datos")) {
           alert("No existe ese cliente en la base de datos");
+        } else if (data.includes("El cliente tiene pedidos pendientes")) {
+          alert(data);
         } else {
           alert("Cliente eliminado exitosamente");
           this.dejarVacio();

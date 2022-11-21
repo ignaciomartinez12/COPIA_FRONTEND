@@ -120,3 +120,12 @@ button {
 #btn_vals:hover{
     background: #757575;
 }
+
+.campo_entrada_img {
+    width: 100%;
+    object-fit: contain;
+    border: 3px solid #757575;
+    font-size: 1rem;
+    background: white;
+    overflow: hidden;
+}

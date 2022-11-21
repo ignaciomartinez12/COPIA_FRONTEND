@@ -201,6 +201,7 @@ label{
     margin-bottom: 16px;
     border: 3px solid #fc8a15;
     background: #fc8a15;
+    cursor: pointer;
 }
 
 .contenedor_lista{
@@ -471,8 +472,9 @@ input[type="checkbox"]:disabled {
 .contenedor_valorar_pedidos textarea{
     font-size: 0.9rem;
     width: 100%;
-    resize:none;
-    height: 50px;
+    resize: vertical;
+    /*height: 50px;*/
+    min-height: 50px;
     padding: 4px;
 }
 
@@ -581,4 +583,8 @@ hr{
 
 .datosRecibo{
     padding: 0 16px 8px 16px;
+}
+
+.elementoBase{
+    overflow: hidden;
 }

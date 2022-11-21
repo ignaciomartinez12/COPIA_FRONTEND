@@ -139,6 +139,8 @@ export class GestionPedidosComponent implements OnInit {
           alert(data);
         } else if (data.includes("El pedido ya ha sido asignado")) {
           alert(data);
+        } else if (data.includes("No te puedes asignar a mas pedidos")) {
+          alert("No te puedes asignar a más pedidos");
         } else if (data.includes("El pedido ya ha sido entregado")) {
           alert(data);
         } else {

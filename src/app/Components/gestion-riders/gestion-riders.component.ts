@@ -400,6 +400,8 @@ export class GestionRidersComponent implements OnInit {
         } else if (data.includes("No tienes acceso a este servicio")) {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
+        } else if (data.includes("El rider esta asignado a un pedido")) {
+          alert(data);
         } else {
           alert("Rider eliminado exitosamente");
           this.dejarVacio();

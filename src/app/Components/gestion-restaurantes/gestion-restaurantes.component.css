@@ -34,6 +34,20 @@
     overflow: hidden;
 }
 
+.campo_entrada_img2 {
+    width: 100%;
+    object-fit: contain;
+    border: 3px solid #757575;
+    font-size: 1rem;
+    background: white;
+    overflow: hidden;
+}
+
+.campo_entrada_img2 textarea{
+    height: fit-content;
+}
+    
+
 a {
     color: #fc8a15;
     font-weight: bold;

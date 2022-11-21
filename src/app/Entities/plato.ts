@@ -1,5 +1,6 @@
 export class Plato {
 
+    id : string;
     nombreP : string;
     precioP : string;
     veganoP : boolean;
@@ -16,6 +17,7 @@ export class Plato {
         this.veganoP = Boolean(jsonObject.aptoVegano);
         this.fotoP = jsonObject.foto;
         this.restaurante = jsonObject.nombreRestaurante;
+        this.id = jsonObject.idPlato;
         this.pos = pos;
     }
 }

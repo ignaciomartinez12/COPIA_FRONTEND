@@ -8,8 +8,8 @@ import { Pedido } from "../Entities/pedido";
 
 export class FuncionesService {
 
-  constructor(){}
-  
+  constructor() { }
+
 
   validarEmail(valor: string): boolean {
     if (/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i.test(valor)) {
@@ -176,9 +176,8 @@ export class FuncionesService {
       }
     } else {
       console.log("lista nula: " + idLista);
-
     }
-    console.log("resaltado quitado: " + idLista);
+    //console.log("resaltado quitado: " + idLista);
   }
 
   resaltarElementoLista(idLista: string, pos: number) {
@@ -188,15 +187,17 @@ export class FuncionesService {
     } else {
       console.log("lista nula: " + idLista);
     }
-    console.log("resaltado quitado: " + idLista);
+    //console.log("resaltado quitado: " + idLista);
   }
 
   genPlatosPedido(pedido: Pedido, restaurante: string): LineaPlato[] {
     var listaPlatos: LineaPlato[] = [];
     var listaPlatosJSON = pedido.listaPlatos.split(";");
+    var listaFotos = pedido.listaFotos.split(";;;");
     for (let i = 0; i < listaPlatosJSON.length; i++) {
       var partesPlato = listaPlatosJSON[i].split(",");
       var plato = new LineaPlato(partesPlato[0], Number(partesPlato[1]).toFixed(2), partesPlato[2], restaurante);
+      plato.foto = listaFotos[i];
       listaPlatos.push(plato);
     }
     return listaPlatos;
@@ -224,7 +225,8 @@ export class FuncionesService {
     if (listaPlatos == "") { //pedido vacio
       listaPlatos = lineaPlato.nombreP + "," + lineaPlato.precioP + "," + lineaPlato.cantidad;
       pedido.listaPlatos = listaPlatos;
-    }else{ //pedido con platos
+      pedido.listaFotos = lineaPlato.foto;
+    } else { //pedido con platos
       var listaPlatosAux = listaPlatos.split(";");
       var encontrado = false;
       for (let i = 0; i < listaPlatosAux.length; i++) {
@@ -235,9 +237,10 @@ export class FuncionesService {
       }
 
       if (!encontrado) {
-        listaPlatos += ";" + lineaPlato.nombreP + "," + lineaPlato.precioP 
-        + "," + lineaPlato.cantidad;
+        listaPlatos += ";" + lineaPlato.nombreP + "," + lineaPlato.precioP
+          + "," + lineaPlato.cantidad;
         pedido.listaPlatos = listaPlatos;
+        pedido.listaFotos += (';;;' + lineaPlato.foto);
       }
     }
     alert("Plato añadido al carrito");
@@ -247,10 +250,26 @@ export class FuncionesService {
     var lista = "";
     for (let i = 0; i < listaPlatos.length; i++) {
       lista += listaPlatos[i].nombreP + "," + listaPlatos[i].precioP + "," + listaPlatos[i].cantidad;
-      if(i<listaPlatos.length-1){
+      if (i < listaPlatos.length - 1) {
         lista += ";";
       }
     }
     return lista;
+  }
+
+  cambiarFondoEstrella(idContenedor: string, valor: number) {
+    if (valor > 5 || valor < 1) {
+      return;
+    }
+    var contenedor = document.getElementById(idContenedor) as HTMLDivElement;
+    for (let i = 0; i < contenedor.children.length; i++) {
+      var estrellaBtn = contenedor.children[i] as HTMLButtonElement;
+      var imagen = estrellaBtn.children[0] as HTMLImageElement;
+      if (i < valor) {
+        imagen.src = '../../../assets/ui_images/estrella-rellena.png';
+      } else {
+        imagen.src = '../../../assets/ui_images/estrella-vacia.png';
+      }
+    }
   }
 }
