@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit {
     this.avisoPwd = this.funciones.comprobarVacio(pwdCampo?.value);
     if (this.avisoPwd === "") { } else { return; }
 
+    this.avisoEmail = "Iniciando sesión";
     this.peticionHttp(correoCampo?.value, pwdCampo?.value);
   }
 
