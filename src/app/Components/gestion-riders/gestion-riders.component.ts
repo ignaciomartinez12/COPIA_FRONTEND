@@ -183,7 +183,7 @@ export class GestionRidersComponent implements OnInit {
           this.funciones.apagarElementosLista('listaRiders');
         }
       }, error: error => {
-        alert("Ha ocurrido un error al introducir el administrador");
+        alert("Ha ocurrido un error al introducir el rider");
         //alert(error.error);
       }
     });

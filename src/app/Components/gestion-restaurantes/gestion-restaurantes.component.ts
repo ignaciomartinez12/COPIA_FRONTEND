@@ -452,8 +452,8 @@ export class GestionRestaurantesComponent implements OnInit {
         };
 
       }, error: error => {
-        //alert("Ha ocurrido un error al obtener la facturacion");
-        alert(error.message);
+        alert("Ha ocurrido un error al obtener la facturacion");
+        //alert(error.message);
       }
     });
   }
@@ -777,7 +777,7 @@ export class GestionRestaurantesComponent implements OnInit {
           this.funciones.apagarElementosLista('listaPlatos');
         }
       }, error: error => {
-        alert("Ha ocurrido un error al introducir el restaurante");
+        alert("Ha ocurrido un error al introducir el plato");
         //alert(error.error);
       }
     });
@@ -821,8 +821,8 @@ export class GestionRestaurantesComponent implements OnInit {
           this.funciones.apagarElementosLista('listaPlatos');
         }
       }, error: error => {
-        //alert("Ha ocurrido un error al actualizar el restaurante");
-        alert(error.error);
+        alert("Ha ocurrido un error al actualizar el plato");
+        //alert(error.error);
       }
     });
 
@@ -860,7 +860,7 @@ export class GestionRestaurantesComponent implements OnInit {
           this.funciones.apagarElementosLista('listaPlatos');
         }
       }, error: error => {
-        alert("Ha ocurrido un error al eliminar el restaurante");
+        alert("Ha ocurrido un error al eliminar el plato");
       }
     });
   }

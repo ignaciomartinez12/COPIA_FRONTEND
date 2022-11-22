@@ -225,8 +225,8 @@ export class GestionClientesComponent implements OnInit {
           this.funciones.apagarElementosLista('listaClientes');
         }
       }, error: error => {
-        //alert("Ha ocurrido un error al actualizar el cliente");
-        alert(error.error);
+        alert("Ha ocurrido un error al actualizar el cliente");
+        //alert(error.error);
       }
     });
   }

@@ -644,8 +644,8 @@ export class PedidosClientesComponent implements OnInit {
           this.mostrar_datosUsuario();
         }
       }, error: error => {
-        //alert("Ha ocurrido un error al actualizar el cliente");
-        alert(error.error);
+        alert("Ha ocurrido un error al actualizar el cliente");
+        //alert(error.error);
       }
     });
   }
@@ -675,8 +675,8 @@ export class PedidosClientesComponent implements OnInit {
           this.cargarCamposUsuario(data);
         }
       }, error: error => {
-        //alert("Ha ocurrido un error al actualizar el cliente");
-        alert(error.error);
+        alert("Ha ocurrido un error al consultar los datos del cliente");
+        //alert(error.error);
       }
     });
   }
@@ -795,7 +795,7 @@ export class PedidosClientesComponent implements OnInit {
           this.cargarDatosValoracionExistente(data, lista);  
         }
       }, error: error => {
-        alert("Ha ocurrido un error al hacer la valoración");
+        alert("Ha ocurrido un error al consultar la valoración");
       }
     }); 
 
