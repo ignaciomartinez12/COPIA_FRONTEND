@@ -147,6 +147,7 @@ export class GestionPedidosComponent implements OnInit {
           alert("Pedido asignado exitosamente");
           this.peticionGetPedidosPrepHttp();
           this.peticionGetPedidosEnHttp();
+          this.recargar();
         }
       }, error: error => {
         alert("Ha ocurrido un error al asignar el pedido");
@@ -184,6 +185,7 @@ export class GestionPedidosComponent implements OnInit {
           alert("Pedido entregado exitosamente");
           //this.peticionGetPedidosPrepHttp();
           this.peticionGetPedidosEnHttp();
+          this.recargar();
         }
       }, error: error => {
         alert("Ha ocurrido un error al entregar el pedido");
@@ -289,5 +291,7 @@ export class GestionPedidosComponent implements OnInit {
     this.peticionGetHttp();
     this.peticionGetPedidosEnHttp();
     this.pedidoSel= new Pedido(1,"",0);
+    this.listaPlatosPedidoSel = [];
+    this.pedidoSelTotal = "";
   }
 }

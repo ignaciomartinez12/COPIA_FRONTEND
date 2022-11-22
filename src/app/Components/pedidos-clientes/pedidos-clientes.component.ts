@@ -262,17 +262,17 @@ export class PedidosClientesComponent implements OnInit {
 
   mostrar_carrito() {
     this.ocultarTodo()
-    this.posicionesPedidos();
     this.listaPlatosPedidoSel = [];
+    this.posicionesPedidos();
     this.pedidoSel = new Pedido(1, "", 0);
     this.funciones.apagarElementosLista('listaPedidosPendientes');
     this.funciones.ocultarBtn("contenedor_carrito", false);
   }
 
   posicionesPedidos() {
-    this.listaPedidosPendientes.forEach((element, index) => {
-      element.pos = index;
-    });
+    for (let index = 0; index < this.listaPedidosPendientes.length; index++) {
+      this.listaPedidosPendientes[index].pos = index;
+    }
   }
 
   mostrar_valorar(element: Pedido) {
@@ -401,7 +401,7 @@ export class PedidosClientesComponent implements OnInit {
           alert(data);
         } else {
           alert("Pedido creado correctamente");
-          this.listaPedidosPendientes.splice(this.listaPedidosPendientes.indexOf(this.pedidoSel), 1);
+          this.listaPedidosPendientes = this.quitarPed(pedido);
           this.listaPlatosPedidoSel = [];
           this.pedidoSel = new Pedido(1, "", 0);
           this.mostrar_carrito();
@@ -410,6 +410,16 @@ export class PedidosClientesComponent implements OnInit {
         alert("Ha ocurrido un error al cargar el pedido del cliente");
       }
     });
+  }
+
+  quitarPed(pedido: Pedido): Pedido[] {
+    var listaAux : Pedido[] = [];
+    for (let i = 0; i < this.listaPedidosPendientes.length; i++) {
+      if (!(this.listaPedidosPendientes[i].restaurante == pedido.restaurante)) {
+        listaAux.push(this.listaPedidosPendientes[i]);
+      }
+    }
+    return listaAux;
   }
 
   peticionHttpCancelarPedidoEnPedidos(): void {
@@ -801,5 +811,15 @@ export class PedidosClientesComponent implements OnInit {
       comentarioCampo = document.getElementById("comentario2") as HTMLInputElement;
     }
     comentarioCampo.value = val.comentario;
+  }
+
+  mostrarDetallesPlato(plato: Plato){
+    var esVeg;
+    if(plato.veganoP){
+      esVeg = "Si";
+    }else{
+      esVeg = "No";
+    }
+    alert("Descripción:"+ plato.descripcionP+'\n'+"Es : "+esVeg);
   }
 }
