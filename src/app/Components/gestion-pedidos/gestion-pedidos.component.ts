@@ -257,7 +257,7 @@ export class GestionPedidosComponent implements OnInit {
           alert("No tienes acceso a este servicio");
           this.router.navigate(['/login']);
         } else if (data.includes("No hay pedidos")) {
-          alert(data);
+          //alert(data);
         } else if (data.includes("Tu cuenta no se encuentra activa")) {
           alert(data);
         } else {
